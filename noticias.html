@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Prisma · Noticias del mundo</title>
+<meta name="description" content="Todas las fuentes del mundo en un solo lugar: filtradas, traducidas, en el mapa, y con la historia y el sesgo de cada medio a la vista.">
+<meta name="theme-color" content="#17181c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prisma">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAOfUlEQVR42u3WwWkCURSGUbswCwsIWEIgrViSmywtwHJCdlYTWxDhwcz9zuI0cN8w/3c4fpz+AYCWgyMAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAACvety/3QEEADB15N/lfiAAgMjoiwEQAIDhFwIgAID6+IsAEABAcPiFAAgAID7+IgAEABAdfxEAAgCIjr8IAAEARMdfBIAAAKLjLwJAAADR8RcBIAAAAQAIAKAy/iIABAAQHX8RAAIAEACAAAAq4y8CQAAAAgAQAIAAAAQAMHb8RQAIAEAAAAIAEACAAAAEACAAAAEACAAQAAIAEAAgAAQAIADA+IsAQACACDD+gAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAQYfxAAgAAQACAAAAEgAEAAAM0I8H4gAAABAAgAYHoEeDcQAEAsArwXCABAAAACAJgeAd4JBAAQiwDvAwIAiEWAdwEBAMQiwHuAAABiEeAdQAAAsQhwfxAAQCgE3BsEABCLAHcGAQCEQsBdQQAAkRhwPxAAwNA4cAcQAACAAAAABAAAIAAAAAEAbMT157aM+4IAAIaOvDgAAQAYfTEAAgAw/EIABABg+IUACADA+IsAEACA8RcBIACA8vALARAAQHz8RQAIACA6/iIABAAIAAEACAAw/iIAEABg/EUAIADA+IsAQACAABAAgAAA4y8CAAEAAkAAAAIAjL8IAAQACAABAAIAEAACAAQAYPxFAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAIAAQACAIw/IgAEAAgABAAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAAAeAIIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAgAAQACAAQAAgAEAAgABAAIABAACAAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEAAgABAAIABAACAAQACAAEAAgAEAD4bkAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAIAEAACAAQAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAEgEEXACAAQAAgAEAAgABAAIAAAAGAAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAoCQ8+V3GQFAJQD+vj6X8Z9CALDJka/GgUHvBcDKkRcHCABGj/6kGDDojQDY4uiLAQQAux/+PYeAQZ8dAHsafiGAADD8YwgAAWD4hQACgNj47yUCDPq8AJg0/iJAAGD8RYAAEADR8RcBAgDDLwQEgAAIDr8QEAAYfxEgAARAfPxFgADA+IsAASAAouMvAgQAAkAACAABIAAQABh/ESAAWgFQHn8RIAAw/iJAACQDwPiLAAGA8RcBAiAWAEZfBAgABIAAEAACAAEgADD+IkAATA8AYy8CBAACQAAIAAGAABAAGH8RIACmB4CRFwECAAEgAASAAEAACAAEgAAQAAIAASAAMP4iQACMCwDjLgIEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQABg/JMRYNC3HwBGXQQIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAACQAAIAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAEAACQAAIAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAIAASAAEAACAAGAABAACAABgABAAAgABIAAQAAgAASAABAAAgABgAAQAAJAAAgABAACQAAIAAEgABAAGHQBIAAEgABAAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACQAAIAAEgAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgAAYAAQAAIAAEgAAQAAgABIAAEgAAQAAgABIAAQAAIAAQAAkAAIAAEAAIAASAAEAACAAGAABAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAEgAASAABAAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAgAASAABIAA8P8VAAgAASAABIAAQAAgAASAABAAAgABgAAQAAZdAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAAIAAGAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAgAASAABIAAEAACQAAgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAACAAGAABAAAkAACAAEAAJAAAgAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAACAABIAAEAACQAAIAAHgCAJAAAgAAWDQBYAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgAASAABIAAEAACAAEgAASAAEAACAAEgAAQAAIAASAAEAACQAAIAASAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAIAAEgABAACAABIAAEgABAACAABIAAEAACAAGAQRcAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAIAASAABIAAEAACQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAAYAAEAACQAAIAAEgAAQAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAAAgA/18BgAAQAAJAAAgABAACQAAIAAEgABAACAABYNAFgABAACAABAACQAAgABAAAgABIAAQAAgAAYAAEAAIAASAABAAAkAAIAAQAAJAAAgAAYAAQAAIAAEgAAQAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAJAAAgAASAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAAAgAASAABIAAEACOIAAEgAAQAAZdAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAgABIAAQAAgAASAABIAAQAAgAASAABAAAgABgAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEAAAgAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAB4AgAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAArPAG8GDo/+vjY5QAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAOfUlEQVR42u3WwWkCURSGUbswCwsIWEIgrViSmywtwHJCdlYTWxDhwcz9zuI0cN8w/3c4fpz+AYCWgyMAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAACvety/3QEEADB15N/lfiAAgMjoiwEQAIDhFwIgAID6+IsAEABAcPiFAAgAID7+IgAEABAdfxEAAgCIjr8IAAEARMdfBIAAAKLjLwJAAADR8RcBIAAAAQAIAKAy/iIABAAQHX8RAAIAEACAAAAq4y8CQAAAAgAQAIAAAAQAMHb8RQAIAEAAAAIAEACAAAAEACAAAAEACAAQAAIAEAAgAAQAIADA+IsAQACACDD+gAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAQYfxAAgAAQACAAAAEgAEAAAM0I8H4gAAABAAgAYHoEeDcQAEAsArwXCABAAAACAJgeAd4JBAAQiwDvAwIAiEWAdwEBAMQiwHuAAABiEeAdQAAAsQhwfxAAQCgE3BsEABCLAHcGAQCEQsBdQQAAkRhwPxAAwNA4cAcQAACAAAAABAAAIAAAAAEAbMT157aM+4IAAIaOvDgAAQAYfTEAAgAw/EIABABg+IUACADA+IsAEACA8RcBIACA8vALARAAQHz8RQAIACA6/iIABAAIAAEACAAw/iIAEABg/EUAIADA+IsAQACAABAAgAAA4y8CAAEAAkAAAAIAjL8IAAQACAABAAIAEAACAAQAYPxFAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAIAAQACAIw/IgAEAAgABAAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAAAeAIIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAgAAQACAAQAAgAEAAgABAAIABAACAAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEAAgABAAIABAACAAQACAAEAAgAEAD4bkAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAIAEAACAAQAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAEgEEXACAAQAAgAEAAgABAAIAAAAGAAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAoCQ8+V3GQFAJQD+vj6X8Z9CALDJka/GgUHvBcDKkRcHCABGj/6kGDDojQDY4uiLAQQAux/+PYeAQZ8dAHsafiGAADD8YwgAAWD4hQACgNj47yUCDPq8AJg0/iJAAGD8RYAAEADR8RcBAgDDLwQEgAAIDr8QEAAYfxEgAARAfPxFgADA+IsAASAAouMvAgQAAkAACAABIAAQABh/ESAAWgFQHn8RIAAw/iJAACQDwPiLAAGA8RcBAiAWAEZfBAgABIAAEAACAAEgADD+IkAATA8AYy8CBAACQAAIAAGAABAAGH8RIACmB4CRFwECAAEgAASAAEAACAAEgAAQAAIAASAAMP4iQACMCwDjLgIEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQABg/JMRYNC3HwBGXQQIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAACQAAIAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAEAACQAAIAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAIAASAAEAACAAGAABAACAABgABAAAgABIAAQAAgAASAABAAAgABgAAQAAJAAAgABAACQAAIAAEgABAAGHQBIAAEgABAAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACQAAIAAEgAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgAAYAAQAAIAAEgAAQAAgABIAAEgAAQAAgABIAAQAAIAAQAAkAAIAAEAAIAASAAEAACAAGAABAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAEgAASAABAAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAgAASAABIAA8P8VAAgAASAABIAAQAAgAASAABAAAgABgAAQAAZdAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAAIAAGAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAgAASAABIAAEAACQAAgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAACAAGAABAAAkAACAAEAAJAAAgAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAACAABIAAEAACQAAIAAHgCAJAAAgAAWDQBYAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgAASAABIAAEAACAAEgAASAAEAACAAEgAAQAAIAASAAEAACQAAIAASAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAIAAEgABAACAABIAAEgABAACAABIAAEAACAAGAQRcAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAIAASAABIAAEAACQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAAYAAEAACQAAIAAEgAAQAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAAAgA/18BgAAQAAJAAAgABAACQAAIAAEgABAACAABYNAFgABAACAABAACQAAgABAAAgABIAAQAAgAAYAAEAAIAASAABAAAkAAIAAQAAJAAAgAAYAAQAAIAAEgAAQAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAJAAAgAASAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAAAgAASAABIAAEACOIAAEgAAQAAZdAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAgABIAAQAAgAASAABIAAQAAgAASAABAAAgABgAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEAAAgAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAB4AgAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAArPAG8GDo/+vjY5QAAAABJRU5ErkJggg==">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Prisma%20%C2%B7%20Noticias%20del%20mundo%22%2C%22short_name%22%3A%22Prisma%22%2C%22start_url%22%3A%22.%2Fnoticias.html%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2317181c%22%2C%22theme_color%22%3A%22%2317181c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAOfUlEQVR42u3WwWkCURSGUbswCwsIWEIgrViSmywtwHJCdlYTWxDhwcz9zuI0cN8w%2F3c4fpz%2BAYCWgyMAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAACvety%2F3QEEADB15N%2FlfiAAgMjoiwEQAIDhFwIgAID6%2BIsAEABAcPiFAAgAID7%2BIgAEABAdfxEAAgCIjr8IAAEARMdfBIAAAKLjLwJAAADR8RcBIAAAAQAIAKAy%2FiIABAAQHX8RAAIAEACAAAAq4y8CQAAAAgAQAIAAAAQAMHb8RQAIAEAAAAIAEACAAAAEACAAAAEACAAQAAIAEAAgAAQAIADA%2BIsAQACACDD%2BgAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAQYfxAAgAAQACAAAAEgAEAAAM0I8H4gAAABAAgAYHoEeDcQAEAsArwXCABAAAACAJgeAd4JBAAQiwDvAwIAiEWAdwEBAMQiwHuAAABiEeAdQAAAsQhwfxAAQCgE3BsEABCLAHcGAQCEQsBdQQAAkRhwPxAAwNA4cAcQAACAAAAABAAAIAAAAAEAbMT157aM%2B4IAAIaOvDgAAQAYfTEAAgAw%2FEIABABg%2BIUACADA%2BIsAEACA8RcBIACA8vALARAAQHz8RQAIACA6%2FiIABAAIAAEACAAw%2FiIAEABg%2FEUAIADA%2BIsAQACAABAAgAAA4y8CAAEAAkAAAAIAjL8IAAQACAABAAIAEAACAAQAYPxFAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAIAAQACAIw%2FIgAEAAgABAAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAAAeAIIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAgAAQACAAQAAgAEAAgABAAIABAACAAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEAAgABAAIABAACAAQACAAEAAgAEAD4bkAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAIAEAACAAQAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAEgEEXACAAQAAgAEAAgABAAIAAAAGAAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAoCQ8%2BV3GQFAJQD%2Bvj6X8Z9CALDJka%2FGgUHvBcDKkRcHCABGj%2F6kGDDojQDY4uiLAQQAux%2F%2BPYeAQZ8dAHsafiGAADD8YwgAAWD4hQACgNj47yUCDPq8AJg0%2FiJAAGD8RYAAEADR8RcBAgDDLwQEgAAIDr8QEAAYfxEgAARAfPxFgADA%2BIsAASAAouMvAgQAAkAACAABIAAQABh%2FESAAWgFQHn8RIAAw%2FiJAACQDwPiLAAGA8RcBAiAWAEZfBAgABIAAEAACAAEgADD%2BIkAATA8AYy8CBAACQAAIAAGAABAAGH8RIACmB4CRFwECAAEgAASAAEAACAAEgAAQAAIAASAAMP4iQACMCwDjLgIEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQABg%2FJMRYNC3HwBGXQQIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAACQAAIAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAEAACQAAIAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAIAASAAEAACAAGAABAACAABgABAAAgABIAAQAAgAASAABAAAgABgAAQAAJAAAgABAACQAAIAAEgABAAGHQBIAAEgABAAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACQAAIAAEgAASAAEAACAABIAAQAAIAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgAAYAAQAAIAAEgAAQAAgABIAAEgAAQAAgABIAAQAAIAAQAAkAAIAAEAAIAASAAEAACAAGAABAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAEgAASAABAAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAgAASAABIAA8P8VAAgAASAABIAAQAAgAASAABAAAgABgAAQAAZdAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAAIAAGAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAEAAJAAAgAAYAAEAAIAAEgAAQAAkAAIAAEgAAQAAgAASAABIAAEAACQAAgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAACAAGAABAAAkAACAAEAAJAAAgAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAACAABIAAEAACQAAIAAHgCAJAAAgAAWDQBYAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAAEgABAAAgABAACQAAgAAQAAgABIAAQAAIAAYAAEAACQAAIAAQAAkAACAABIAAQAAgAASAABIAAQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgAASAABIAAEAACAAEgAASAAEAACAAEgAAQAAIAASAAEAACQAAIAASAAEAACAABIAAEAAIAASAABIAAEAAIAASAABAAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgABAAAgABAACQAAIAAEgABAACAABIAAEgABAACAABIAAEAACAAGAQRcAAkAACAAEgABAAAgAASAAEAACAAEgAASAAEAACAAEgAAQAAIAASAABIAAEAACQAAIAASAABAAAgABIAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgAAQAAgABIAAEAACQAAgABAAAkAACAABgABAAAgABIAAQAAgAAQAAkAAIAAQAAIAASAAEAAIAAGAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAAYAAEAACQAAIAAEgAAQAAkAACAABgAAQAAgAASAABAACQAAgAASAABAACAABgAAQAAJAAAgA%2F18BgAAQAAJAAAgABAACQAAIAAEgABAACAABYNAFgABAACAABAACQAAgABAAAgABIAAQAAgAAYAAEAAIAASAABAAAkAAIAAQAAJAAAgAAYAAQAAIAAEgAAQAAkAAIAAEgAAQAAgAAYAAEAACQAAgAAQAAkAACAABgAAQAAJAAAgAASAABAACQAAIAAGAABAACAABIAAEAAJAACAABIAAEAAIAAGAABAAAkAAIAAEAAJAAAgAASAAEAAIAAEgAASAAEAAIAAEgAAQAAIAAYAAEAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAkAACAABgABAAAgAASAABAACAAEgAASAABAACAABgAAQAAJAACAABAACQAAIAAGAABAACAABIAAEAAJAAAgAASAABIAAEACOIAAEgAAQAAZdAAgABIAAEAACAAEgABAAAkAACAAEgABAAAgAASAAEAACAAEgAASAABAACAAEgAAQAAJAACAAEAACQAAIAAGAAEAACAAEgABAACAABAACQAAgABAAAgABIAAQAAgAASAABIAAQAAgAASAABAAAgABgAAQAAJAAAgABIAAQAAIAAEgABAAAgABIAAEgABAAAgABIAAEAACAAEAAAgAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAB4AgAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAAAIAABAAAIAAAAAEAAAgAAAAAQAACAAAQAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAQAACAAAAABAAAIAABAAAAAAgAAEAAAgAAAAAEAAAgAAEAAAAACAAAQAACAAAAABAAAIAAAAAEAAAgAAEAAAAArPAG8GDo%2F%2BvjY5QAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --negro:#17181c;--negro-2:#24262e;--negro-3:#2f323c;
+    --rojo:#D81E2C;--rojo-osc:#A8121E;
+    --oro:#b8862b;--oro-cl:#d9a83e;
+    --verde:#1f8a4c;--ambar:#b7791f;--azul:#2b7fff;
+    --blanco:#ffffff;--hueso:#f3f2f1;--gris:#6c6f76;--gris-claro:#9a9da4;
+    --linea:rgba(23,24,28,.1);--linea-2:rgba(23,24,28,.06);--r:14px;
+    /* espectro de sesgo (convencion AllSides: azul=izq, rojo=der) */
+    --izq:#2b5fd0;--ci:#6f97e0;--centro:#8f949c;--cd:#e0906f;--der:#d23b28;--estatal:#7a4fd6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100%}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--hueso);color:var(--negro);
+    -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+  h1,h2,h3,h4{line-height:1.14;letter-spacing:-.01em}
+  .display{font-family:'Archivo Black',system-ui,sans-serif;letter-spacing:0}
+  .mono{font-family:'JetBrains Mono',monospace}
+  button,select,input,textarea{font-family:inherit}
+  button{cursor:pointer;border:none;background:none}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  body::before{content:"PRISMA";position:fixed;font-family:'Archivo Black',sans-serif;font-size:30vw;
+    color:transparent;-webkit-text-stroke:2px rgba(23,24,28,.045);top:52%;left:50%;
+    transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;z-index:0}
+
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:22px 18px 60px}
+
+  /* ---- cabecera ---- */
+  header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .seal{width:50px;height:50px;border-radius:14px;background:var(--negro);color:#fff;display:grid;place-items:center;
+    font-family:'Archivo Black';font-size:25px;box-shadow:0 10px 26px -10px rgba(23,24,28,.6);flex:none;position:relative;overflow:hidden}
+  .seal::after{content:"";position:absolute;inset:0;background:conic-gradient(from 210deg,var(--izq),#7a4fd6,var(--der),var(--oro-cl),var(--izq));opacity:.9;mix-blend-mode:screen}
+  .seal span{position:relative;z-index:1}
+  .brand .bt .l1{font-family:'Archivo Black';font-size:20px;line-height:1}
+  .brand .bt .l2{font-size:10.5px;color:var(--oro);font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+  .hstatus{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .chip-net{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;
+    background:#fff;border:1.5px solid var(--linea)}
+  .chip-net .led{width:9px;height:9px;border-radius:50%;background:var(--gris-claro);flex:none}
+  .chip-net.on .led{background:var(--verde);box-shadow:0 0 0 3px rgba(31,138,76,.16)}
+  .chip-net.off .led{background:var(--ambar)}
+  .clock{font-size:12px;color:var(--gris);font-weight:600;text-align:right;line-height:1.5}
+  .clock b{color:var(--negro)}
+
+  /* ---- ticker ultima hora ---- */
+  .ticker{margin:16px 0 4px;background:var(--negro);color:#fff;border-radius:12px;display:flex;align-items:center;gap:0;overflow:hidden;height:42px}
+  .ticker .lbl{background:var(--rojo);height:100%;display:flex;align-items:center;gap:7px;padding:0 14px;font-weight:900;font-size:11.5px;
+    letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;flex:none}
+  .ticker .lbl .dotlive{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1.1s infinite}
+  .ticker .track{flex:1;overflow:hidden;position:relative;height:100%}
+  .ticker .move{position:absolute;white-space:nowrap;display:flex;align-items:center;height:100%;will-change:transform;animation:tick 60s linear infinite}
+  .ticker .move:hover{animation-play-state:paused}
+  .ticker .move a{font-size:13px;font-weight:600;padding:0 26px;color:#f0f0f0;position:relative}
+  .ticker .move a::before{content:"";position:absolute;left:0;top:50%;width:4px;height:4px;border-radius:50%;background:var(--oro-cl);transform:translateY(-50%)}
+  @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes pulse{50%{opacity:.3}}
+
+  /* ---- hero ---- */
+  .hero{margin:18px 0 6px}
+  .hero h1{font-family:'Archivo Black';font-size:clamp(28px,5.4vw,46px);line-height:1}
+  .hero h1 .g{background:linear-gradient(90deg,var(--izq),#7a4fd6,var(--der));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:var(--gris);font-size:14px;font-weight:500;margin-top:8px;max-width:660px;line-height:1.55}
+
+  /* ---- tabs ---- */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 18px;position:sticky;top:0;z-index:30;padding:10px 0;
+    background:linear-gradient(var(--hueso) 72%,transparent)}
+  .tab{border:1.5px solid var(--linea);background:#fff;padding:9px 15px;border-radius:999px;font-weight:700;font-size:13px;
+    color:var(--gris);transition:.13s;display:inline-flex;align-items:center;gap:7px}
+  .tab:hover{border-color:var(--negro);color:var(--negro)}
+  .tab.on{background:var(--negro);border-color:var(--negro);color:#fff}
+  .tab .b{font-size:10px;background:var(--rojo);color:#fff;border-radius:999px;padding:1px 6px;font-weight:800}
+
+  .view{display:none;animation:fade .25s ease}
+  .view.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ---- filtros ---- */
+  .filters{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .fgroup{display:flex;align-items:center;gap:6px}
+  .fgroup>span{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gris-claro)}
+  .sel{font-size:13px;font-weight:600;padding:8px 11px;border:1.5px solid var(--linea);border-radius:9px;background:#fff;color:var(--negro)}
+  .sel:focus{outline:none;border-color:var(--negro)}
+  .search{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--linea);border-radius:9px;padding:0 11px}
+  .search input{border:none;outline:none;padding:9px 0;font-size:13.5px;font-weight:500;width:100%;background:none}
+  .search .ic{color:var(--gris-claro);font-size:15px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:700;font-size:13.5px;padding:9px 15px;border-radius:10px;transition:.13s;white-space:nowrap}
+  .btn-negro{background:var(--negro);color:#fff}.btn-negro:hover{background:var(--negro-2)}
+  .btn-ghost{background:#fff;border:1.5px solid var(--linea);color:var(--negro)}.btn-ghost:hover{border-color:var(--negro)}
+  .btn-sm{padding:6px 11px;font-size:12.5px;border-radius:8px}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+  /* chips de sesgo (filtro) */
+  .biaschips{display:flex;gap:6px;flex-wrap:wrap}
+  .bchip{font-size:11.5px;font-weight:800;padding:6px 11px;border-radius:999px;border:1.5px solid var(--linea);background:#fff;color:var(--gris);display:inline-flex;align-items:center;gap:6px}
+  .bchip .dot{width:9px;height:9px;border-radius:50%}
+  .bchip.on{color:#fff;border-color:transparent}
+  .bchip[data-b="izq"].on{background:var(--izq)} .bchip[data-b="ci"].on{background:var(--ci)}
+  .bchip[data-b="centro"].on{background:var(--centro)} .bchip[data-b="cd"].on{background:var(--cd)}
+  .bchip[data-b="der"].on{background:var(--der)} .bchip[data-b="estatal"].on{background:var(--estatal)}
+
+  /* ---- feed ---- */
+  .feedgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+  .art{background:#fff;border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:.15s}
+  .art:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(23,24,28,.5)}
+  .art .thumb{aspect-ratio:16/9;background:#e9eaec no-repeat center/cover;position:relative}
+  .art .thumb .noimg{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;opacity:.25}
+  .art .thumb .cat{position:absolute;left:10px;top:10px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+    background:rgba(23,24,28,.82);color:#fff;padding:4px 9px;border-radius:999px;backdrop-filter:blur(3px)}
+  .art-b{padding:14px 15px 15px;display:flex;flex-direction:column;flex:1}
+  .art-src{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--gris);font-weight:600;flex-wrap:wrap}
+  .art-src .nm{font-weight:800;color:var(--negro)}
+  .art-t{font-size:16px;font-weight:800;margin:8px 0 6px;line-height:1.28}
+  .art-x{font-size:13px;color:var(--gris);font-weight:500;line-height:1.5;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .art-foot{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;align-items:center}
+  .lnk{font-size:12px;font-weight:800;color:var(--negro);display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:8px;border:1.5px solid var(--linea);transition:.12s}
+  .lnk:hover{background:var(--negro);color:#fff;border-color:var(--negro)}
+  .lnk.tr{color:var(--izq);border-color:rgba(43,95,208,.3)}.lnk.tr:hover{background:var(--izq);color:#fff;border-color:var(--izq)}
+  .lnk.tr.done{color:var(--verde);border-color:rgba(31,138,76,.3)}
+
+  /* insignia de sesgo */
+  .bbadge{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:#fff}
+  .bbadge .dt{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.9)}
+  .bbadge.izq{background:var(--izq)}.bbadge.ci{background:var(--ci)}.bbadge.centro{background:var(--centro)}
+  .bbadge.cd{background:var(--cd);color:#3a1f14}.bbadge.der{background:var(--der)}.bbadge.estatal{background:var(--estatal)}
+  .bbadge.cd .dt{background:rgba(58,31,20,.5)}
+
+  /* skeleton */
+  .sk{background:#fff;border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+  .sk .a{aspect-ratio:16/9;background:linear-gradient(90deg,#eee,#f6f6f6,#eee);background-size:200% 100%;animation:sh 1.3s infinite}
+  .sk .b{padding:15px}.sk .l{height:11px;border-radius:6px;background:#eee;margin-bottom:9px;animation:sh 1.3s infinite;background-size:200% 100%;background-image:linear-gradient(90deg,#eee,#f6f6f6,#eee)}
+  .sk .l.s{width:60%}
+  @keyframes sh{to{background-position:-200% 0}}
+
+  .empty{grid-column:1/-1;padding:56px 18px;text-align:center;color:var(--gris)}
+  .empty .ic{font-size:40px;opacity:.4;margin-bottom:10px}
+  .empty p{font-size:14px;font-weight:600;line-height:1.6;max-width:420px;margin:0 auto}
+
+  .loadmore{display:flex;justify-content:center;margin-top:22px}
+
+  /* ---- mapa ---- */
+  .mapwrap{background:#fff;border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+  #map{height:min(62vh,560px);width:100%;background:#dfe3e8}
+  .map-leg{display:flex;gap:14px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--linea);font-size:12px;color:var(--gris);font-weight:600;align-items:center}
+  .map-leg .it{display:inline-flex;align-items:center;gap:6px}
+  .map-leg .d{width:11px;height:11px;border-radius:50%}
+  .mapfallback{padding:40px 20px;text-align:center;color:var(--gris)}
+  .leaflet-popup-content{font-family:'Inter',sans-serif;margin:11px 13px;font-size:12.5px}
+  .leaflet-popup-content b{font-size:13px}
+  .pp-h{font-weight:900;font-size:13.5px;margin-bottom:6px}
+  .pp-h .c{font-size:11px;color:#6c6f76;font-weight:700}
+  .pp-it{display:block;padding:5px 0;border-top:1px solid #eee;font-weight:600;color:#17181c;line-height:1.35}
+
+  /* ---- video / shorts ---- */
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .vcard{background:#fff;border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.15s}
+  .vcard:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(23,24,28,.5)}
+  .vcard .vth{aspect-ratio:16/9;background:#111 no-repeat center/cover;position:relative}
+  .vcard .vth .play{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:44px;opacity:.92;text-shadow:0 3px 14px rgba(0,0,0,.5)}
+  .vcard .vb{padding:12px 13px}
+  .vcard .vt{font-size:13.5px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .vcard .vs{font-size:11.5px;color:var(--gris);font-weight:700;margin-top:7px;display:flex;gap:7px;align-items:center}
+  .modal{position:fixed;inset:0;z-index:200;background:rgba(10,11,13,.82);display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+  .modal.on{display:flex}
+  .modal .box{width:min(920px,100%);background:#000;border-radius:14px;overflow:hidden;position:relative}
+  .modal .box.vert{width:min(420px,100%)}
+  .modal .vframe{aspect-ratio:16/9;width:100%}
+  .modal .box.vert .vframe{aspect-ratio:9/16;max-height:82vh}
+  .modal .x{position:absolute;top:-12px;right:-12px;width:38px;height:38px;border-radius:50%;background:#fff;color:#17181c;font-size:20px;font-weight:900;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.4);z-index:3}
+  @media(max-width:520px){.modal .x{top:6px;right:6px}}
+
+  .shortsrail{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory}
+  .short{flex:none;width:200px;aspect-ratio:9/16;border-radius:14px;overflow:hidden;position:relative;scroll-snap-align:start;cursor:pointer;background:#111 no-repeat center/cover;border:1px solid var(--linea)}
+  .short .ov{position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(0,0,0,.82));display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+  .short .ov .st{color:#fff;font-size:12px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .short .ov .ss{color:#e7c96b;font-size:10.5px;font-weight:800;margin-top:6px;text-transform:uppercase;letter-spacing:.04em}
+  .short .play{position:absolute;top:10px;right:10px;font-size:18px;color:#fff;opacity:.9}
+
+  /* ---- radio ---- */
+  .radiobar{position:sticky;bottom:0;z-index:40;background:var(--negro);color:#fff;border-radius:14px;padding:12px 14px;display:none;
+    align-items:center;gap:12px;margin-top:16px;box-shadow:0 -6px 30px -12px rgba(0,0,0,.4)}
+  .radiobar.on{display:flex}
+  .radiobar .pp{width:44px;height:44px;border-radius:50%;background:var(--rojo);color:#fff;display:grid;place-items:center;font-size:18px;flex:none}
+  .radiobar .meta{flex:1;min-width:0}
+  .radiobar .meta .nm{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .radiobar .meta .st{font-size:11.5px;color:var(--gris-claro);font-weight:600;display:flex;align-items:center;gap:6px}
+  .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  .eq i{width:3px;background:var(--verde);border-radius:2px;animation:eq .9s infinite ease-in-out}
+  .eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.15s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  .radiolist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .rstat{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:13px 14px;display:flex;gap:11px;align-items:center;cursor:pointer;transition:.13s;border-left:3px solid var(--linea)}
+  .rstat:hover{border-left-color:var(--rojo);transform:translateY(-2px);box-shadow:0 16px 34px -22px rgba(23,24,28,.45)}
+  .rstat.playing{border-left-color:var(--verde);background:#f6fbf8}
+  .rstat .ricon{width:42px;height:42px;border-radius:10px;background:var(--hueso) no-repeat center/contain;flex:none;display:grid;place-items:center;font-size:19px;border:1px solid var(--linea)}
+  .rstat .rnm{font-weight:800;font-size:13.5px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .rstat .rmeta{font-size:11px;color:var(--gris);font-weight:600;margin-top:3px}
+
+  /* ---- canales / directorio ---- */
+  .chan{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:16px;transition:.15s;border-top:4px solid var(--centro)}
+  .chan[data-b="izq"]{border-top-color:var(--izq)}.chan[data-b="ci"]{border-top-color:var(--ci)}
+  .chan[data-b="centro"]{border-top-color:var(--centro)}.chan[data-b="cd"]{border-top-color:var(--cd)}
+  .chan[data-b="der"]{border-top-color:var(--der)}.chan[data-b="estatal"]{border-top-color:var(--estatal)}
+  .changrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .chan-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .chan-h .nm{font-size:17px;font-weight:900}
+  .chan-h .meta{font-size:11.5px;color:var(--gris);font-weight:700;margin-top:2px}
+  .chan .hist{font-size:12.5px;color:var(--gris);font-weight:500;line-height:1.5;margin:11px 0}
+  .chan .cred{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:3px 8px;border-radius:6px}
+  .cred.alta{background:#e2efe7;color:#146b3a}.cred.media{background:#fdf2d9;color:#8a5a11}
+  .cred.baja{background:#fbe4e2;color:#a8121e}.cred.mixta{background:#eceef0;color:#4a4d54}
+  /* medidor */
+  .bmeter{margin:12px 0 4px}
+  .btrack{position:relative;height:9px;border-radius:999px;background:linear-gradient(90deg,var(--izq),var(--ci),var(--centro),var(--cd),var(--der))}
+  .btrack .mk{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--negro);transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .blabels{display:flex;justify-content:space-between;font-size:10px;font-weight:800;color:var(--gris-claro);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+  .bstate{margin:12px 0 4px;display:flex;align-items:center;gap:9px;font-weight:800;color:var(--estatal);font-size:13px}
+  .bsrc{font-size:10.5px;color:var(--gris-claro);font-weight:700;margin-top:6px}
+  .chan-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .chan-links a{font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;border:1.5px solid var(--linea);color:var(--negro);transition:.12s;display:inline-flex;gap:5px;align-items:center}
+  .chan-links a:hover{background:var(--negro);color:#fff;border-color:var(--negro)}
+
+  /* ---- ajustes ---- */
+  .card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:18px;margin-bottom:16px}
+  .card h3{font-size:15.5px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .card .sub{font-size:12.5px;color:var(--gris);font-weight:500;line-height:1.5;margin-bottom:14px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--linea-2);flex-wrap:wrap}
+  .row:first-of-type{border-top:none}
+  .row .lab{font-size:13.5px;font-weight:700}
+  .row .desc{font-size:11.5px;color:var(--gris);font-weight:500;margin-top:2px;max-width:520px}
+  .sw{width:48px;height:27px;border-radius:999px;background:#d3d5d9;position:relative;transition:.15s;flex:none;cursor:pointer}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .sw.on{background:var(--verde)}.sw.on::after{left:24px}
+  .txin{width:100%;font-size:13.5px;padding:11px 12px;border:1.5px solid var(--linea);border-radius:10px;background:#fff;font-family:'JetBrains Mono',monospace}
+  .txin:focus{outline:none;border-color:var(--negro)}
+  .note{background:#fff;border:1px solid var(--linea);border-left:3px solid var(--oro);border-radius:12px;padding:13px 15px;font-size:12.5px;color:var(--gris);line-height:1.6}
+  .note b{color:var(--negro)}
+  .srcpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:6px}
+  .srcpick label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding:8px 10px;border:1.5px solid var(--linea);border-radius:9px;cursor:pointer}
+  .srcpick label input{accent-color:var(--negro)}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--negro);color:#fff;
+    padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:700;z-index:300;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);max-width:90vw;text-align:center}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--linea);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--gris-claro);line-height:1.6}
+  footer b{color:var(--gris)}
+
+  @media(max-width:640px){
+    .wrap{padding:16px 13px 60px}
+    .feedgrid,.vgrid,.changrid,.radiolist{grid-template-columns:1fr}
+    .clock{display:none}
+    .tabs{gap:6px}
+    .tab{padding:8px 12px;font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="seal"><span>P</span></div>
+      <div class="bt"><div class="l1">Prisma</div><div class="l2">Noticias del mundo</div></div>
+    </div>
+    <div class="hstatus">
+      <span class="chip-net" id="netchip"><span class="led"></span><span id="nettxt">Conectando…</span></span>
+      <div class="clock" id="clock"></div>
+    </div>
+  </header>
+
+  <!-- ticker de ultima hora -->
+  <div class="ticker" id="ticker" style="display:none">
+    <div class="lbl"><span class="dotlive"></span>Última hora</div>
+    <div class="track"><div class="move" id="tickmove"></div></div>
+  </div>
+
+  <div class="hero">
+    <h1 class="display">El mundo, <span class="g">sin filtros ocultos</span>.</h1>
+    <p>Todas las fuentes en un solo lugar: noticias, artículos, video, shorts y radio. Filtra por tema y país, tradúcelas a tu idioma, míralas en el mapa, y conoce la <b>historia y el sesgo</b> de cada medio para que tú decidas.</p>
+  </div>
+
+  <!-- pestañas -->
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-v="portada">📰 Portada</button>
+    <button class="tab" data-v="mundo">🗺️ Mundo</button>
+    <button class="tab" data-v="video">🎬 Video</button>
+    <button class="tab" data-v="shorts">⚡ Shorts</button>
+    <button class="tab" data-v="radio">📻 Radio</button>
+    <button class="tab" data-v="canales">🧭 Canales <span class="b" id="chanCount"></span></button>
+    <button class="tab" data-v="ajustes">⚙️ Ajustes</button>
+  </div>
+
+  <!-- ===================== PORTADA ===================== -->
+  <section class="view on" id="v-portada">
+    <div class="filters">
+      <div class="search">
+        <span class="ic">🔎</span>
+        <input id="q" type="search" placeholder="Buscar en las noticias del mundo…" autocomplete="off">
+      </div>
+      <div class="fgroup"><span>Tema</span>
+        <select class="sel" id="fCat">
+          <option value="todas">Todos</option>
+          <option value="mundo">🌍 Mundo</option>
+          <option value="politica">🏛️ Política</option>
+          <option value="economia">💹 Economía</option>
+          <option value="tecnologia">💻 Tecnología</option>
+          <option value="ciencia">🔬 Ciencia</option>
+          <option value="deportes">⚽ Deportes</option>
+          <option value="cultura">🎭 Cultura</option>
+        </select>
+      </div>
+      <div class="fgroup"><span>Región</span>
+        <select class="sel" id="fReg">
+          <option value="todas">Todas</option>
+          <option value="Colombia">🇨🇴 Colombia</option>
+          <option value="Latinoamérica">Latinoamérica</option>
+          <option value="España">🇪🇸 España</option>
+          <option value="EE.UU.">🇺🇸 EE.UU.</option>
+          <option value="Reino Unido">🇬🇧 Reino Unido</option>
+          <option value="Europa">Europa</option>
+          <option value="Medio Oriente">Medio Oriente</option>
+          <option value="Asia">Asia</option>
+          <option value="Oceanía">Oceanía</option>
+          <option value="África">África</option>
+          <option value="Global">Agencias globales</option>
+        </select>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btnRefresh">↻ Actualizar</button>
+      <button class="btn btn-negro btn-sm" id="btnWorld" title="Busca en millones de medios del mundo (GDELT)">🌐 Buscar en el mundo</button>
+    </div>
+
+    <div class="filters" style="padding:10px 14px">
+      <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gris-claro)">Sesgo</span>
+      <div class="biaschips" id="biasChips">
+        <button class="bchip on" data-b="all">Todos</button>
+        <button class="bchip" data-b="izq"><span class="dot" style="background:var(--izq)"></span>Izquierda</button>
+        <button class="bchip" data-b="ci"><span class="dot" style="background:var(--ci)"></span>Centro-izq</button>
+        <button class="bchip" data-b="centro"><span class="dot" style="background:var(--centro)"></span>Centro</button>
+        <button class="bchip" data-b="cd"><span class="dot" style="background:var(--cd)"></span>Centro-der</button>
+        <button class="bchip" data-b="der"><span class="dot" style="background:var(--der)"></span>Derecha</button>
+        <button class="bchip" data-b="estatal"><span class="dot" style="background:var(--estatal)"></span>Estatal</button>
+      </div>
+    </div>
+
+    <div class="feedgrid" id="feed"></div>
+    <div class="loadmore" id="loadmore" style="display:none">
+      <button class="btn btn-negro" id="btnMore">Ver más noticias</button>
+    </div>
+  </section>
+
+  <!-- ===================== MUNDO ===================== -->
+  <section class="view" id="v-mundo">
+    <div class="mapwrap">
+      <div id="map"><div class="mapfallback">Cargando el mapa del mundo…</div></div>
+      <div class="map-leg">
+        <span class="it"><b style="color:var(--negro)">Dónde está pasando</b></span>
+        <span class="it"><span class="d" style="background:var(--izq)"></span>Izquierda</span>
+        <span class="it"><span class="d" style="background:var(--centro)"></span>Centro</span>
+        <span class="it"><span class="d" style="background:var(--der)"></span>Derecha</span>
+        <span class="it"><span class="d" style="background:var(--estatal)"></span>Estatal</span>
+        <span class="it" style="margin-left:auto">El tamaño del punto = número de noticias · toca un punto para ver los titulares.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VIDEO ===================== -->
+  <section class="view" id="v-video">
+    <div class="filters">
+      <div class="fgroup"><span>Canal</span>
+        <select class="sel" id="fVideo"></select>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btnVideoAll">🎬 Todos los canales</button>
+      <span style="font-size:12px;color:var(--gris);font-weight:600">Video en vivo y bajo demanda de canales de noticias.</span>
+    </div>
+    <div class="vgrid" id="videos"></div>
+  </section>
+
+  <!-- ===================== SHORTS ===================== -->
+  <section class="view" id="v-shorts">
+    <div style="margin-bottom:12px;font-size:13px;color:var(--gris);font-weight:600">Noticias en 60 segundos. Desliza →</div>
+    <div class="shortsrail" id="shorts"></div>
+    <div class="vgrid" id="shortsGrid" style="margin-top:18px"></div>
+  </section>
+
+  <!-- ===================== RADIO ===================== -->
+  <section class="view" id="v-radio">
+    <div class="filters">
+      <div class="fgroup"><span>País</span>
+        <select class="sel" id="fRadioPais">
+          <option value="">Todo el mundo</option>
+          <option value="Colombia">🇨🇴 Colombia</option>
+          <option value="Spain">🇪🇸 España</option>
+          <option value="Mexico">🇲🇽 México</option>
+          <option value="Argentina">🇦🇷 Argentina</option>
+          <option value="The United States Of America">🇺🇸 EE.UU.</option>
+          <option value="United Kingdom">🇬🇧 Reino Unido</option>
+        </select>
+      </div>
+      <div class="search" style="max-width:320px">
+        <span class="ic">🔎</span>
+        <input id="qRadio" type="search" placeholder="Buscar emisora (ej. Caracol, BBC)…" autocomplete="off">
+      </div>
+      <button class="btn btn-ghost btn-sm" id="btnRadioReload">↻ Buscar emisoras</button>
+    </div>
+    <div class="radiolist" id="radiolist"></div>
+  </section>
+
+  <!-- ===================== CANALES ===================== -->
+  <section class="view" id="v-canales">
+    <div class="note" style="margin-bottom:16px">
+      <b>Cómo leer el sesgo.</b> La posición izquierda–derecha y la credibilidad de cada medio provienen de clasificadores independientes
+      (<b>AllSides</b>, <b>Media Bias/Fact Check</b>, <b>Ad Fontes Media</b>), no de un juicio de Prisma. Son orientativas: un medio puede tener
+      noticias más neutrales que su página de opinión. La idea es que <b>tú</b> compares y decidas.
+    </div>
+    <div class="filters">
+      <div class="search">
+        <span class="ic">🔎</span>
+        <input id="qChan" type="search" placeholder="Buscar un canal…" autocomplete="off">
+      </div>
+      <div class="fgroup"><span>Sesgo</span>
+        <select class="sel" id="fChanBias">
+          <option value="all">Todos</option>
+          <option value="izq">Izquierda</option>
+          <option value="ci">Centro-izquierda</option>
+          <option value="centro">Centro</option>
+          <option value="cd">Centro-derecha</option>
+          <option value="der">Derecha</option>
+          <option value="estatal">Estatal</option>
+        </select>
+      </div>
+      <div class="fgroup"><span>Orden</span>
+        <select class="sel" id="fChanSort">
+          <option value="bias">Por sesgo (izq → der)</option>
+          <option value="name">Alfabético</option>
+          <option value="country">Por país</option>
+          <option value="year">Más antiguos primero</option>
+        </select>
+      </div>
+    </div>
+    <div class="changrid" id="channels"></div>
+  </section>
+
+  <!-- ===================== AJUSTES ===================== -->
+  <section class="view" id="v-ajustes">
+    <div class="card">
+      <h3>🌐 Idioma y traducción</h3>
+      <div class="sub">Prisma trae noticias de todo el mundo. Elige a qué idioma traducir cuando toques “Traducir”.</div>
+      <div class="row">
+        <div><div class="lab">Traducir a</div><div class="desc">Idioma destino de los botones “Traducir”.</div></div>
+        <select class="sel" id="setLang">
+          <option value="es">Español</option><option value="en">Inglés</option><option value="pt">Portugués</option>
+          <option value="fr">Francés</option><option value="de">Alemán</option><option value="it">Italiano</option>
+        </select>
+      </div>
+      <div class="row">
+        <div><div class="lab">Traducir automáticamente los titulares extranjeros</div><div class="desc">Traduce solo lo que no esté en tu idioma. Puede tardar un poco más al cargar.</div></div>
+        <div class="sw" id="setAuto"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🤖 Traducción y resúmenes con IA <span style="font-size:11px;font-weight:700;color:var(--gris);background:var(--hueso);padding:3px 8px;border-radius:6px">opcional</span></h3>
+      <div class="sub">Con tu propia clave de Anthropic, Prisma traduce con más calidad y puede resumir una noticia en 3 líneas neutrales. La clave se guarda <b>solo en este dispositivo</b>, nunca dentro del archivo.</div>
+      <input class="txin" id="setKey" type="password" placeholder="sk-ant-... (opcional)" autocomplete="off">
+      <div class="row" style="border:none;padding-top:12px">
+        <div class="desc">Consíguela en console.anthropic.com. Si la dejas vacía, Prisma usa traductores gratuitos.</div>
+        <button class="btn btn-negro btn-sm" id="btnSaveKey">Guardar clave</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔌 Conexión a las fuentes</h3>
+      <div class="sub">Los medios bloquean la lectura directa desde el navegador (CORS). Prisma usa un “puente” público para leer los RSS. Si uno falla, prueba otro.</div>
+      <div class="row">
+        <div><div class="lab">Puente (proxy) de lectura</div><div class="desc">“Automático” prueba varios en orden hasta que uno funcione.</div></div>
+        <select class="sel" id="setProxy">
+          <option value="auto">Automático (recomendado)</option>
+          <option value="allorigins">AllOrigins</option>
+          <option value="codetabs">CodeTabs</option>
+          <option value="corseu">cors.eu.org</option>
+          <option value="direct">Sin puente (directo)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🗂️ Fuentes activas</h3>
+      <div class="sub">Enciende o apaga los medios que ves en la Portada y el Mapa.</div>
+      <div class="srcpick" id="srcpick"></div>
+    </div>
+
+    <div class="card">
+      <h3>💾 Tus datos</h3>
+      <div class="sub">Prisma guarda tus preferencias y guardados solo en este navegador. Nada se sube a ningún servidor.</div>
+      <div class="row">
+        <div><div class="lab">Respaldo</div><div class="desc">Exporta o restaura tus ajustes y noticias guardadas.</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="btnExport">Exportar</button>
+          <button class="btn btn-ghost btn-sm" id="btnImport">Importar</button>
+          <button class="btn btn-ghost btn-sm" id="btnClear" style="color:var(--rojo)">Borrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Prisma</b> no aloja ni copia el contenido: solo enlaza y muestra los titulares y extractos que cada medio publica en sus RSS, y abre el original en su sitio. Las clasificaciones de sesgo son de terceros. Hecho para <b>Joan te presta · Plaza</b>.
+    </div>
+  </section>
+
+  <!-- barra de radio flotante -->
+  <div class="radiobar" id="radiobar">
+    <button class="pp" id="rbToggle">▶</button>
+    <div class="meta">
+      <div class="nm" id="rbName">—</div>
+      <div class="st" id="rbState"><span class="eq"><i></i><i></i><i></i><i></i></span> En vivo</div>
+    </div>
+    <button class="btn btn-sm" id="rbStop" style="background:#3a3d44;color:#fff">✕</button>
+  </div>
+
+  <footer>
+    <div>© <span id="yr"></span> <b>Prisma</b> · una plaza de Joan te presta. Fuentes de terceros; el sesgo es orientativo.</div>
+    <div>Datos y preferencias solo en tu dispositivo.</div>
+  </footer>
+
+</div>
+
+<!-- reproductor de video/short -->
+<div class="modal" id="modal"><div class="box" id="modalBox"><button class="x" id="modalX">×</button><div id="modalInner"></div></div></div>
+<audio id="audio" crossorigin="anonymous"></audio>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   PRISMA · Noticias del mundo — motor de una sola página
+   Todo en el dispositivo. Sin backend propio.
+   ============================================================ */
+"use strict";
+
+/* ---------- utilidades cortas ---------- */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const enc = encodeURIComponent;
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function stripHtml(s){const d=document.createElement('div'); d.innerHTML=s||''; return (d.textContent||'').replace(/\s+/g,' ').trim();}
+function toast(m){const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),2600);}
+function shareArticle(title,url){
+  if(!url) return;
+  if(navigator.share){ navigator.share({title:title||'Prisma · Noticias',text:title,url}).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado')).catch(()=>toast('No se pudo copiar')); }
+  else toast(url);
+}
+function timeAgo(d){ if(!d) return ''; const s=(Date.now()-d)/1000; if(s<60)return 'ahora'; if(s<3600)return Math.floor(s/60)+' min'; if(s<86400)return Math.floor(s/3600)+' h'; const dd=Math.floor(s/86400); if(dd<7)return dd+' d'; return new Date(d).toLocaleDateString('es-CO',{day:'numeric',month:'short'}); }
+
+/* ---------- almacenamiento ---------- */
+const SK='noticias_v1', KK='noticias_api_key';
+const defaults={ lang:'es', auto:false, proxy:'auto', cat:'todas', reg:'todas', bias:'all', off:[], saved:[] };
+let ST = load();
+function load(){ try{ return Object.assign({}, defaults, JSON.parse(localStorage.getItem(SK)||'{}')); }catch(e){ return {...defaults}; } }
+function save(){ try{ localStorage.setItem(SK, JSON.stringify(ST)); }catch(e){} }
+function getKey(){ try{ return localStorage.getItem(KK)||''; }catch(e){ return ''; } }
+function setKey(k){ try{ k? localStorage.setItem(KK,k): localStorage.removeItem(KK); }catch(e){} }
+
+/* ============================================================
+   CATÁLOGO DE MEDIOS  (semilla; el workflow lo amplía/corrige)
+   sesgo_num: -3 izquierda … 0 centro … +3 derecha
+   sesgo: izq | ci | centro | cd | der | estatal
+   ============================================================ */
+/*__CATALOGO__*/
+let CATALOGO = [
+  // ---- Agencias / global ----
+  {id:'reuters',nombre:'Reuters',pais:'Reino Unido',region:'Global',lang:'en',sitio:'https://www.reuters.com',rss:['https://news.google.com/rss/search?q=site:reuters.com+when:2d&hl=en-US&gl=US&ceid=US:en'],yt:'UChqUTb7kYRX8-EiaN3XFrSQ',sesgo:'centro',sesgo_num:0,fuente:'AllSides · MBFC',conf:'alta',fundado:'1851',dueno:'Thomson Reuters',cred:'alta',hist:'Agencia británica fundada en 1851; referencia global de cables neutrales. Clasificada como centro por AllSides y de alta factualidad por MBFC.'},
+  {id:'ap',nombre:'Associated Press',pais:'EE.UU.',region:'Global',lang:'en',sitio:'https://apnews.com',rss:['https://news.google.com/rss/search?q=site:apnews.com+when:2d&hl=en-US&gl=US&ceid=US:en'],yt:'UC52X5wxOL_s5yw0dQk7NtgA',sesgo:'centro',sesgo_num:0,fuente:'AllSides · MBFC',conf:'alta',fundado:'1846',dueno:'Cooperativa sin ánimo de lucro',cred:'alta',hist:'Cooperativa de medios de EE.UU. (1846). Estándar de neutralidad y su libro de estilo lo usan medios de todo el mundo.'},
+  {id:'afp',nombre:'AFP',pais:'Francia',region:'Global',lang:'es',sitio:'https://www.afp.com/es',rss:[],yt:'',sesgo:'centro',sesgo_num:0,fuente:'MBFC',conf:'alta',fundado:'1835',dueno:'Agence France-Presse (semipública)',cred:'alta',hist:'La agencia más antigua del mundo (1835). Neutral, alta factualidad; parcialmente financiada por el Estado francés pero con independencia editorial por ley.'},
+  {id:'bloomberg',nombre:'Bloomberg',pais:'EE.UU.',region:'Global',lang:'en',sitio:'https://www.bloomberg.com',rss:['https://feeds.bloomberg.com/markets/news.rss'],yt:'UCUMZ7gohGI9HcU9VNsr2FJQ',sesgo:'centro',sesgo_num:0,fuente:'AllSides',conf:'alta',fundado:'1990',dueno:'Michael Bloomberg',cred:'alta',hist:'Especializado en economía y mercados. Centro según AllSides; su dueño es un político y filántropo demócrata.'},
+  {id:'economist',nombre:'The Economist',pais:'Reino Unido',region:'Global',lang:'en',sitio:'https://www.economist.com',rss:['https://www.economist.com/latest/rss.xml'],yt:'UC0p5jTq6Xx_DosDFxVXnWaQ',sesgo:'cd',sesgo_num:0.7,fuente:'AllSides · MBFC',conf:'media',fundado:'1843',dueno:'The Economist Group',cred:'alta',hist:'Semanario británico liberal-clásico (1843). Defiende libre mercado y globalización; ligeramente centro-derecha en lo económico, progresista en lo social.'},
+
+  // ---- EE.UU. / Reino Unido (inglés) ----
+  {id:'bbc',nombre:'BBC News',pais:'Reino Unido',region:'Reino Unido',lang:'en',sitio:'https://www.bbc.com/news',rss:['https://feeds.bbci.co.uk/news/world/rss.xml'],yt:'UC16niRr50-MSBwiO3YDb3RA',sesgo:'centro',sesgo_num:-0.3,fuente:'AllSides · MBFC',conf:'alta',fundado:'1922',dueno:'Público (Reino Unido)',cred:'alta',hist:'Radiotelevisión pública británica (1922), financiada por licencia. Centro con leve inclinación de centro-izquierda según AllSides; alta factualidad.'},
+  {id:'guardian',nombre:'The Guardian',pais:'Reino Unido',region:'Reino Unido',lang:'en',sitio:'https://www.theguardian.com',rss:['https://www.theguardian.com/world/rss'],yt:'UCHpw8xwDNhU9gdohEcJu4aA',sesgo:'ci',sesgo_num:-2,fuente:'AllSides · MBFC',conf:'alta',fundado:'1821',dueno:'Scott Trust',cred:'alta',hist:'Diario británico progresista (1821), propiedad de un fideicomiso sin dueño individual. Centro-izquierda; alta factualidad.'},
+  {id:'nyt',nombre:'The New York Times',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.nytimes.com',rss:['https://rss.nytimes.com/services/xml/rss/nyt/World.xml'],yt:'UCqnbDFdCpuN8CMEg0VuEBqA',sesgo:'ci',sesgo_num:-1.5,fuente:'AllSides · MBFC',conf:'alta',fundado:'1851',dueno:'Familia Sulzberger (The NYT Company)',cred:'alta',hist:'Diario de referencia de EE.UU. (1851). Noticias de alta factualidad con sesgo editorial de centro-izquierda según AllSides.'},
+  {id:'wapo',nombre:'The Washington Post',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.washingtonpost.com',rss:['https://feeds.washingtonpost.com/rss/world'],yt:'UCHd62-u_v4DvJ8TCFtpi4GA',sesgo:'ci',sesgo_num:-1.5,fuente:'AllSides · MBFC',conf:'alta',fundado:'1877',dueno:'Jeff Bezos (Nash Holdings)',cred:'alta',hist:'Diario histórico de la capital de EE.UU. (1877), propiedad de Jeff Bezos desde 2013. Centro-izquierda; alta factualidad.'},
+  {id:'wsj',nombre:'The Wall Street Journal',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.wsj.com',rss:['https://feeds.a.dj.com/rss/RSSWorldNews.xml'],yt:'UCK7tptUDHh-RYDsdxO1-5QQ',sesgo:'cd',sesgo_num:1,fuente:'AllSides · MBFC',conf:'alta',fundado:'1889',dueno:'News Corp (Murdoch)',cred:'alta',hist:'Diario económico de EE.UU. (1889), de News Corp. Noticias centristas y alta factualidad, pero página de opinión claramente de derecha.'},
+  {id:'cnn',nombre:'CNN',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.cnn.com',rss:['http://rss.cnn.com/rss/edition_world.rss'],yt:'UCupvZG-5ko_eiXAupbDfxWw',sesgo:'ci',sesgo_num:-1.5,fuente:'AllSides · MBFC',conf:'alta',fundado:'1980',dueno:'Warner Bros. Discovery',cred:'media',hist:'Primer canal de noticias 24 h (1980). Centro-izquierda según AllSides; factualidad mixta-alta según MBFC por su tono editorial.'},
+  {id:'fox',nombre:'Fox News',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.foxnews.com',rss:['https://moxie.foxnews.com/google-publisher/world.xml'],yt:'UCXIJgqnII2ZOINSWNOGFThA',sesgo:'der',sesgo_num:2.3,fuente:'AllSides · MBFC',conf:'alta',fundado:'1996',dueno:'Fox Corporation (Murdoch)',cred:'mixta',hist:'Canal conservador de EE.UU. (1996), de la familia Murdoch. Derecha según AllSides; factualidad mixta, con clara separación entre noticias y opinión.'},
+  {id:'npr',nombre:'NPR',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.npr.org',rss:['https://feeds.npr.org/1004/rss.xml'],yt:'UCJnS2EsPfv46u1JR8cnD0NA',sesgo:'ci',sesgo_num:-1.2,fuente:'AllSides · MBFC',conf:'alta',fundado:'1970',dueno:'Radio pública sin ánimo de lucro',cred:'alta',hist:'Radio pública de EE.UU. (1970). Centro-izquierda; alta factualidad y periodismo pausado.'},
+  {id:'aljz',nombre:'Al Jazeera English',pais:'Catar',region:'Medio Oriente',lang:'en',sitio:'https://www.aljazeera.com',rss:['https://www.aljazeera.com/xml/rss/all.xml'],yt:'UCNye-wNBqNL5ZzHSJj3l8Bg',sesgo:'estatal',sesgo_num:-1,fuente:'MBFC',conf:'media',fundado:'2006',dueno:'Estado de Catar',cred:'media',hist:'Canal internacional financiado por Catar (2006). Amplia cobertura del Sur Global; independiente en muchos temas pero con líneas rojas sobre Catar. Estatal.'},
+  {id:'politico',nombre:'Politico',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.politico.com',rss:['https://rss.politico.com/politics-news.xml'],yt:'UCgjtvMmHXbutALaw9XzRkAg',sesgo:'ci',sesgo_num:-0.8,fuente:'AllSides',conf:'media',fundado:'2007',dueno:'Axel Springer',cred:'alta',hist:'Medio especializado en política de Washington (2007), hoy del grupo alemán Axel Springer. Leve centro-izquierda.'},
+
+  // ---- España ----
+  {id:'elpais',nombre:'El País',pais:'España',region:'España',lang:'es',sitio:'https://elpais.com',rss:['https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada'],yt:'UCnsvJeZO4RigQ898WdDNoBw',sesgo:'ci',sesgo_num:-1.5,fuente:'MBFC',conf:'alta',fundado:'1976',dueno:'Grupo PRISA',cred:'alta',hist:'Diario español nacido con la democracia (1976), del grupo PRISA. Línea socioliberal de centro-izquierda; alta factualidad.'},
+  {id:'elmundo',nombre:'El Mundo',pais:'España',region:'España',lang:'es',sitio:'https://www.elmundo.es',rss:['https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml'],yt:'UCGXbLrVe8vnkiFv7q2vYv3w',sesgo:'cd',sesgo_num:1.2,fuente:'MBFC',conf:'alta',fundado:'1989',dueno:'Unidad Editorial (RCS, Italia)',cred:'alta',hist:'Diario español (1989) de tono liberal-conservador. Centro-derecha; conocido por su periodismo de investigación.'},
+  {id:'abc',nombre:'ABC',pais:'España',region:'España',lang:'es',sitio:'https://www.abc.es',rss:['https://www.abc.es/rss/2.0/portada/'],yt:'UChFgb_m6aDftnqrxTYFO5Xw',sesgo:'der',sesgo_num:1.8,fuente:'MBFC',conf:'media',fundado:'1903',dueno:'Grupo Vocento',cred:'alta',hist:'Uno de los diarios más antiguos de España (1903), monárquico y conservador. Derecha; alta factualidad.'},
+  {id:'eldiario',nombre:'elDiario.es',pais:'España',region:'España',lang:'es',sitio:'https://www.eldiario.es',rss:['https://www.eldiario.es/rss/'],yt:'UCig8aKQHLt8E35_LJKwOscA',sesgo:'izq',sesgo_num:-2.3,fuente:'MBFC',conf:'media',fundado:'2012',dueno:'Socios y redacción',cred:'alta',hist:'Nativo digital español (2012) de propiedad mayoritaria de sus periodistas. Izquierda; enfocado en derechos sociales y control al poder.'},
+
+  // ---- Colombia ----
+  {id:'eltiempo',nombre:'El Tiempo',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.eltiempo.com',rss:['https://www.eltiempo.com/rss/colombia.xml'],yt:'UCv5Oy_TJFvGKXjeNzzJE_PQ',sesgo:'centro',sesgo_num:0.5,fuente:'MBFC',conf:'media',fundado:'1911',dueno:'Grupo económico (Luis C. Sarmiento)',cred:'alta',hist:'El diario más grande de Colombia (1911), hoy del grupo del banquero Luis Carlos Sarmiento. Centro con leve inclinación al establecimiento; alta factualidad.'},
+  {id:'espectador',nombre:'El Espectador',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.elespectador.com',rss:['https://news.google.com/rss/search?q=site:elespectador.com+when:2d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCFYdMS-M4mRdbxPuErz1CVw',sesgo:'ci',sesgo_num:-1,fuente:'MBFC',conf:'media',fundado:'1887',dueno:'Grupo Valorem (Santo Domingo)',cred:'alta',hist:'El periódico más antiguo de Colombia (1887), símbolo de libertad de prensa (fue atacado por Pablo Escobar). Centro-izquierda; alta factualidad.'},
+  {id:'semana',nombre:'Semana',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.semana.com',rss:['https://www.semana.com/arc/outboundfeeds/rss/?outputType=xml'],yt:'UChy3akrVISIU6dKsT0wZTFw',sesgo:'cd',sesgo_num:1.8,fuente:'Análisis académico',conf:'media',fundado:'1982',dueno:'Grupo Gilinski',cred:'media',hist:'Revista de análisis (1982); tras la compra por la familia Gilinski (2020) viró a una línea editorial de derecha marcada, con éxodo de parte de su redacción.'},
+  {id:'blu',nombre:'Blu Radio',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.bluradio.com',rss:['https://news.google.com/rss/search?q=site:bluradio.com+when:2d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCUYokk2dJxFZf7NgxTL-ROg',sesgo:'centro',sesgo_num:0.3,fuente:'sin fuente verificable',conf:'baja',fundado:'2012',dueno:'Valorem / Caracol TV',cred:'media',hist:'Emisora informativa (2012) del grupo Santo Domingo. Centro; sin clasificación formal de terceros, marcada con confianza baja.'},
+
+  // ---- Latinoamérica ----
+  {id:'infobae',nombre:'Infobae',pais:'Argentina',region:'Latinoamérica',lang:'es',sitio:'https://www.infobae.com',rss:['https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml'],yt:'UCvsU0EGXN7Su7MfNqcTGNHg',sesgo:'cd',sesgo_num:1.3,fuente:'MBFC',conf:'media',fundado:'2002',dueno:'Daniel Hadad',cred:'media',hist:'Portal argentino de gran alcance regional (2002). Centro-derecha, crítico de gobiernos de izquierda; volumen altísimo de notas.'},
+  {id:'clarin',nombre:'Clarín',pais:'Argentina',region:'Latinoamérica',lang:'es',sitio:'https://www.clarin.com',rss:['https://www.clarin.com/rss/lo-ultimo/'],yt:'UCjMGMWnToRcQRqmyVB4R2xQ',sesgo:'cd',sesgo_num:1,fuente:'MBFC',conf:'media',fundado:'1945',dueno:'Grupo Clarín',cred:'media',hist:'Mayor diario argentino (1945) y cabeza del mayor grupo mediático del país. Centro-derecha; en conflicto histórico con el kirchnerismo.'},
+  {id:'lajornada',nombre:'La Jornada',pais:'México',region:'Latinoamérica',lang:'es',sitio:'https://www.jornada.com.mx',rss:['https://www.jornada.com.mx/rss/edicion.xml'],yt:'UCWXOegeUI7sWXji5oD4iRVA',sesgo:'izq',sesgo_num:-2.3,fuente:'MBFC',conf:'media',fundado:'1984',dueno:'Cooperativa (DEMOS)',cred:'media',hist:'Diario mexicano de izquierda (1984), cercano a movimientos sociales y al obradorismo. Izquierda declarada.'},
+  {id:'eluniversal',nombre:'El Universal (Mx)',pais:'México',region:'Latinoamérica',lang:'es',sitio:'https://www.eluniversal.com.mx',rss:['https://news.google.com/rss/search?q=site:eluniversal.com.mx+when:2d&hl=es-419&gl=MX&ceid=MX:es-419'],yt:'UC2SEk1w7DgoHs_G3w1biz-w',sesgo:'centro',sesgo_num:0.4,fuente:'MBFC',conf:'media',fundado:'1916',dueno:'Compañía Periodística Nacional',cred:'media',hist:'Diario histórico de México (1916). Centro; factualidad mixta-alta.'},
+
+  // ---- Europa / mundo / estatales ----
+  {id:'dw',nombre:'Deutsche Welle',pais:'Alemania',region:'Europa',lang:'es',sitio:'https://www.dw.com/es',rss:['https://rss.dw.com/rdf/rss-sp-all'],yt:'UCknLrEdhRCp1aegoMqRaCZg',sesgo:'centro',sesgo_num:-0.2,fuente:'MBFC',conf:'alta',fundado:'1953',dueno:'Público (Alemania)',cred:'alta',hist:'Radiotelevisión exterior pública alemana (1953). Neutral y de alta factualidad; financiada por el Estado pero independiente por ley. Publica en español.'},
+  {id:'france24',nombre:'France 24',pais:'Francia',region:'Europa',lang:'es',sitio:'https://www.france24.com/es',rss:['https://www.france24.com/es/rss'],yt:'UCQfwfsi5VrQ8yKZ-UWmAEFg',sesgo:'centro',sesgo_num:-0.2,fuente:'MBFC',conf:'alta',fundado:'2006',dueno:'Público (Francia Médias Monde)',cred:'alta',hist:'Canal internacional público francés (2006). Neutral; edición en español para América Latina. Estatal pero con independencia editorial.'},
+  {id:'euronews',nombre:'Euronews',pais:'Europa',region:'Europa',lang:'es',sitio:'https://es.euronews.com',rss:['https://es.euronews.com/rss'],yt:'UCyoGb3SMlTlB8CLGVH4c8Rw',sesgo:'centro',sesgo_num:0,fuente:'MBFC',conf:'media',fundado:'1993',dueno:'Alpac Capital (Portugal)',cred:'alta',hist:'Canal paneuropeo (1993). Centro; enfoque en la agenda de la Unión Europea, en varios idiomas.'},
+  {id:'rt',nombre:'RT en Español',pais:'Rusia',region:'Europa',lang:'es',sitio:'https://actualidad.rt.com',rss:['https://news.google.com/rss/search?q=site:actualidad.rt.com+when:2d&hl=es-419&gl=US&ceid=US:es-419'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'MBFC',conf:'alta',fundado:'2005',dueno:'Estado ruso',cred:'baja',hist:'Canal financiado por el Estado ruso (2005). MBFC lo clasifica como propaganda estatal y baja factualidad; sancionado en la UE. Estatal — leer con máxima cautela.'},
+  {id:'trt',nombre:'TRT World',pais:'Turquía',region:'Medio Oriente',lang:'en',sitio:'https://www.trtworld.com',rss:['https://news.google.com/rss/search?q=site:trtworld.com+when:2d&hl=en&gl=US&ceid=US:en'],yt:'UC7fWeaHhqgM4Ry-RMpM2YYw',sesgo:'estatal',sesgo_num:0.5,fuente:'MBFC',conf:'media',fundado:'2015',dueno:'Estado turco',cred:'media',hist:'Canal internacional del Estado turco (2015). Cobertura del mundo musulmán con línea afín al gobierno de Ankara. Estatal.'},
+  {id:'cgtn',nombre:'CGTN',pais:'China',region:'Asia',lang:'es',sitio:'https://espanol.cgtn.com',rss:['https://news.google.com/rss/search?q=site:cgtn.com+when:2d&hl=es-419&gl=US&ceid=US:es-419'],yt:'UCgrNz-aDmcr2uuto8_DL2jg',sesgo:'estatal',sesgo_num:0,fuente:'MBFC',conf:'alta',fundado:'2016',dueno:'Estado chino (PCCh)',cred:'baja',hist:'Cadena internacional del Estado chino (2016). Refleja la posición oficial del Partido Comunista; baja factualidad en temas sensibles. Estatal.'},
+  {id:'timesofindia',nombre:'The Times of India',pais:'India',region:'Asia',lang:'en',sitio:'https://timesofindia.indiatimes.com',rss:['https://timesofindia.indiatimes.com/rssfeedstopstories.cms'],yt:'UCckHqySbfy5FcPP6MD_S-Yg',sesgo:'centro',sesgo_num:0.4,fuente:'MBFC',conf:'media',fundado:'1838',dueno:'The Times Group',cred:'media',hist:'El diario en inglés más leído de India (1838). Centro; factualidad mixta por su volumen y titulares sensacionalistas.'},
+  {id:'nhk',nombre:'NHK World',pais:'Japón',region:'Asia',lang:'en',sitio:'https://www3.nhk.or.jp/nhkworld/',rss:['https://news.google.com/rss/search?q=site:nhk.or.jp/nhkworld+when:2d&hl=en-US&gl=US&ceid=US:en'],yt:'UCSPEjw8F2nQDtmUKPFNF7_A',sesgo:'centro',sesgo_num:0,fuente:'MBFC',conf:'alta',fundado:'1925',dueno:'Público (Japón)',cred:'alta',hist:'Radiotelevisión pública japonesa (1925). Neutral y de alta factualidad; servicio internacional en inglés.'},
+
+  // ===== Ampliación verificada (workflow: EE.UU., RU, estatales, Medio Oriente, Asia, Oceanía, África) =====
+  {id:'nbcnews',nombre:'NBC News',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.nbcnews.com',rss:['https://feeds.nbcnews.com/nbcnews/public/news','https://news.google.com/rss/search?q=site:nbcnews.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1.5,fuente:'AllSides (Lean Left) + Media Bias/Fact Check (Left-Center, factual High)',conf:'alta',fundado:'1940',dueno:'NBCUniversal, division de Comcast',cred:'alta',hist:'Division informativa de la cadena NBC (radio desde 1926, noticias formalizadas hacia 1940), propiedad de Comcast a traves de NBCUniversal. AllSides la marca Lean Left y MBFC Left-Center.'},
+  {id:'cbsnews',nombre:'CBS News',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.cbsnews.com',rss:['https://www.cbsnews.com/latest/rss/main','https://news.google.com/rss/search?q=site:cbsnews.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1,fuente:'AllSides (Lean Left) + Media Bias/Fact Check (Left-Center, factual High)',conf:'alta',fundado:'1927',dueno:'CBS News, parte de Paramount Skydance',cred:'alta',hist:'Division de noticias de la cadena CBS, con raices en la radio de 1927 y la era de Edward R. Murrow; hoy parte de Paramount. AllSides la ubica Lean Left y MBFC Left-Center.'},
+  {id:'abcnews',nombre:'ABC News',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://abcnews.go.com',rss:['https://abcnews.go.com/abcnews/topstories','https://news.google.com/rss/search?q=site:abcnews.go.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1,fuente:'AllSides (Lean Left) + Media Bias/Fact Check (Left-Center, factual High)',conf:'alta',fundado:'1945',dueno:'ABC News, The Walt Disney Company',cred:'alta',hist:'Division informativa de la cadena ABC, surgida hacia 1945 y propiedad de Disney. AllSides y MBFC la situan en centro-izquierda.'},
+  {id:'axios',nombre:'Axios',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.axios.com',rss:['https://api.axios.com/feed/','https://news.google.com/rss/search?q=site:axios.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1,fuente:'AllSides (Lean Left) + Media Bias/Fact Check (Left-Center, factual High)',conf:'media',fundado:'2016',dueno:'Cox Enterprises',cred:'alta',hist:'Medio digital fundado en 2016 por ex-editores de Politico, conocido por su formato breve smart brevity; adquirido por Cox Enterprises en 2022. AllSides lo marca Lean Left y MBFC Left-Center.'},
+  {id:'thehill',nombre:'The Hill',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://thehill.com',rss:['https://thehill.com/homenews/feed/','https://news.google.com/rss/search?q=site:thehill.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'centro',sesgo_num:0,fuente:'AllSides (Center) + Media Bias/Fact Check (Least Biased, factual High)',conf:'media',fundado:'1994',dueno:'Nexstar Media Group',cred:'alta',hist:'Publicacion politica centrada en el Congreso de EE.UU., fundada en 1994 y propiedad de Nexstar Media Group desde 2021. AllSides la ubica en Center y MBFC como Least Biased.'},
+  {id:'thetelegraph',nombre:'The Telegraph',pais:'Reino Unido',region:'Reino Unido',lang:'en',sitio:'https://www.telegraph.co.uk',rss:['https://www.telegraph.co.uk/rss.xml','https://news.google.com/rss/search?q=site:telegraph.co.uk+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'cd',sesgo_num:1.5,fuente:'Media Bias/Fact Check (Right, factual Mixed) + AllSides (Lean Right)',conf:'media',fundado:'1855',dueno:'En transicion (familia Barclay; RedBird Capital acordo la compra en 2025)',cred:'mixta',hist:'Diario britanico fundado en 1855, de linea conservadora y estrecho vinculo con el Partido Conservador. MBFC lo clasifica como Right (factualidad Mixed) y AllSides como Lean Right. Su propiedad esta en transicion.'},
+  {id:'theindependent',nombre:'The Independent',pais:'Reino Unido',region:'Reino Unido',lang:'en',sitio:'https://www.independent.co.uk',rss:['https://news.google.com/rss/search?q=site:independent.co.uk+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1.5,fuente:'Media Bias/Fact Check (Left-Center, factual Mixed) + AllSides (Lean Left)',conf:'media',fundado:'1986',dueno:'Independent Digital News & Media (accionistas: E. Lebedev y S. Abuljadayel)',cred:'mixta',hist:'Diario britanico fundado en 1986, hoy solo digital tras cerrar su edicion impresa en 2016. Linea de centro-izquierda; MBFC lo situa en Left-Center pero con factualidad Mixed.'},
+  {id:'newsweek',nombre:'Newsweek',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.newsweek.com',rss:['https://news.google.com/rss/search?q=site:newsweek.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'centro',sesgo_num:1,fuente:'Media Bias/Fact Check (Right-Center, factual Mixed) + AllSides (Center, baja confianza)',conf:'baja',fundado:'1933',dueno:'Newsweek Publishing LLC (Dev Pragad y Johnathan Davis)',cred:'mixta',hist:'Revista semanal estadounidense fundada en 1933, otrora rival de Time; tras su declive paso a un modelo digital de alto volumen. MBFC la califica de centro-derecha con factualidad mixta por su tendencia al sensacionalismo.'},
+  {id:'breitbart',nombre:'Breitbart',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.breitbart.com',rss:['https://feeds.feedburner.com/breitbart','https://news.google.com/rss/search?q=site:breitbart.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'der',sesgo_num:3,fuente:'AllSides (Right) + Media Bias/Fact Check (Questionable, factual Mixed-Low)',conf:'alta',fundado:'2007',dueno:'Breitbart News Network LLC (privada; historicamente con inversion de la familia Mercer)',cred:'baja',hist:'Sitio de noticias y opinion de derecha dura fundado por Andrew Breitbart en 2007 y ligado al nacionalismo populista de Steve Bannon. AllSides lo marca en Right y MBFC como fuente cuestionable de baja factualidad.'},
+  {id:'thedailywire',nombre:'The Daily Wire',pais:'EE.UU.',region:'EE.UU.',lang:'en',sitio:'https://www.dailywire.com',rss:['https://www.dailywire.com/feeds/rss.xml','https://news.google.com/rss/search?q=site:dailywire.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'der',sesgo_num:2.8,fuente:'AllSides (Right) + Media Bias/Fact Check (Right, factual Mixed)',conf:'alta',fundado:'2015',dueno:'The Daily Wire LLC (Ben Shapiro y Jeremy Boreing)',cred:'mixta',hist:'Medio conservador estadounidense fundado en 2015 por Ben Shapiro y Jeremy Boreing, con fuerte presencia en podcasts y video. AllSides y MBFC lo situan claramente a la derecha con factualidad mixta.'},
+  {id:'rfi',nombre:'RFI',pais:'Francia',region:'Europa',lang:'fr',sitio:'https://www.rfi.fr',rss:['https://www.rfi.fr/en/rss','https://news.google.com/rss/search?q=site:rfi.fr+when:3d&hl=fr&gl=FR&ceid=FR:fr'],yt:'',sesgo:'ci',sesgo_num:-0.5,fuente:'Media Bias/Fact Check (Left-Center)',conf:'alta',fundado:'1975',dueno:'France Medias Monde (Estado frances)',cred:'alta',hist:'Radio internacional publica de Francia (France Medias Monde), relanzada como RFI en 1975; emite en frances y una veintena de idiomas. Financiada por el Estado pero editorialmente independiente; fiable, sesgo centro-izquierda.'},
+  {id:'aljazeeraar',nombre:'Al Jazeera árabe',pais:'Catar',region:'Medio Oriente',lang:'ar',sitio:'https://www.aljazeera.net',rss:['https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cae1','https://news.google.com/rss/search?q=site:aljazeera.net+when:3d&hl=ar&gl=EG&ceid=EG:ar'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (Left-Center, Mixed) para la marca; la edicion en arabe es mas controvertida',conf:'media',fundado:'1996',dueno:'Al Jazeera Media Network, financiada por el gobierno de Catar',cred:'media',hist:'Cadena catari (1996) financiada por el Estado de Catar. La edicion en arabe es mas militante que la inglesa: critica con varios gobiernos arabes e Israel y afin a causas islamistas y palestinas. MBFC califica la marca como Left-Center con factualidad mixta.'},
+  {id:'rtx',nombre:'RT (Russia Today)',pais:'Rusia',region:'Europa',lang:'en',sitio:'https://www.rt.com',rss:['https://www.rt.com/rss/','https://news.google.com/rss/search?q=site:rt.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (Questionable, Propaganda, Low)',conf:'alta',fundado:'2005',dueno:'TV-Novosti, ONG financiada por el presupuesto del Estado ruso',cred:'baja',hist:'Canal internacional del Estado ruso (via TV-Novosti) creado en 2005 como herramienta de influencia exterior del Kremlin. Difunde la linea oficial rusa; sancionado y prohibido en la UE y retirado de YouTube tras la invasion de Ucrania en 2022. Leer con maxima cautela.'},
+  {id:'sputnik',nombre:'Sputnik',pais:'Rusia',region:'Europa',lang:'en',sitio:'https://sputnikglobe.com',rss:['https://sputnikglobe.com/export/rss2/archive/index.xml','https://news.google.com/rss/search?q=site:sputnikglobe.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (Questionable, Propaganda, Low)',conf:'alta',fundado:'2014',dueno:'Rossiya Segodnya (agencia estatal rusa)',cred:'baja',hist:'Agencia y radio multilingue del grupo estatal Rossiya Segodnya, lanzada en 2014 para proyectar la narrativa del Kremlin en el exterior. Considerada propaganda; prohibida en la UE desde 2022.'},
+  {id:'tass',nombre:'TASS',pais:'Rusia',region:'Europa',lang:'ru',sitio:'https://tass.com',rss:['https://tass.com/rss/v2.xml','https://news.google.com/rss/search?q=site:tass.com+when:3d&hl=ru&gl=RU&ceid=RU:ru'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (state media, Mixed)',conf:'alta',fundado:'1904',dueno:'Agencia de noticias estatal del gobierno federal ruso',cred:'mixta',hist:'Agencia de noticias oficial de Rusia, con origen en 1904 y nombre TASS desde 1925; propiedad del Estado. Informa hechos basicos con fiabilidad razonable pero encuadra la actualidad segun la posicion oficial del Kremlin.'},
+  {id:'xinhua',nombre:'Xinhua',pais:'China',region:'Asia',lang:'zh',sitio:'https://english.news.cn',rss:['https://english.news.cn/rss/worldrss.xml','https://news.google.com/rss/search?q=site:english.news.cn+when:3d&hl=zh-CN&gl=CN&ceid=CN:zh-Hans'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (Questionable, Pro-China Government)',conf:'alta',fundado:'1931',dueno:'Agencia estatal, organo del Consejo de Estado y del PCCh',cred:'baja',hist:'Agencia de noticias oficial de China (1931), organo directo del Partido-Estado y mayor productor de noticias del pais. Funciona como voz del gobierno y aparato de propaganda exterior.'},
+  {id:'globaltimes',nombre:'Global Times',pais:'China',region:'Asia',lang:'en',sitio:'https://www.globaltimes.cn',rss:['https://www.globaltimes.cn/rss/outbrain.xml','https://news.google.com/rss/search?q=site:globaltimes.cn+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'estatal',sesgo_num:0,fuente:'Media Bias/Fact Check (Questionable, Propaganda, Low)',conf:'alta',fundado:'2009',dueno:'People Daily (diario oficial del Comite Central del PCCh)',cred:'baja',hist:'Tabloide nacionalista publicado por el People Daily, organo del PCCh; su edicion en ingles nacio en 2009. Conocido por un tono agresivo (wolf warrior) que expresa las posiciones mas duras de Pekin.'},
+  {id:'thehindu',nombre:'The Hindu',pais:'India',region:'Asia',lang:'en',sitio:'https://www.thehindu.com',rss:['https://www.thehindu.com/news/national/feeder/default.rss','https://news.google.com/rss/search?q=site:thehindu.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1,fuente:'Media Bias/Fact Check (Left-Center, Mostly Factual)',conf:'alta',fundado:'1878',dueno:'Kasturi & Sons Ltd (familia Kasturi / N. Ram)',cred:'alta',hist:'Periodico de referencia indio fundado en 1878, de propiedad familiar y con reputacion de rigor. Linea editorial progresista de centro-izquierda; MBFC lo valora como Mostly Factual.'},
+  {id:'timesofisrael',nombre:'The Times of Israel',pais:'Israel',region:'Medio Oriente',lang:'en',sitio:'https://www.timesofisrael.com',rss:['https://news.google.com/rss/search?q=site:timesofisrael.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'centro',sesgo_num:0,fuente:'AllSides (Center) y Media Bias/Fact Check (Left-Center, Mostly Factual)',conf:'media',fundado:'2012',dueno:'Privado; fundado por David Horovitz, financista principal Seth Klarman',cred:'alta',hist:'Digital israeli sin filiacion partidista fundado en 2012 por el periodista David Horovitz. AllSides lo situa en el centro y MBFC en centro-izquierda con cobertura mayormente factual (con parcialidad pro-israeli sobre Palestina).'},
+  {id:'haaretz',nombre:'Haaretz',pais:'Israel',region:'Medio Oriente',lang:'he',sitio:'https://www.haaretz.com',rss:['https://www.haaretz.com/srv/all-headlines-rss','https://news.google.com/rss/search?q=site:haaretz.com+when:3d&hl=iw&gl=IL&ceid=IL:iw'],yt:'',sesgo:'ci',sesgo_num:-1.5,fuente:'Media Bias/Fact Check (Left-Center, High) y AllSides (Lean Left)',conf:'alta',fundado:'1918',dueno:'Grupo Haaretz; familia Schocken y Leonid Nevzlin',cred:'alta',hist:'El diario mas antiguo aun en circulacion de Israel (1918), liberal de izquierda y muy critico con la ocupacion y con los gobiernos de derecha. Su seccion de noticias es mas centrada que su pagina de opinion.'},
+  {id:'jerusalempost',nombre:'The Jerusalem Post',pais:'Israel',region:'Medio Oriente',lang:'en',sitio:'https://www.jpost.com',rss:['https://www.jpost.com/rss/rssfeedsheadlines.aspx','https://news.google.com/rss/search?q=site:jpost.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'cd',sesgo_num:1,fuente:'Media Bias/Fact Check (Right-Center, Mostly Factual)',conf:'alta',fundado:'1932',dueno:'Jerusalem Post Group / Mirkaei Tikshoret (Eli Azur)',cred:'alta',hist:'Diario israeli en ingles fundado en 1932 como Palestine Post; originalmente de izquierda, hoy de linea conservadora de centro-derecha. Enfocado a la audiencia internacional y a la diaspora judia.'},
+  {id:'abcau',nombre:'ABC News (Australia)',pais:'Australia',region:'Oceanía',lang:'en',sitio:'https://www.abc.net.au/news',rss:['https://www.abc.net.au/news/feed/2942460/rss.xml','https://news.google.com/rss/search?q=site:abc.net.au+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-0.5,fuente:'Media Bias/Fact Check (Left-Center, High)',conf:'alta',fundado:'1932',dueno:'Gobierno de Australia (corporacion publica independiente, ABC Act 1983)',cred:'alta',hist:'Radiodifusora publica nacional de Australia, creada en 1932 y financiada por el Estado pero independiente por estatuto. Referente informativo fiable; acusada por la derecha de sesgo de centro-izquierda.'},
+  {id:'straitstimes',nombre:'The Straits Times',pais:'Singapur',region:'Asia',lang:'en',sitio:'https://www.straitstimes.com',rss:['https://www.straitstimes.com/news/singapore/rss.xml','https://news.google.com/rss/search?q=site:straitstimes.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'centro',sesgo_num:0.4,fuente:'Media Bias/Fact Check (Least Biased, con influencia gubernamental)',conf:'media',fundado:'1845',dueno:'SPH Media Trust (sin animo de lucro desde 2021)',cred:'alta',hist:'Diario de referencia de Singapur fundado en 1845, hoy bajo SPH Media Trust. Factualmente fiable pero considerado proximo al gobierno (PAP): favorable al establishment y prudente con los temas sensibles del Estado.'},
+  {id:'africanews',nombre:'Africanews',pais:'Congo (Rep.)',region:'África',lang:'en',sitio:'https://www.africanews.com',rss:['https://www.africanews.com/feed/rss','https://news.google.com/rss/search?q=site:africanews.com+when:3d&hl=en-US&gl=US&ceid=US:en'],yt:'',sesgo:'ci',sesgo_num:-1,fuente:'Media Bias/Fact Check (Left-Center, Mostly Factual)',conf:'media',fundado:'2016',dueno:'Euronews (Alpac Capital); sede en Pointe-Noire, Congo',cred:'media',hist:'Primer canal panafricano multilingue (ingles y frances), lanzado en 2016 por Euronews y con sede en Congo-Brazzaville. MBFC lo situa en centro-izquierda, con factualidad Mostly Factual. Comparte estandares y propiedad con Euronews.'},
+
+  // ===== Más fuentes verificadas (Colombia y otras) =====
+  {id:'lasillavacia',nombre:'La Silla Vacia',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.lasillavacia.com',rss:['https://www.lasillavacia.com/feed/','https://news.google.com/rss/search?q=site:lasillavacia.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCMMJRVRhqqSa8bStl6uxxCg',sesgo:'ci',sesgo_num:-1.5,fuente:'Media Bias/Fact Check (Left-Center, High) — verificado jul-2026',conf:'alta',fundado:'2009',dueno:'Independiente (fundado y dirigido por Juanita Leon)',cred:'alta',hist:'Medio digital de analisis politico fundado en 2009 por Juanita Leon, especializado en \'quien es quien\' del poder y periodismo de datos. MBFC lo califica centro-izquierda con reporte factual Alto.'},
+  {id:'caracolradio',nombre:'Caracol Radio',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://caracol.com.co',rss:['https://caracol.com.co/arc/outboundfeeds/rss/?outputType=xml','https://news.google.com/rss/search?q=site:caracol.com.co+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCNAJlRrXYFi8jo889TbxPiw',sesgo:'centro',sesgo_num:0,fuente:'Sin fuente verificable de terceros dedicada (MBFC no la clasifica)',conf:'baja',fundado:'1948',dueno:'Grupo PRISA (Union Radio), Espana',cred:'media',hist:'Cadena radial fundada en 1948; desde 1999 la controla el Grupo PRISA (Espana), el mismo de El Pais. Es independiente de Caracol Television pese al nombre compartido de origen. Linea de centro. Nota: \'Caracol\' tambien puede referir a Noticias Caracol (TV, familia Santo Domingo, YouTube UC2Xq2PK-got3Rtz9ZJ32hLQ).'},
+  {id:'elcolombiano',nombre:'El Colombiano',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.elcolombiano.com',rss:['https://www.elcolombiano.com/rss/portada.xml','https://news.google.com/rss/search?q=site:elcolombiano.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCQfe_8Jml53OFwr3R5DAn4g',sesgo:'cd',sesgo_num:1.5,fuente:'Sin fuente verificable de terceros (MBFC/AllSides no lo clasifican); tradicion conservadora documentada (historia editorial / Wikipedia)',conf:'baja',fundado:'1912',dueno:'Familia Gomez Hernandez (El Colombiano S.A.)',cred:'media',hist:'Principal diario de Medellin y Antioquia, fundado en 1912 y tradicionalmente ligado al Partido Conservador. Linea editorial de centro-derecha/conservadora, propiedad de la familia Gomez Hernandez.'},
+  {id:'rcnnoticiasrcn',nombre:'RCN',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.noticiasrcn.com',rss:['https://news.google.com/rss/search?q=site:noticiasrcn.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCnr6pbeXJmkNQJ9PSYle7QQ',sesgo:'cd',sesgo_num:1.5,fuente:'Sin fuente verificable de terceros dedicada (MBFC no la clasifica); caracterizacion frecuente de centro-derecha/afin al uribismo en la literatura periodistica. Ajuste: sesgo_num 2->1.5 para coherencia con la etiqueta \'centro-derecha\'',conf:'baja',fundado:'1949',dueno:'Organizacion Ardila Lulle',cred:'media',hist:'Marca informativa (radio RCN 1949 y Noticias RCN / RCN Television) de la Organizacion Ardila Lulle. Percibida como de centro-derecha y afin al establecimiento conservador. No expone RSS publico que resuelva (el feed de rcnradio.com devuelve HTML/S3 bloqueado). Canal YouTube = Noticias RCN; RCN Radio usa UCSCAJJ1RJ4rfRTVW4gjYTpQ.'},
+  {id:'publico',nombre:'Publico',pais:'Espana',region:'España',lang:'es',sitio:'https://www.publico.es',rss:['https://news.google.com/rss/search?q=site:publico.es+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UC9WiW-rkYhxl-04PeOEbf1w',sesgo:'ci',sesgo_num:-2.5,fuente:'Media Bias/Fact Check (Left-Center -4.7, High) — verificado',conf:'alta',fundado:'2007',dueno:'Display Connectors / Jaume Roures (entorno Mediapro)',cred:'alta',hist:'Diario de izquierda fundado en 2007; cerro su edicion impresa en 2012 y sigue como digital, con posturas republicanas y anti-monarquicas. MBFC lo clasifica como centro-izquierda (de los mas a la izquierda) con reporte factual Alto. No se encontro feed RSS publico que resuelva actualmente.'},
+  {id:'lanacion',nombre:'La Nacion',pais:'Argentina',region:'Latinoamérica',lang:'es',sitio:'https://www.lanacion.com.ar',rss:['https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml','https://news.google.com/rss/search?q=site:lanacion.com.ar+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCba3hpU7EFBSk817y9qZkiA',sesgo:'cd',sesgo_num:1.5,fuente:'Media Bias/Fact Check (Right-Center 3.2, High) — verificado',conf:'alta',fundado:'1870',dueno:'S.A. La Nacion (familias Mitre / Saguier)',cred:'alta',hist:'Fundado en 1870 por Bartolome Mitre; diario tradicional de linea conservadora-liberal, historicamente ligado al sector agropecuario y a la centroderecha. MBFC: centro-derecha, reporte factual Alto.'},
+  {id:'milenio',nombre:'Milenio',pais:'Mexico',region:'Latinoamérica',lang:'es',sitio:'https://www.milenio.com',rss:['https://news.google.com/rss/search?q=site:milenio.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCFxHplbcoJK9m70c4VyTIxg',sesgo:'centro',sesgo_num:0.5,fuente:'Sin ficha MBFC dedicada; estudio academico (Scielo, cobertura electoral) reporta sesgo alto en coyunturas electorales',conf:'baja',fundado:'2000',dueno:'Grupo Multimedios / Grupo Milenio (Monterrey)',cred:'media',hist:'Diario nacional del Grupo Multimedios lanzado en 2000, con raices regiomontanas; linea de centro/establishment. Estudios academicos han detectado sesgos en su cobertura electoral. No se encontro RSS publico que resuelva (el CMS devuelve pagina 404 en /rss).'},
+  {id:'elcomercio',nombre:'El Comercio',pais:'Peru',region:'Latinoamérica',lang:'es',sitio:'https://elcomercio.pe',rss:['https://elcomercio.pe/arc/outboundfeeds/rss/?outputType=xml','https://news.google.com/rss/search?q=site:elcomercio.pe+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCA5MMdT1ePEEi9ACfCelIKQ',sesgo:'cd',sesgo_num:2,fuente:'Sin fuente verificable de terceros (Ground News confirma que MBFC/AllSides/Ad Fontes no lo clasifican); alineacion conservadora/centro-derecha documentada (Wikipedia) y control del Grupo El Comercio (familia Miro Quesada)',conf:'baja',fundado:'1839',dueno:'Grupo El Comercio (familia Miro Quesada)',cred:'media',hist:'Decano de la prensa peruana, fundado en 1839; encabeza el mayor grupo mediatico del pais (controla America TV y Canal N, ~70-80% del mercado). Linea conservadora/centro-derecha, ha respaldado candidatos de derecha.'},
+  {id:'pagina12',nombre:'Pagina/12',pais:'Argentina',region:'Latinoamérica',lang:'es',sitio:'https://www.pagina12.com.ar',rss:['https://www.pagina12.com.ar/arc/outboundfeeds/rss/?outputType=xml','https://news.google.com/rss/search?q=site:pagina12.com.ar+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCJNDedOnljCssaiRZqg8-Dg',sesgo:'ci',sesgo_num:-2.5,fuente:'Sin ficha MBFC dedicada; clasificacion academica (estudios de sesgo mediatico en Argentina) y Media Ownership Monitor: izquierda/progresista, afin al kirchnerismo',conf:'media',fundado:'1987',dueno:'Grupo Octubre (Victor Santa Maria) desde 2016',cred:'media',hist:'Fundado en 1987; emblema de la centroizquierda y el progresismo argentino, afin al kirchnerismo. Desde 2016 lo controla el Grupo Octubre de Victor Santa Maria. Sus feeds /rss/ heredados dejaron de resolver; se usa el feed Arc.'},
+  {id:'elmercurioemol',nombre:'El Mercurio',pais:'Chile',region:'Latinoamérica',lang:'es',sitio:'https://www.emol.com',rss:['https://news.google.com/rss/search?q=site:emol.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCdaS9_8DNHa5tcf1DZ-0Yyw',sesgo:'cd',sesgo_num:2,fuente:'Media Bias/Fact Check (Emol/El Mercurio Online: Right-Center, Mostly Factual, credibilidad Alta)',conf:'alta',fundado:'1900',dueno:'Empresa Periodistica El Mercurio S.A.P. (familia Edwards)',cred:'media',hist:'El Mercurio de Santiago (1900; su antecesor de Valparaiso es de 1827) es el decano de la prensa chilena, conservador y de derecha, controlado por la familia Edwards; Emol es su portal online (1999). MBFC: centro-derecha, \'Mostly Factual\'. Sus feeds RSS heredados (RSS20/index.asp) hoy devuelven HTML; no hay feed que resuelva.'},
+  {id:'pulzo',nombre:'Pulzo',pais:'Colombia',region:'Colombia',lang:'es',sitio:'https://www.pulzo.com',rss:['https://news.google.com/rss/search?q=site:pulzo.com+when:3d&hl=es-419&gl=CO&ceid=CO:es-419'],yt:'UCEOTRMgfd7uXZD6goFTQP6A',sesgo:'centro',sesgo_num:0,fuente:'Sin fuente verificable de terceros (MBFC/AllSides no lo clasifican)',conf:'baja',fundado:'2013',dueno:'Pulzo S.A.S. (nativo digital colombiano)',cred:'media',hist:'Portal de noticias nativo digital fundado en 2013, uno de los de mayor trafico en Colombia; produce y agrega noticias con estilo agil y de alto volumen. Sin clasificacion de sesgo por terceros.'},
+];
+/*__CATALOGO_END__*/
+
+const byId = {}; CATALOGO.forEach(o=>byId[o.id]=o);
+/* dominio → id de medio (para reconocer el sesgo en resultados externos de GDELT) */
+const DOMAIN_IDX={};
+CATALOGO.forEach(o=>{ try{ DOMAIN_IDX[new URL(o.sitio).hostname.replace(/^www\./,'')]=o.id; }catch(e){} });
+
+/* clase css de sesgo a partir del número/etiqueta */
+function biasClass(o){
+  if(o.sesgo==='estatal') return 'estatal';
+  const n=o.sesgo_num;
+  if(n<=-1.5) return 'izq'; if(n<=-0.5) return 'ci'; if(n<0.5) return 'centro'; if(n<1.5) return 'cd'; return 'der';
+}
+function biasWord(o){
+  if(o.sesgo==='estatal') return 'Estatal';
+  const c=biasClass(o);
+  return {izq:'Izquierda',ci:'Centro-izq',centro:'Centro',cd:'Centro-der',der:'Derecha'}[c];
+}
+function biasBadge(o){
+  const c=biasClass(o);
+  const t=o.sesgo==='estatal'? ('Medio estatal · '+o.pais) : ('Sesgo: '+biasWord(o)+' · fuente: '+(o.fuente||'—'));
+  return `<span class="bbadge ${c}" title="${esc(t)}"><span class="dt"></span>${biasWord(o)}</span>`;
+}
+
+/* ============================================================
+   COORDENADAS para el mapa (lat,lng)
+   ============================================================ */
+const COORD_PAIS={
+  'EE.UU.':[38,-97],'Reino Unido':[54,-2],'España':[40,-3.7],'Colombia':[4.6,-74.1],'Argentina':[-34.6,-58.4],
+  'México':[19.4,-99.1],'Francia':[46.6,2.3],'Alemania':[51.2,10.4],'Rusia':[55.7,37.6],'China':[39.9,116.4],
+  'Catar':[25.3,51.5],'Turquía':[39.9,32.8],'India':[28.6,77.2],'Japón':[35.7,139.7],
+  'Israel':[31.5,34.9],'Australia':[-25,134],'Singapur':[1.35,103.8],'Congo (Rep.)':[-4.26,15.24],
+  'Perú':[-9.2,-75],'Chile':[-33.4,-70.7],
+  // regiones (respaldo cuando no hay ciudad ni país exacto)
+  'Europa':[50.1,9.1],'Latinoamérica':[-15,-60],'Medio Oriente':[31,35.5],'Asia':[34,100],
+  'Oceanía':[-25,134],'África':[2,20],'Global':[20,0]
+};
+/* ciudades para dar el toque "por ciudades" */
+const CIUDADES={
+  'washington':[38.9,-77],'new york':[40.7,-74],'nueva york':[40.7,-74],'los angeles':[34,-118.2],'london':[51.5,-0.12],
+  'londres':[51.5,-0.12],'paris':[48.85,2.35],'parís':[48.85,2.35],'berlin':[52.5,13.4],'berlín':[52.5,13.4],
+  'madrid':[40.4,-3.7],'barcelona':[41.4,2.17],'moscow':[55.75,37.6],'moscú':[55.75,37.6],'kyiv':[50.45,30.5],
+  'kiev':[50.45,30.5],'gaza':[31.5,34.45],'tel aviv':[32.08,34.78],'jerusalem':[31.78,35.22],'jerusalén':[31.78,35.22],
+  'beijing':[39.9,116.4],'pekín':[39.9,116.4],'tokyo':[35.68,139.7],'tokio':[35.68,139.7],'delhi':[28.6,77.2],
+  'bogota':[4.6,-74.08],'bogotá':[4.6,-74.08],'medellin':[6.25,-75.56],'medellín':[6.25,-75.56],'cali':[3.45,-76.53],
+  'buenos aires':[-34.6,-58.4],'ciudad de méxico':[19.4,-99.1],'mexico city':[19.4,-99.1],'caracas':[10.5,-66.9],
+  'lima':[-12.05,-77.04],'santiago':[-33.45,-70.66],'brasilia':[-15.8,-47.9],'são paulo':[-23.55,-46.63],
+  'doha':[25.3,51.5],'dubai':[25.2,55.27],'estambul':[41,28.98],'istanbul':[41,28.98],'roma':[41.9,12.5],'rome':[41.9,12.5],
+  'bruselas':[50.85,4.35],'brussels':[50.85,4.35],'ginebra':[46.2,6.14],'seúl':[37.57,126.98],'seoul':[37.57,126.98]
+};
+
+/* ============================================================
+   PROXY / lectura de feeds
+   ============================================================ */
+/* proxies que devuelven el cuerpo crudo + cabecera CORS (verificados jul-2026).
+   corsproxy.io se descartó: no sirve en file:// ni GitHub Pages sin pagar. */
+const PROXIES={
+  allorigins: u=>'https://api.allorigins.win/raw?url='+enc(u),
+  codetabs:   u=>'https://api.codetabs.com/v1/proxy/?quest='+enc(u),
+  corseu:     u=>'https://cors.eu.org/'+u,
+  direct:     u=>u
+};
+/* la fiabilidad de cada proxy cambia por día; al arrancar sondeamos y usamos el que responda */
+let PROXY_WINNER=null, probeDone=null;
+function proxyChain(){
+  const p=ST.proxy, all=['allorigins','corseu','codetabs','direct'];
+  if(p==='direct') return ['direct','corseu','allorigins'];
+  if(p&&p!=='auto'&&PROXIES[p]) return [p,...all.filter(x=>x!==p)];
+  return PROXY_WINNER ? [PROXY_WINNER,...all.filter(x=>x!==PROXY_WINNER)] : all;
+}
+async function probeProxy(){
+  if(ST.proxy && ST.proxy!=='auto') return;   // proxy fijado por el usuario
+  if(probeDone) return probeDone;
+  probeDone=(async()=>{
+    const test='https://feeds.bbci.co.uk/news/world/rss.xml';
+    const cands=['allorigins','corseu','codetabs'];
+    const res=await Promise.all(cands.map(name=>(async()=>{
+      try{ const c=new AbortController(); const to=setTimeout(()=>c.abort(),5500);
+        const r=await fetch(PROXIES[name](test),{signal:c.signal}); clearTimeout(to);
+        if(!r.ok) return null; const t=await r.text();
+        return /<rss|<feed|<channel/i.test(t.slice(0,400))?name:null;
+      }catch(e){ return null; }
+    })()));
+    PROXY_WINNER=res.find(Boolean)||null;
+  })();
+  return probeDone;
+}
+async function fetchText(url,{timeout=8000}={}){
+  for(const name of proxyChain()){
+    try{
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),timeout);
+      const r=await fetch(PROXIES[name](url),{signal:ctrl.signal,headers:{'Accept':'text/xml,application/xml,application/rss+xml,text/html,*/*'}});
+      clearTimeout(to);
+      if(!r.ok) continue;
+      const t=await r.text();
+      if(t&&t.length>60) return t;
+    }catch(e){/* siguiente proxy */}
+  }
+  throw new Error('sin proxy');
+}
+/* carrera de proxies en paralelo: gana el primero que responda (para GDELT / búsquedas puntuales) */
+async function fetchViaAny(url,timeout=8000){
+  const names=proxyChain().filter(n=>n!=='direct');
+  return await Promise.any(names.map(async name=>{
+    const c=new AbortController(); const to=setTimeout(()=>c.abort(),timeout);
+    try{ const r=await fetch(PROXIES[name](url),{signal:c.signal}); const t=await r.text(); clearTimeout(to);
+      if(r.ok&&t&&t.length>40) return t; throw new Error('bad'); }
+    catch(e){ clearTimeout(to); throw e; }
+  }));
+}
+
+/* ---------- parseo RSS/Atom ---------- */
+function tag(node,name){ const e=node.getElementsByTagName(name); return e&&e[0]?e[0]:null; }
+function tagText(node,name){ const e=tag(node,name); return e? (e.textContent||'').trim():''; }
+function pickImg(node,desc){
+  // media:content / media:thumbnail
+  const mc=node.getElementsByTagName('media:content');
+  for(const m of mc){ const u=m.getAttribute('url'); const ty=m.getAttribute('type')||''; const me=m.getAttribute('medium')||''; if(u&&(me==='image'||/image/.test(ty)||/\.(jpg|jpeg|png|webp)/i.test(u))) return u; }
+  const mt=node.getElementsByTagName('media:thumbnail'); if(mt[0]&&mt[0].getAttribute('url')) return mt[0].getAttribute('url');
+  const en=node.getElementsByTagName('enclosure'); for(const e of en){ const ty=e.getAttribute('type')||''; if(/image/.test(ty)&&e.getAttribute('url')) return e.getAttribute('url'); }
+  const it=node.getElementsByTagName('itunes:image'); if(it[0]&&it[0].getAttribute('href')) return it[0].getAttribute('href');
+  const m=(desc||'').match(/<img[^>]+src=["']([^"']+)["']/i); if(m) return m[1];
+  return '';
+}
+function parseFeed(xml, outlet){
+  let doc; try{ doc=new DOMParser().parseFromString(xml,'text/xml'); }catch(e){ return []; }
+  if(!doc||doc.getElementsByTagName('parsererror').length) {
+    try{ doc=new DOMParser().parseFromString(xml,'text/html'); }catch(e){ return []; }
+  }
+  let nodes=[...doc.getElementsByTagName('item')];
+  if(!nodes.length) nodes=[...doc.getElementsByTagName('entry')];
+  const out=[];
+  for(const n of nodes){
+    const title=stripHtml(tagText(n,'title')); if(!title) continue;
+    let link=tagText(n,'link');
+    if(!link){ const ls=n.getElementsByTagName('link'); for(const l of ls){ const rel=l.getAttribute('rel'); if(!rel||rel==='alternate'){ link=l.getAttribute('href')||''; if(link)break; } } }
+    let descRaw=tagText(n,'description')||tagText(n,'summary')||tagText(n,'content:encoded')||tagText(n,'content');
+    const desc=stripHtml(descRaw).slice(0,320);
+    const dateS=tagText(n,'pubDate')||tagText(n,'published')||tagText(n,'updated')||tagText(n,'dc:date');
+    let ts=dateS? Date.parse(dateS): 0; if(isNaN(ts)) ts=0;
+    // Google News añade " - Medio" al final del titular: lo quitamos
+    let ftitle=title;
+    if(link && link.indexOf('news.google.')>-1) ftitle=title.replace(/\s+[-–|]\s+[^-–|]{2,45}$/,'').trim()||title;
+    const img=pickImg(n,descRaw);
+    out.push({title:ftitle,link,desc,ts,img,outlet:outlet.id});
+  }
+  return out;
+}
+
+/* ---------- caché por medio ---------- */
+/* cascada de estrategias para un feed: proxy crudo → allorigins/get → rss2json */
+async function fetchOutletItems(outlet){
+  for(const url of (outlet.rss||[])){
+    // 1) proxies crudos → DOMParser
+    for(const name of proxyChain()){
+      try{
+        const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),7000);
+        const r=await fetch(PROXIES[name](url),{signal:ctrl.signal}); clearTimeout(to);
+        if(!r.ok) continue;
+        const t=await r.text(); if(!t||t.length<60) continue;
+        const items=parseFeed(t,outlet); if(items.length) return items;
+      }catch(e){}
+    }
+    // 2) AllOrigins /get: el XML viene como string dentro de JSON.contents
+    try{
+      const r=await fetch('https://api.allorigins.win/get?url='+enc(url));
+      const j=await r.json(); if(j&&j.contents){ const items=parseFeed(j.contents,outlet); if(items.length) return items; }
+    }catch(e){}
+    // 3) rss2json: JSON ya limpio (máx ~10 sin llave), último recurso
+    try{
+      const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+enc(url));
+      const j=await r.json();
+      if(j&&j.status==='ok'&&Array.isArray(j.items)){
+        const items=j.items.map(it=>({title:stripHtml(it.title),link:it.link,
+          desc:stripHtml(it.description||it.content||'').slice(0,320),
+          ts:Date.parse(it.pubDate)||0, img:it.thumbnail||(it.enclosure&&it.enclosure.link)||'', outlet:outlet.id})).filter(a=>a.title);
+        if(items.length) return items;
+      }
+    }catch(e){}
+  }
+  return [];
+}
+const memCache={};
+async function loadOutlet(outlet){
+  const ttl=10*60*1000, ck='nfeed_'+outlet.id;
+  if(memCache[ck]&&Date.now()-memCache[ck].t<ttl) return memCache[ck].items;
+  try{ const raw=JSON.parse(localStorage.getItem(ck)||'null'); if(raw&&Date.now()-raw.t<ttl){ memCache[ck]=raw; return raw.items; } }catch(e){}
+  if(!outlet.rss||!outlet.rss.length) return [];
+  let items=await fetchOutletItems(outlet);
+  // sin resultado → sirve la última copia buena (modo offline / proxies caídos)
+  if(!items.length){ try{ const raw=JSON.parse(localStorage.getItem(ck)||'null'); if(raw&&raw.items&&raw.items.length) return raw.items; }catch(e){} }
+  const rec={t:Date.now(),items};
+  memCache[ck]=rec; try{ localStorage.setItem(ck,JSON.stringify(rec)); }catch(e){}
+  return items;
+}
+async function mapLimit(items,limit,fn){
+  const ret=new Array(items.length); let i=0;
+  const workers=Array.from({length:Math.min(limit,items.length||1)},async()=>{
+    while(i<items.length){ const idx=i++; try{ ret[idx]=await fn(items[idx],idx); }catch(e){ ret[idx]=null; } }
+  });
+  await Promise.all(workers); return ret;
+}
+
+/* ---------- traducción ---------- */
+async function translate(text,target){
+  target=target||ST.lang||'es'; if(!text) return text;
+  const key=getKey();
+  // 1) Anthropic (mejor calidad)
+  if(key){
+    try{
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,messages:[{role:'user',content:`Traduce al ${target==='es'?'español':target} de forma natural y neutral, sin añadir nada. Devuelve SOLO la traducción:\n\n${text}`}]})});
+      const j=await r.json(); const t=j&&j.content&&j.content[0]&&j.content[0].text; if(t) return t.trim();
+    }catch(e){}
+  }
+  // 2) Google (endpoint gtx): directo (manda CORS *) y si falla, vía proxy
+  try{
+    const u='https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl='+target+'&dt=t&q='+enc(text);
+    let raw='';
+    try{ const r=await fetch(u); if(r.ok) raw=await r.text(); }catch(e){}
+    if(!raw){ try{ raw=await fetchText(u,{timeout:9000}); }catch(e){} }
+    if(raw){ const data=JSON.parse(raw); if(data&&data[0]) return data[0].map(s=>s[0]).join(''); }
+  }catch(e){}
+  // 3) MyMemory (respaldo oficial; asume origen inglés si no se detecta)
+  try{
+    const r=await fetch('https://api.mymemory.translated.net/get?q='+enc(text.slice(0,480))+'&langpair=en|'+target);
+    const j=await r.json(); const t=j&&j.responseData&&j.responseData.translatedText; if(t&&!/MYMEMORY WARNING/i.test(t)) return t;
+  }catch(e){}
+  return text;
+}
+
+/* ============================================================
+   ESTADO DE LA PORTADA
+   ============================================================ */
+let FEED=[], shown=0, PAGE=18, loading=false, feedToken=0;
+function activeOutlets(){
+  return CATALOGO.filter(o=>!ST.off.includes(o.id))
+    .filter(o=> ST.reg==='todas' || o.region===ST.reg || (ST.reg==='Latinoamérica'&&o.region==='Colombia'))
+    .filter(o=> ST.bias==='all' || biasClass(o)===ST.bias);
+}
+async function buildFeed(){
+  const myToken=++feedToken; loading=true;
+  const feed=$('#feed'); feed.innerHTML='';
+  for(let i=0;i<8;i++){ feed.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>')); }
+  updateNet();
+  const outs=activeOutlets();
+  if(!outs.length){ feed.innerHTML=''; feed.appendChild(el('div','empty','<div class="ic">🗂️</div><p>No hay fuentes activas con esos filtros. Cambia el sesgo o la región, o enciende medios en Ajustes.</p>')); loading=false; return; }
+  FEED=[]; shown=0;
+  const seen=new Set();
+  let firstPaint=false, pending=false, lastPaint=0;
+  const repaint=()=>{ if(myToken!==feedToken) return; FEED.sort((a,b)=>b.ts-a.ts); applyFeedFilters(); renderTicker(); if($('#v-mundo').classList.contains('on')) plotMap(); };
+  const schedulePaint=()=>{
+    if(myToken!==feedToken) return; const now=Date.now();
+    if(!firstPaint){ firstPaint=true; lastPaint=now; repaint(); return; }
+    if(now-lastPaint>700){ lastPaint=now; repaint(); }
+    else if(!pending){ pending=true; setTimeout(()=>{ pending=false; lastPaint=Date.now(); repaint(); },700); }
+  };
+  await probeProxy();
+  if(myToken!==feedToken) return;   // el usuario cambió de filtro/pestaña: abandona
+  await mapLimit(outs,6,async(o)=>{
+    const items=await loadOutlet(o);
+    if(myToken!==feedToken) return;
+    let added=false;
+    for(const a of items){ const k=a.title.toLowerCase().slice(0,70); if(k&&!seen.has(k)){ seen.add(k); FEED.push(a); added=true; } }
+    if(added) schedulePaint();
+  });
+  if(myToken!==feedToken) return;
+  loading=false;
+  if(!FEED.length){ feed.innerHTML=''; feed.appendChild(el('div','empty','<div class="ic">📭</div><p>No pudimos cargar noticias ahora. Revisa tu conexión, toca “Actualizar” o cambia el “puente” en Ajustes › Conexión.</p>')); $('#loadmore').style.display='none'; return; }
+  repaint();
+}
+function matchesFilters(a){
+  const o=byId[a.outlet]; if(!o) return false;
+  if(ST.cat!=='todas' && catOf(a,o)!==ST.cat) return false;
+  const q=($('#q').value||'').trim().toLowerCase();
+  if(q && !(a.title.toLowerCase().includes(q)||(a.desc||'').toLowerCase().includes(q)||o.nombre.toLowerCase().includes(q))) return false;
+  return true;
+}
+/* categoría heurística por palabras clave */
+const CATKW={
+  politica:['gobierno','president','elecc','congreso','senado','ministro','política','partido','vot','parliament','election','minister'],
+  economia:['econom','mercado','dólar','peso','inflación','bolsa','empresa','banco','pib','stock','market','trade','economy','inflation'],
+  tecnologia:['tecnolog','inteligencia artificial',' ia ','app','google','apple','microsoft','tech','software','startup','chip','ai '],
+  ciencia:['ciencia','estudio','investigación','salud','clima','nasa','espacio','science','climate','health','research'],
+  deportes:['fútbol','futbol','gol','mundial','liga','nba','tenis','olímp','sport','soccer','match','league'],
+  cultura:['música','cine','película','arte','festival','cultura','libro','music','film','movie','art','culture'],
+  mundo:['guerra','ataque','ucrania','gaza','israel','china','rusia','ee.uu','onu','war','attack','ukraine','global','world']
+};
+function catOf(a,o){
+  const t=(a.title+' '+(a.desc||'')).toLowerCase();
+  for(const c of ['politica','economia','tecnologia','ciencia','deportes','cultura','mundo']){
+    if(CATKW[c].some(k=>t.includes(k))) return c;
+  }
+  return 'mundo';
+}
+function applyFeedFilters(){
+  const feed=$('#feed'); feed.innerHTML=''; shown=0;
+  const list=FEED.filter(matchesFilters);
+  if(!list.length){
+    feed.appendChild(el('div','empty','<div class="ic">📭</div><p>No encontramos noticias con esos filtros. Prueba con “Actualizar”, otra región o menos filtros.</p>'));
+    $('#loadmore').style.display='none'; return;
+  }
+  FEED._filtered=list;
+  renderMore();
+}
+function renderMore(){
+  const list=FEED._filtered||[]; const feed=$('#feed');
+  const slice=list.slice(shown,shown+PAGE);
+  slice.forEach(a=>feed.appendChild(card(a)));
+  shown+=slice.length;
+  $('#loadmore').style.display= shown<list.length? 'flex':'none';
+}
+function card(a){
+  const o=byId[a.outlet]; if(!o) return extCard(a);
+  const c=el('article','art');
+  const cat=catOf(a,o);
+  const catLabel={mundo:'Mundo',politica:'Política',economia:'Economía',tecnologia:'Tecnología',ciencia:'Ciencia',deportes:'Deportes',cultura:'Cultura'}[cat];
+  c.innerHTML=`
+    <div class="thumb" ${a.img?`style="background-image:url('${esc(a.img)}')"`:''}>
+      ${a.img?'':'<div class="noimg">📰</div>'}
+      <span class="cat">${catLabel}</span>
+    </div>
+    <div class="art-b">
+      <div class="art-src">${biasBadge(o)} <span class="nm">${esc(o.nombre)}</span> · ${esc(o.pais)} · ${timeAgo(a.ts)}</div>
+      <h3 class="art-t">${esc(a.title)}</h3>
+      <p class="art-x">${esc(a.desc||'')}</p>
+      <div class="art-foot">
+        <a class="lnk" href="${esc(a.link)}" target="_blank" rel="noopener">Abrir ↗</a>
+        <button class="lnk tr">🌐 Traducir</button>
+        <button class="lnk ver">🧭 Canal</button>
+        <button class="lnk sh">↗ Compartir</button>
+      </div>
+    </div>`;
+  c.querySelector('.sh').addEventListener('click',()=>shareArticle(a.title,a.link));
+  // traducir
+  c.querySelector('.tr').addEventListener('click',async(e)=>{
+    const btn=e.currentTarget; if(btn.classList.contains('done')){ c.querySelector('.art-t').textContent=a.title; c.querySelector('.art-x').textContent=a.desc||''; btn.classList.remove('done'); btn.innerHTML='🌐 Traducir'; return; }
+    btn.innerHTML='… traduciendo'; btn.disabled=true;
+    const [tt,tx]=await Promise.all([translate(a.title,ST.lang), a.desc?translate(a.desc,ST.lang):Promise.resolve('')]);
+    c.querySelector('.art-t').textContent=tt; if(tx)c.querySelector('.art-x').textContent=tx;
+    btn.disabled=false; btn.classList.add('done'); btn.innerHTML='✓ Original';
+  });
+  c.querySelector('.ver').addEventListener('click',()=>openChannel(o.id));
+  return c;
+}
+/* tarjeta para fuentes externas (GDELT): sesgo solo si reconocemos el dominio */
+function extCard(a){
+  const c=el('article','art');
+  const dom=(a.ext&&a.ext.domain)||''; const o=DOMAIN_IDX[dom]?byId[DOMAIN_IDX[dom]]:null;
+  const badge=o?biasBadge(o):'<span class="bbadge centro" title="Medio no clasificado por AllSides/MBFC"><span class="dt"></span>Sin clasificar</span>';
+  const nm=o?o.nombre:(dom||'Fuente externa');
+  const extra=(a.ext&&a.ext.country)?(' · '+esc(a.ext.country)):'';
+  c.innerHTML=`
+    <div class="thumb" ${a.img?`style="background-image:url('${esc(a.img)}')"`:''}>
+      ${a.img?'':'<div class="noimg">🌐</div>'}<span class="cat">Mundo</span></div>
+    <div class="art-b">
+      <div class="art-src">${badge} <span class="nm">${esc(nm)}</span>${extra} · ${timeAgo(a.ts)}</div>
+      <h3 class="art-t">${esc(a.title)}</h3>
+      <p class="art-x">${esc(a.desc||'')}</p>
+      <div class="art-foot">
+        <a class="lnk" href="${esc(a.link)}" target="_blank" rel="noopener">Abrir ↗</a>
+        <button class="lnk tr">🌐 Traducir</button>
+        <button class="lnk sh">↗ Compartir</button>
+      </div>
+    </div>`;
+  c.querySelector('.sh').addEventListener('click',()=>shareArticle(a.title,a.link));
+  c.querySelector('.tr').addEventListener('click',async(e)=>{
+    const btn=e.currentTarget;
+    if(btn.classList.contains('done')){ c.querySelector('.art-t').textContent=a.title; btn.classList.remove('done'); btn.innerHTML='🌐 Traducir'; return; }
+    btn.innerHTML='… traduciendo'; btn.disabled=true;
+    c.querySelector('.art-t').textContent=await translate(a.title,ST.lang);
+    btn.disabled=false; btn.classList.add('done'); btn.innerHTML='✓ Original';
+  });
+  return c;
+}
+/* búsqueda mundial con GDELT (CORS *, sin llave, ~1 pet/5s) */
+function parseGdeltDate(s){ const m=String(s||'').match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/); return m?Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]):0; }
+async function worldSearch(){
+  const q=($('#q').value||'').trim();
+  if(!q){ toast('Escribe algo en el buscador para explorar el mundo'); $('#q').focus(); return; }
+  const myToken=++feedToken;   // invalida cualquier carga progresiva en curso (que no pise esto)
+  const feed=$('#feed'); feed.innerHTML=''; $('#loadmore').style.display='none';
+  feed.appendChild(el('div','',`<div style="grid-column:1/-1;padding:14px 16px;background:#fff;border:1px solid var(--linea);border-radius:14px;font-weight:700;font-size:13px">🌐 Buscando <b>“${esc(q)}”</b> en medios de todo el mundo (GDELT)…</div>`));
+  for(let i=0;i<6;i++) feed.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
+  const url='https://api.gdeltproject.org/api/v2/doc/doc?query='+enc(q)+'&mode=artlist&format=json&maxrecords=48&sort=datedesc';
+  let arts=[];
+  await probeProxy();
+  try{ const raw=await fetchViaAny(url,9000); const j=JSON.parse(raw); arts=(j&&j.articles)||[]; }catch(e){}
+  if(myToken!==feedToken) return;   // el usuario hizo otra cosa mientras tanto
+  feed.innerHTML='';
+  const back=el('div',''); back.style.gridColumn='1/-1';
+  back.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--linea);border-left:3px solid var(--oro);border-radius:12px;padding:11px 15px;margin-bottom:4px">
+    <div style="font-size:13px;font-weight:700">🌐 ${arts.length} resultados del mundo para “${esc(q)}” <span style="color:var(--gris-claro);font-weight:600">· fuente: GDELT · el sesgo solo se muestra si reconocemos el medio</span></div>
+    <button class="btn btn-ghost btn-sm" id="btnBackFeed">← Volver a mi portada</button></div>`;
+  feed.appendChild(back);
+  $('#btnBackFeed').addEventListener('click',()=>{ $('#q').value=''; buildFeed().then(maybeAutoTranslate); });
+  if(!arts.length){ feed.appendChild(el('div','empty','<div class="ic">🌐</div><p>Sin resultados ahora (GDELT limita a ~1 búsqueda cada 5 s). Espera un momento y reintenta, o cambia las palabras.</p>')); return; }
+  arts.forEach(g=>feed.appendChild(extCard({title:g.title,link:g.url,desc:'',ts:parseGdeltDate(g.seendate),img:g.socialimage&&/^https/.test(g.socialimage)?g.socialimage:'',ext:{domain:(g.domain||'').replace(/^www\./,''),country:g.sourcecountry,lang:g.language}})));
+}
+/* auto-traducción de titulares no-idioma (solo si ST.auto) */
+async function maybeAutoTranslate(){
+  if(!ST.auto) return;
+  const cards=$$('#feed .art');
+  await mapLimit(cards,4,async(c)=>{
+    const btn=c.querySelector('.tr'); if(btn && !btn.classList.contains('done')) btn.click();
+  });
+}
+
+/* ---------- ticker ---------- */
+function renderTicker(){
+  const top=(FEED||[]).slice(0,14);
+  if(!top.length){ $('#ticker').style.display='none'; return; }
+  const html=top.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(a.title)}</a>`).join('');
+  $('#tickmove').innerHTML=html+html; $('#ticker').style.display='flex';
+}
+
+/* ============================================================
+   MAPA
+   ============================================================ */
+let map=null, mapLayer=null, leafletLoading=null;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  if(leafletLoading) return leafletLoading;
+  leafletLoading=new Promise((res,rej)=>{
+    const css=el('link'); css.rel='stylesheet'; css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+    const s=el('script'); s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; s.onload=()=>res(); s.onerror=()=>rej(new Error('leaflet')); document.head.appendChild(s);
+  });
+  return leafletLoading;
+}
+function locFor(a,o){
+  const t=(a.title+' '+(a.desc||'')).toLowerCase();
+  for(const city in CIUDADES){ if(t.includes(city)) return {ll:CIUDADES[city],city}; }
+  const c=COORD_PAIS[o.pais]||COORD_PAIS[o.region]; if(c) return {ll:c,city:o.pais};
+  return null;
+}
+async function plotMap(){
+  try{ await loadLeaflet(); }catch(e){ $('#map').innerHTML='<div class="mapfallback">No se pudo cargar el mapa (sin internet o el CDN falló). El resto de Prisma funciona igual.</div>'; return; }
+  if(!map){
+    $('#map').innerHTML='';
+    map=L.map('map',{worldCopyJump:true,minZoom:2,maxZoom:8,scrollWheelZoom:true}).setView([20,0],2);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap · © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+  }
+  if(mapLayer) map.removeLayer(mapLayer);
+  mapLayer=L.layerGroup().addTo(map);
+  // agrupar noticias por ubicación
+  const groups={};
+  (FEED||[]).slice(0,240).forEach(a=>{ const o=byId[a.outlet]; if(!o)return; const loc=locFor(a,o); if(!loc)return;
+    const k=loc.ll.join(','); (groups[k]=groups[k]||{ll:loc.ll,city:loc.city,items:[]}).items.push({a,o}); });
+  const COL={izq:'#2b5fd0',ci:'#6f97e0',centro:'#8f949c',cd:'#e0906f',der:'#d23b28',estatal:'#7a4fd6'};
+  Object.values(groups).forEach(g=>{
+    const n=g.items.length; const r=Math.min(9+n*2.4,30);
+    // sesgo dominante
+    const tally={}; g.items.forEach(x=>{const c=biasClass(x.o); tally[c]=(tally[c]||0)+1;});
+    const dom=Object.keys(tally).sort((a,b)=>tally[b]-tally[a])[0]||'centro';
+    const m=L.circleMarker(g.ll,{radius:r,color:'#fff',weight:1.5,fillColor:COL[dom],fillOpacity:.82});
+    const lis=g.items.slice(0,6).map(x=>`<a class="pp-it" href="${esc(x.a.link)}" target="_blank" rel="noopener">${esc(x.a.title)} <span style="color:#9a9da4">· ${esc(x.o.nombre)}</span></a>`).join('');
+    m.bindPopup(`<div class="pp-h">${esc(g.city)} <span class="c">· ${n} noticia${n>1?'s':''}</span></div>${lis}`,{maxWidth:300});
+    m.addTo(mapLayer);
+  });
+  setTimeout(()=>map.invalidateSize(),120);
+}
+
+/* ============================================================
+   VIDEO / SHORTS (YouTube RSS por canal)
+   ============================================================ */
+const ytCache={};
+async function loadYT(outlet){
+  if(!outlet.yt) return [];
+  if(ytCache[outlet.yt]&&Date.now()-ytCache[outlet.yt].t<15*60*1000) return ytCache[outlet.yt].v;
+  const url='https://www.youtube.com/feeds/videos.xml?channel_id='+outlet.yt;
+  let vids=[];
+  try{
+    const xml=await fetchText(url); const doc=new DOMParser().parseFromString(xml,'text/xml');
+    const entries=[...doc.getElementsByTagName('entry')];
+    vids=entries.map(n=>{
+      const vid=tagText(n,'yt:videoId'); const title=tagText(n,'title');
+      const th=n.getElementsByTagName('media:thumbnail')[0]; const img=th?th.getAttribute('url'):('https://i.ytimg.com/vi/'+vid+'/hqdefault.jpg');
+      const pub=Date.parse(tagText(n,'published'))||0;
+      return {vid,title,img,pub,outlet:outlet.id};
+    }).filter(v=>v.vid);
+  }catch(e){}
+  ytCache[outlet.yt]={t:Date.now(),v:vids};
+  return vids;
+}
+async function buildVideos(single){
+  const grid=$('#videos'); grid.innerHTML='';
+  for(let i=0;i<6;i++) grid.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
+  await probeProxy();
+  const outs=(single?[byId[single]]:CATALOGO.filter(o=>o.yt&&!ST.off.includes(o.id))).filter(Boolean);
+  const lists=await mapLimit(outs,5,loadYT);
+  let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });
+  all.sort((a,b)=>b.pub-a.pub);
+  grid.innerHTML='';
+  if(!all.length){ grid.appendChild(el('div','empty','<div class="ic">🎬</div><p>No pudimos cargar los videos ahora. Revisa tu conexión o cambia el puente en Ajustes.</p>')); return; }
+  all.slice(0,40).forEach(v=>grid.appendChild(vcard(v)));
+}
+function vcard(v){
+  const o=byId[v.outlet]; const c=el('div','vcard');
+  c.innerHTML=`<div class="vth" style="background-image:url('${esc(v.img)}')"><div class="play">▶</div></div>
+    <div class="vb"><div class="vt">${esc(v.title)}</div><div class="vs">${biasBadge(o)} ${esc(o.nombre)} · ${timeAgo(v.pub)}</div></div>`;
+  c.addEventListener('click',()=>openVideo(v.vid,false));
+  return c;
+}
+async function buildShorts(){
+  const rail=$('#shorts'), grid=$('#shortsGrid'); rail.innerHTML=''; grid.innerHTML='';
+  for(let i=0;i<5;i++){ const s=el('div','short'); s.style.background='#e9eaec'; rail.appendChild(s); }
+  await probeProxy();
+  const outs=CATALOGO.filter(o=>o.yt&&!ST.off.includes(o.id));
+  const lists=await mapLimit(outs,5,loadYT);
+  let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });
+  all.sort((a,b)=>b.pub-a.pub);
+  rail.innerHTML='';
+  if(!all.length){ rail.innerHTML=''; grid.appendChild(el('div','empty','<div class="ic">⚡</div><p>No hay shorts disponibles ahora mismo.</p>')); return; }
+  all.slice(0,18).forEach(v=>{
+    const o=byId[v.outlet]; const s=el('div','short');
+    s.style.backgroundImage=`url('${esc(v.img)}')`;
+    s.innerHTML=`<div class="play">▶</div><div class="ov"><div class="st">${esc(v.title)}</div><div class="ss">${esc(o.nombre)}</div></div>`;
+    s.addEventListener('click',()=>openVideo(v.vid,true));
+    rail.appendChild(s);
+  });
+}
+function openVideo(id,vertical){
+  const box=$('#modalBox'); box.className='box'+(vertical?' vert':'');
+  $('#modalInner').innerHTML=`<iframe class="vframe" src="https://www.youtube-nocookie.com/embed/${esc(id)}?autoplay=1&rel=0&playsinline=1" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" allowfullscreen playsinline frameborder="0"></iframe>
+    <a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener" style="display:block;text-align:center;background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:9px;text-decoration:none">▶ Abrir en YouTube (si no se ve aquí)</a>`;
+  $('#modal').classList.add('on');
+}
+function closeModal(){ $('#modal').classList.remove('on'); $('#modalInner').innerHTML=''; }
+
+/* ============================================================
+   RADIO (radio-browser)
+   ============================================================ */
+const RB='https://de1.api.radio-browser.info';
+let curStation=null;
+async function buildRadio(){
+  const list=$('#radiolist'); list.innerHTML='';
+  for(let i=0;i<6;i++) list.appendChild(el('div','sk','<div class="b"><div class="l"></div><div class="l s"></div></div>'));
+  const pais=$('#fRadioPais').value, q=($('#qRadio').value||'').trim();
+  let url;
+  if(q) url=RB+'/json/stations/search?name='+enc(q)+'&limit=60&hidebroken=true&order=clickcount&reverse=true';
+  else if(pais) url=RB+'/json/stations/search?tag=news&country='+enc(pais)+'&limit=60&hidebroken=true&order=clickcount&reverse=true';
+  else url=RB+'/json/stations/bytag/news?limit=80&hidebroken=true&order=clickcount&reverse=true';
+  let arr=[];
+  try{ const r=await fetch(url,{headers:{'Accept':'application/json'}}); arr=await r.json(); }catch(e){}
+  // filtrar https + audio compatible iOS
+  arr=(arr||[]).filter(s=>{ const u=s.url_resolved||s.url||''; return u.startsWith('https')&&/(mp3|aac|aacp|ogg|)/i.test(s.codec||''); });
+  // dedupe por nombre
+  const seen=new Set(); arr=arr.filter(s=>{const k=(s.name||'').toLowerCase().trim(); if(!k||seen.has(k))return false; seen.add(k); return true;});
+  list.innerHTML='';
+  if(!arr.length){ list.appendChild(el('div','empty','<div class="ic">📻</div><p>No encontramos emisoras con ese filtro. Prueba otro país o busca por nombre.</p>')); return; }
+  arr.slice(0,60).forEach(s=>list.appendChild(rcard(s)));
+}
+function rcard(s){
+  const c=el('div','rstat'); c.dataset.url=s.url_resolved||s.url;
+  const fav=s.favicon&&/^https/.test(s.favicon)?`style="background-image:url('${esc(s.favicon)}')"`:'';
+  c.innerHTML=`<div class="ricon" ${fav}>${fav?'':'📻'}</div>
+    <div style="min-width:0"><div class="rnm">${esc(s.name||'Emisora')}</div>
+    <div class="rmeta">${esc(s.country||'')}${s.tags?' · '+esc((s.tags||'').split(',').slice(0,2).join(', ')):''}</div></div>`;
+  c.addEventListener('click',()=>playRadio(s,c));
+  return c;
+}
+function playRadio(s,card){
+  const audio=$('#audio'); const url=s.url_resolved||s.url;
+  $$('.rstat.playing').forEach(x=>x.classList.remove('playing')); if(card)card.classList.add('playing');
+  audio.src=url; audio.play().catch(()=>toast('No se pudo reproducir esta emisora. Prueba otra.'));
+  curStation=s;
+  $('#rbName').textContent=s.name||'Emisora'; $('#rbToggle').textContent='⏸';
+  $('#radiobar').classList.add('on');
+  if('mediaSession' in navigator){
+    navigator.mediaSession.metadata=new MediaMetadata({title:s.name||'Emisora',artist:(s.country||'Radio en vivo'),album:'Prisma · Radio',artwork:s.favicon?[{src:s.favicon,sizes:'128x128'}]:[]});
+    navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();$('#rbToggle').textContent='▶';});
+    navigator.mediaSession.setActionHandler('play',()=>{audio.play();$('#rbToggle').textContent='⏸';});
+  }
+}
+$('#rbToggle')&&$('#rbToggle').addEventListener('click',()=>{ const a=$('#audio'); if(a.paused){a.play();$('#rbToggle').textContent='⏸';}else{a.pause();$('#rbToggle').textContent='▶';} });
+$('#rbStop')&&$('#rbStop').addEventListener('click',()=>{ const a=$('#audio'); a.pause(); a.src=''; $('#radiobar').classList.remove('on'); $$('.rstat.playing').forEach(x=>x.classList.remove('playing')); });
+
+/* ============================================================
+   CANALES (directorio con historia + medidor de sesgo)
+   ============================================================ */
+function biasMeterHtml(o){
+  if(o.sesgo==='estatal'){
+    return `<div class="bstate">⚑ Medio estatal — financiado por ${esc(o.dueno||o.pais)}</div>
+      <div class="bsrc">Los medios estatales reflejan, en distinto grado, la posición de su gobierno. Fuente: ${esc(o.fuente||'—')}.</div>`;
+  }
+  const pct=Math.max(2,Math.min(98,((o.sesgo_num+3)/6)*100));
+  return `<div class="bmeter"><div class="btrack"><span class="mk" style="left:${pct}%"></span></div>
+    <div class="blabels"><span>Izquierda</span><span>Centro</span><span>Derecha</span></div></div>
+    <div class="bsrc">Clasificado como <b style="color:var(--negro)">${biasWord(o)}</b> · fuente: ${esc(o.fuente||'—')}${o.conf==='baja'?' · <i>sin consenso claro</i>':''}</div>`;
+}
+function channelCard(o){
+  const c=el('div','chan'); c.dataset.b=biasClass(o);
+  const links=[`<a href="${esc(o.sitio)}" target="_blank" rel="noopener">🌐 Sitio</a>`];
+  if(o.yt) links.push(`<a href="https://www.youtube.com/channel/${esc(o.yt)}" target="_blank" rel="noopener">▶ YouTube</a>`);
+  links.push(`<button class="verport" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;border:1.5px solid var(--linea)">📰 Ver sus noticias</button>`);
+  c.innerHTML=`<div class="chan-h"><div><div class="nm">${esc(o.nombre)}</div>
+      <div class="meta">${esc(o.pais)} · fundado ${esc(o.fundado||'—')} · ${esc(o.dueno||'')}</div></div>
+      <span class="cred ${esc(o.cred||'mixta')}">${({alta:'Cred. alta',media:'Cred. media',baja:'Cred. baja',mixta:'Cred. mixta'})[o.cred||'mixta']}</span></div>
+    ${biasMeterHtml(o)}
+    <div class="hist">${esc(o.hist||'')}</div>
+    <div class="chan-links">${links.join('')}</div>`;
+  c.querySelector('.verport').addEventListener('click',()=>{ ST.reg='todas'; ST.bias='all'; ST.off=CATALOGO.filter(x=>x.id!==o.id).map(x=>x.id); save(); syncSettingsUI(); switchTab('portada'); buildFeed(); toast('Mostrando solo '+o.nombre+' · quítalo en Ajustes › Fuentes'); });
+  return c;
+}
+function buildChannels(){
+  const grid=$('#channels'); grid.innerHTML='';
+  const q=($('#qChan').value||'').trim().toLowerCase(), fb=$('#fChanBias').value, sort=$('#fChanSort').value;
+  let list=CATALOGO.filter(o=> (fb==='all'||biasClass(o)===fb) && (!q||o.nombre.toLowerCase().includes(q)||o.pais.toLowerCase().includes(q)));
+  if(sort==='bias') list.sort((a,b)=>a.sesgo_num-b.sesgo_num);
+  else if(sort==='name') list.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  else if(sort==='country') list.sort((a,b)=>a.pais.localeCompare(b.pais)||a.sesgo_num-b.sesgo_num);
+  else if(sort==='year') list.sort((a,b)=>(parseInt(a.fundado)||9999)-(parseInt(b.fundado)||9999));
+  if(!list.length){ grid.appendChild(el('div','empty','<div class="ic">🧭</div><p>Ningún canal coincide con la búsqueda.</p>')); return; }
+  list.forEach(o=>grid.appendChild(channelCard(o)));
+}
+function openChannel(id){ switchTab('canales'); $('#qChan').value=byId[id].nombre; buildChannels(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ============================================================
+   NAVEGACIÓN / TABS
+   ============================================================ */
+const loaded={};
+function switchTab(v){
+  $$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+  $$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(v==='mundo'){ if(!FEED.length) buildFeed().then(plotMap); else plotMap(); }
+  if(v==='video'&&!loaded.video){ loaded.video=true; buildVideos(); }
+  if(v==='shorts'&&!loaded.shorts){ loaded.shorts=true; buildShorts(); }
+  if(v==='radio'&&!loaded.radio){ loaded.radio=true; buildRadio(); }
+  if(v==='canales'&&!loaded.canales){ loaded.canales=true; buildChannels(); }
+}
+
+/* ============================================================
+   AJUSTES UI
+   ============================================================ */
+function syncSettingsUI(){
+  $('#setLang').value=ST.lang; $('#setProxy').value=ST.proxy;
+  $('#setAuto').classList.toggle('on',!!ST.auto);
+  $('#fCat').value=ST.cat; $('#fReg').value=ST.reg;
+  $$('#biasChips .bchip').forEach(b=>b.classList.toggle('on',b.dataset.b===ST.bias));
+  // fuentes
+  const sp=$('#srcpick'); if(sp && !sp._built){ sp._built=true; sp.innerHTML='';
+    CATALOGO.forEach(o=>{ const l=el('label'); l.innerHTML=`<input type="checkbox" data-id="${o.id}" ${ST.off.includes(o.id)?'':'checked'}> ${esc(o.nombre)} <span style="color:#9a9da4;font-size:11px">· ${esc(o.pais)}</span>`;
+      l.querySelector('input').addEventListener('change',e=>{ const id=e.target.dataset.id; if(e.target.checked)ST.off=ST.off.filter(x=>x!==id); else if(!ST.off.includes(id))ST.off.push(id); save(); });
+      sp.appendChild(l); });
+  }
+  // selector de canal para video
+  const fv=$('#fVideo'); if(fv&&!fv._built){ fv._built=true; fv.innerHTML='<option value="">Todos</option>'+CATALOGO.filter(o=>o.yt).map(o=>`<option value="${o.id}">${esc(o.nombre)}</option>`).join(''); }
+}
+function updateNet(){
+  const on=navigator.onLine; const c=$('#netchip');
+  c.className='chip-net '+(on?'on':'off'); $('#nettxt').textContent= on?'En línea':'Sin conexión';
+}
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+function bind(){
+  // tabs
+  $('#tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) switchTab(t.dataset.v); });
+  // filtros portada
+  let qT; $('#q').addEventListener('input',()=>{ clearTimeout(qT); qT=setTimeout(applyFeedFilters,240); });
+  $('#fCat').addEventListener('change',e=>{ ST.cat=e.target.value; save(); applyFeedFilters(); });
+  $('#fReg').addEventListener('change',e=>{ ST.reg=e.target.value; save(); buildFeed(); });
+  $('#biasChips').addEventListener('click',e=>{ const b=e.target.closest('.bchip'); if(!b)return; ST.bias=b.dataset.b; save(); syncSettingsUI(); buildFeed(); });
+  $('#btnRefresh').addEventListener('click',()=>{ Object.keys(memCache).forEach(k=>delete memCache[k]); buildFeed().then(maybeAutoTranslate); });
+  $('#btnWorld').addEventListener('click',worldSearch);
+  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); applyFeedFilters(); } });
+  $('#btnMore').addEventListener('click',renderMore);
+  // video
+  $('#fVideo').addEventListener('change',e=>buildVideos(e.target.value||null));
+  $('#btnVideoAll').addEventListener('click',()=>{ $('#fVideo').value=''; buildVideos(); });
+  // radio
+  $('#btnRadioReload').addEventListener('click',buildRadio);
+  $('#fRadioPais').addEventListener('change',buildRadio);
+  let rT; $('#qRadio').addEventListener('input',()=>{ clearTimeout(rT); rT=setTimeout(buildRadio,400); });
+  // canales
+  let cT; $('#qChan').addEventListener('input',()=>{ clearTimeout(cT); cT=setTimeout(buildChannels,220); });
+  $('#fChanBias').addEventListener('change',buildChannels); $('#fChanSort').addEventListener('change',buildChannels);
+  // ajustes
+  $('#setLang').addEventListener('change',e=>{ ST.lang=e.target.value; save(); });
+  $('#setProxy').addEventListener('change',e=>{ ST.proxy=e.target.value; save(); toast('Puente actualizado'); });
+  $('#setAuto').addEventListener('click',()=>{ ST.auto=!ST.auto; save(); syncSettingsUI(); if(ST.auto)maybeAutoTranslate(); });
+  $('#btnSaveKey').addEventListener('click',()=>{ setKey($('#setKey').value.trim()); toast($('#setKey').value.trim()?'Clave guardada en este dispositivo':'Clave eliminada'); });
+  $('#btnExport').addEventListener('click',exportData);
+  $('#btnImport').addEventListener('click',importData);
+  $('#btnClear').addEventListener('click',()=>{ if(confirm('¿Borrar tus preferencias y guardados de este navegador?')){ localStorage.removeItem(SK); ST={...defaults}; save(); syncSettingsUI(); toast('Datos borrados'); } });
+  // modal
+  $('#modalX').addEventListener('click',closeModal); $('#modal').addEventListener('click',e=>{ if(e.target.id==='modal')closeModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+  // red
+  window.addEventListener('online',updateNet); window.addEventListener('offline',updateNet);
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({ST,ts:Date.now()},null,2)],{type:'application/json'});
+  const a=el('a'); a.href=URL.createObjectURL(blob); a.download='prisma-respaldo.json'; a.click();
+}
+function importData(){
+  const inp=el('input'); inp.type='file'; inp.accept='application/json';
+  inp.onchange=()=>{ const f=inp.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.ST){ ST=Object.assign({},defaults,d.ST); save(); syncSettingsUI(); buildFeed(); toast('Respaldo restaurado'); } }catch(e){ toast('Archivo no válido'); } }; r.readAsText(f); };
+  inp.click();
+}
+function clock(){ const d=new Date(); $('#clock').innerHTML=`<b>${d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})}</b><br>${d.toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'})}`; }
+
+function init(){
+  $('#yr').textContent=new Date().getFullYear();
+  $('#chanCount').textContent=CATALOGO.length;
+  clock(); setInterval(clock,30000);
+  updateNet();
+  bind();
+  syncSettingsUI();
+  buildFeed().then(maybeAutoTranslate);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
