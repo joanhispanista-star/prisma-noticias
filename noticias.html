@@ -297,6 +297,22 @@
   .ev-online{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--verde-tint,#e2efe7);color:#146b3a}
   .ev-link{margin-left:auto;font-size:12px;font-weight:800;color:var(--negro)}
   .ev-link:hover{text-decoration:underline}
+  /* ---- archivo ---- */
+  .arch-h{font-weight:800;font-size:14px;margin:16px 0 12px;display:flex;align-items:center;gap:8px}
+  .arch-h .n{font-size:11.5px;color:var(--gris);font-weight:700}
+  .vcard .vth .yr{position:absolute;left:8px;top:8px;font-size:10.5px;font-weight:800;background:rgba(23,24,28,.82);color:#fff;padding:3px 8px;border-radius:999px;backdrop-filter:blur(3px)}
+  .vcard .vth .arch-badge{position:absolute;right:8px;top:8px;font-size:9.5px;font-weight:800;background:rgba(122,79,214,.92);color:#fff;padding:3px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
+  .doc-tema{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:999px;background:#efe9fb;color:#5b3df5;margin-top:6px}
+  .wb-card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);border-left:3px solid var(--oro);padding:16px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .wb-card .em{font-size:30px}
+  .wb-card .t{font-weight:800;font-size:15px}
+  .wb-card .s{font-size:12.5px;color:var(--gris);font-weight:600;margin-top:3px}
+  .wb-preset{font-size:11.5px;font-weight:800;padding:6px 11px;border-radius:999px;border:1.5px solid var(--linea);background:#fff;color:var(--negro);cursor:pointer;transition:.12s}
+  .wb-preset:hover{background:var(--negro);color:#fff;border-color:var(--negro)}
+  .hemarticle{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--linea-2)}
+  .hemarticle .hem-dt{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--gris);white-space:nowrap;padding-top:2px;flex:none}
+  .hemarticle a{font-size:13px;font-weight:600;line-height:1.4;color:var(--negro)}
+  .hemarticle .hem-src{font-size:11px;color:var(--gris);font-weight:700}
 
   /* ---- ajustes ---- */
   .card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:18px;margin-bottom:16px}
@@ -368,6 +384,7 @@
     <button class="tab" data-v="radio">📻 Radio</button>
     <button class="tab" data-v="canales">🧭 Canales <span class="b" id="chanCount"></span></button>
     <button class="tab" data-v="prisma">🧠 Prisma</button>
+    <button class="tab" data-v="archivo">🕰️ Archivo</button>
     <button class="tab" data-v="ajustes">⚙️ Ajustes</button>
   </div>
 
@@ -582,6 +599,58 @@
         <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--gris)"><input type="checkbox" id="agendaOnline" style="accent-color:var(--negro)"> Solo con acceso en línea</label>
       </div>
       <div class="agendagrid" id="agendaGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ARCHIVO (histórico) ===================== -->
+  <section class="view" id="v-archivo">
+    <div class="seg" id="archivoSeg">
+      <button class="segbtn on" data-s="hemeroteca">📰 Hemeroteca</button>
+      <button class="segbtn" data-s="docs">📼 Documentales</button>
+      <button class="segbtn" data-s="undia">⏳ Un día como hoy</button>
+    </div>
+
+    <!-- Hemeroteca: noticias antiguas -->
+    <div class="seg-view on" id="s-hemeroteca">
+      <div class="note" style="margin-bottom:14px">
+        <b>Noticias de otras épocas.</b> Busca un tema y Prisma lo rastrea en el <b>archivo de televisión</b> (miles de emisiones reales de CNN, BBC, DW… desde 2009) y en la prensa histórica. Puedes <b>ver los clips</b> tal como se emitieron.
+      </div>
+      <div class="filters" style="margin-bottom:14px">
+        <div class="search"><span class="ic">🔎</span><input id="hemQ" type="search" placeholder="Un tema histórico: muro de Berlín, 11-S, elecciones…" autocomplete="off"></div>
+        <div class="fgroup"><span>Año</span>
+          <select class="sel" id="hemYear"><option value="">Cualquiera</option></select>
+        </div>
+        <button class="btn btn-negro btn-sm" id="btnHem">Buscar en la historia</button>
+      </div>
+      <div id="hemOut"></div>
+    </div>
+
+    <!-- Documentales -->
+    <div class="seg-view" id="s-docs">
+      <div class="note" style="margin-bottom:14px">
+        <b>Documentales difíciles de encontrar.</b> Una selección curada de grandes documentales históricos (de dominio público) que puedes ver aquí mismo, y una búsqueda en archivos de confianza (Prelinger, NASA, archivos nacionales). <b>Prisma cura esta lista;</b> los resultados de búsqueda son archivos de terceros.
+      </div>
+      <div class="filters" style="margin-bottom:14px">
+        <div class="search"><span class="ic">🔎</span><input id="docQ" type="search" placeholder="Busca en archivos históricos: espacio, guerra fría, ciencia…" autocomplete="off"></div>
+        <button class="btn btn-negro btn-sm" id="btnDoc">Buscar</button>
+        <button class="btn btn-ghost btn-sm" id="btnDocFeat">★ Destacados</button>
+      </div>
+      <div id="docTitulo" style="font-weight:800;font-size:14px;margin:4px 0 12px">★ Documentales destacados</div>
+      <div class="vgrid" id="docGrid"></div>
+    </div>
+
+    <!-- Un día como hoy (Wayback) -->
+    <div class="seg-view" id="s-undia">
+      <div class="note" style="margin-bottom:14px">
+        <b>¿Cómo se informaba ese día?</b> Elige una fecha y un periódico y Prisma abre su <b>portada archivada</b> tal como estaba, gracias a la Wayback Machine (Internet Archive). Ideal para revivir un día histórico.
+      </div>
+      <div class="filters" style="margin-bottom:14px">
+        <div class="fgroup"><span>Fecha</span><input class="sel" id="wbDate" type="date"></div>
+        <div class="fgroup"><span>Periódico</span><select class="sel" id="wbSrc"></select></div>
+        <button class="btn btn-negro btn-sm" id="btnWb">Ver la portada de ese día</button>
+      </div>
+      <div class="ev-chips" style="margin-bottom:14px" id="wbPresets"></div>
+      <div id="wbOut"></div>
     </div>
   </section>
 
@@ -1591,6 +1660,99 @@ function selectPrismaSeg(s){
 }
 
 /* ============================================================
+   ARCHIVO · histórico (Internet Archive · TV News · Wayback)
+   ============================================================ */
+const FEATURED_DOCS=[
+  {id:'TheInternetsOwnBoyTheStoryOfAaronSwartz',t:'El chico de internet: la historia de Aaron Swartz',y:'2014',tema:'tecnología',d:'El activista que soñó con liberar el conocimiento y el caso que lo llevó al límite.'},
+  {id:'the-world-at-war-1973-thames-television-world-war-two',t:'El mundo en guerra',y:'1973',tema:'historia',d:'La serie definitiva sobre la Segunda Guerra Mundial, con testimonios de sus protagonistas.'},
+  {id:'CosmosAPersonalVoyage',t:'Cosmos: un viaje personal',y:'1980',tema:'ciencia',d:'Carl Sagan nos lleva por el universo en la serie de divulgación más querida de la historia.'},
+  {id:'ConnectionsByJamesBurke',t:'Connections (James Burke)',y:'1978',tema:'ciencia',d:'Cómo un invento lleva a otro: la historia de la tecnología contada como un thriller.'},
+  {id:'TheCenturyOfTheSelfPart1',t:'El siglo del yo (Adam Curtis)',y:'2002',tema:'historia',d:'Cómo el psicoanálisis y la publicidad moldearon el consumo y la política del siglo XX.'},
+  {id:'Apollo1116mmOnboardFilm',t:'Apolo 11: película original a bordo',y:'1969',tema:'ciencia',d:'Las imágenes originales en 16mm de la misión que llevó al ser humano a la Luna.'},
+  {id:'LaEducacionProhibida-WithEnglishSubtitles',t:'La Educación Prohibida',y:'2012',tema:'español',d:'Un recorrido por otras formas de educar. Documental independiente en español.'},
+  {id:'documental_con_animo_de_lucro',t:'Con ánimo de lucro',y:'2006',tema:'español',d:'Sobre los derechos de autor en la era digital. En español.'},
+  {id:'battle_of_san_pietro',t:'La batalla de San Pietro (John Huston)',y:'1945',tema:'historia',d:'El clásico bélico de John Huston, filmado en el frente italiano de la II Guerra Mundial.'},
+  {id:'nanookOfTheNorth1922',t:'Nanook, el esquimal',y:'1922',tema:'historia',d:'El primer gran documental de la historia del cine: la vida en el Ártico.'},
+  {id:'ChelovekskinoapparatomManWithAMovieCamera',t:'El hombre de la cámara',y:'1929',tema:'historia',d:'Obra maestra de la vanguardia soviética: un día en la ciudad, sin actores ni guion.'},
+  {id:'DuckandC1951',t:'Duck and Cover',y:'1951',tema:'historia',d:'La famosa propaganda de la Guerra Fría que enseñaba a los niños a "protegerse" de una bomba atómica.'},
+];
+const IA_SAFE='collection:(prelinger OR academic_films OR nasa OR usnationalarchives OR computerchronicles OR classic_tv)';
+async function iaSearch(q,rows,sort){
+  const u='https://archive.org/advancedsearch.php?q='+enc(q)+'&fl[]=identifier&fl[]=title&fl[]=year&sort[]='+enc(sort||'downloads desc')+'&rows='+(rows||24)+'&output=json';
+  const r=await fetch(u); const j=await r.json(); return (j.response&&j.response.docs)||[];
+}
+const iaThumb=id=>'https://archive.org/services/img/'+id;
+function openArchive(id){
+  const box=$('#modalBox'); box.className='box';
+  $('#modalInner').innerHTML=`<iframe class="vframe" src="https://archive.org/embed/${esc(id)}" allow="fullscreen" allowfullscreen frameborder="0"></iframe>
+    <a href="https://archive.org/details/${esc(id)}" target="_blank" rel="noopener" style="display:block;text-align:center;background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:9px;text-decoration:none">Ver en Internet Archive ↗</a>`;
+  $('#modal').classList.add('on');
+}
+function archCard(d,badge){
+  const id=d.identifier||d.id, c=el('div','vcard');
+  c.innerHTML=`<div class="vth" style="background-image:url('${esc(iaThumb(id))}')"><div class="play">▶</div>${(d.y||d.year)?`<span class="yr">${esc(d.y||d.year)}</span>`:''}${badge?`<span class="arch-badge">${esc(badge)}</span>`:''}</div>
+    <div class="vb"><div class="vt">${esc(d.t||d.title)}</div>${d.d?`<div class="vs" style="-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden">${esc(d.d)}</div>`:''}${d.tema?`<span class="doc-tema">${esc(d.tema)}</span>`:''}</div>`;
+  c.addEventListener('click',()=>openArchive(id));
+  return c;
+}
+function renderFeaturedDocs(){ const g=$('#docGrid'); if(!g)return; $('#docTitulo').textContent='★ Documentales destacados (curados por Prisma)'; g.innerHTML=''; FEATURED_DOCS.forEach(d=>g.appendChild(archCard(d,'documental'))); }
+async function buildDocs(){
+  const q=($('#docQ').value||'').trim();
+  if(!q){ renderFeaturedDocs(); return; }
+  const g=$('#docGrid'); $('#docTitulo').textContent='Resultados de archivo para “'+q+'”'; g.innerHTML='';
+  for(let i=0;i<6;i++) g.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
+  let docs=[]; try{ docs=await iaSearch('mediatype:movies AND '+IA_SAFE+' AND ('+q+')',30); }catch(e){}
+  g.innerHTML='';
+  if(!docs.length){ g.appendChild(el('div','empty','<div class="ic">📼</div><p>Sin resultados en los archivos de confianza para “'+esc(q)+'”. Prueba otro tema o mira los destacados.</p>')); return; }
+  docs.forEach(d=>g.appendChild(archCard(d,'archivo')));
+}
+async function buildHemeroteca(){
+  const q=($('#hemQ').value||'').trim(), year=$('#hemYear').value, out=$('#hemOut');
+  if(!q){ out.innerHTML='<div class="empty"><div class="ic">📰</div><p>Escribe un tema histórico para buscar en el archivo (ej. “muro de Berlín”, “11 de septiembre”, “elecciones 2010”).</p></div>'; return; }
+  out.innerHTML='<div class="ai-loading">Buscando “'+esc(q)+'” en el archivo de televisión y prensa…</div>';
+  let tv=[]; try{ let tq='collection:tvnews AND ('+q+')'; if(year) tq+=' AND year:'+year; tv=await iaSearch(tq,24,'-date'); }catch(e){}
+  let arts=[]; try{ await probeProxy(); let gu='https://api.gdeltproject.org/api/v2/doc/doc?query='+enc(q)+'&mode=artlist&format=json&maxrecords=30&sort=datedesc'; if(year){ gu+='&startdatetime='+year+'0101000000&enddatetime='+year+'1231235959'; } const raw=await fetchViaAny(gu,9000); const j=JSON.parse(raw); arts=(j&&j.articles)||[]; }catch(e){}
+  if(!tv.length && !arts.length){ out.innerHTML='<div class="empty"><div class="ic">🕰️</div><p>Sin resultados para “'+esc(q)+'”'+(year?(' en '+year):'')+'. Prueba con otras palabras o quita el año.</p></div>'; return; }
+  let html='';
+  if(tv.length) html+='<div class="arch-h">📺 En televisión <span class="n">· '+tv.length+' emisiones reales · toca para verlas</span></div><div class="vgrid" id="hemTv"></div>';
+  if(arts.length) html+='<div class="arch-h">📰 En la prensa <span class="n">· fuente: GDELT'+(year?(' · '+year):'')+'</span></div><div id="hemPress"></div>';
+  out.innerHTML=html;
+  if(tv.length){ const g=$('#hemTv'); tv.forEach(d=>g.appendChild(archCard(d,'TV'))); }
+  if(arts.length){ const p=$('#hemPress'); arts.forEach(a=>{ const dt=parseGdeltDate(a.seendate), dom=(a.domain||'').replace(/^www\./,''), o=DOMAIN_IDX[dom]?byId[DOMAIN_IDX[dom]]:null;
+    const row=el('div','hemarticle'); row.innerHTML=`<span class="hem-dt">${dt?new Date(dt).toLocaleDateString('es-CO',{year:'2-digit',month:'short',day:'numeric'}):''}</span><div style="min-width:0"><a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.title)}</a><div class="hem-src">${esc(o?o.nombre:dom)}</div></div>`; p.appendChild(row); }); }
+}
+const WB_SRCS=['nyt','bbc','guardian','elpais','eltiempo','espectador','clarin','lajornada','cnn','wapo'];
+async function buildWayback(){
+  const date=$('#wbDate').value, id=$('#wbSrc').value, out=$('#wbOut');
+  if(!date||!byId[id]){ out.innerHTML='<div class="empty"><p>Elige una fecha y un periódico.</p></div>'; return; }
+  const o=byId[id]; let domain; try{ domain=new URL(o.sitio).hostname.replace(/^www\./,''); }catch(e){ domain=o.sitio; }
+  const ts=date.replace(/-/g,'');
+  out.innerHTML='<div class="ai-loading">Buscando la portada de '+esc(o.nombre)+' del '+esc(date)+'…</div>';
+  try{
+    const r=await fetch('https://archive.org/wayback/available?url='+enc(domain)+'&timestamp='+ts);
+    const j=await r.json(); const snap=j&&j.archived_snapshots&&j.archived_snapshots.closest;
+    if(snap&&snap.url){ const s=snap.timestamp; const fecha=s.slice(6,8)+'/'+s.slice(4,6)+'/'+s.slice(0,4);
+      out.innerHTML=`<div class="wb-card"><div class="em">📜</div><div style="flex:1;min-width:0"><div class="t">${esc(o.nombre)} · ${fecha}</div><div class="s">Instantánea más cercana a la fecha que pediste, guardada por la Wayback Machine.</div></div><a class="btn btn-negro btn-sm" href="${esc(snap.url.replace('http://','https://'))}" target="_blank" rel="noopener">Ver la portada archivada ↗</a></div>`;
+    } else out.innerHTML='<div class="empty"><div class="ic">📭</div><p>No hay copia archivada de '+esc(o.nombre)+' cerca del '+esc(date)+'. Prueba otra fecha (los archivos son más completos desde ~2000) u otro periódico.</p></div>';
+  }catch(e){ out.innerHTML='<div class="nokey">No se pudo consultar el archivo ahora. Reintenta en un momento.</div>'; }
+}
+function initArchivo(){
+  const y=$('#hemYear'); if(y && !y._built){ y._built=true; const now=new Date().getFullYear(); let o='<option value="">Cualquiera</option>'; for(let yr=now; yr>=2009; yr--) o+='<option value="'+yr+'">'+yr+'</option>'; y.innerHTML=o; }
+  const sel=$('#wbSrc'); if(sel && !sel._built){ sel._built=true; sel.innerHTML=WB_SRCS.filter(id=>byId[id]).map(id=>`<option value="${id}">${esc(byId[id].nombre)}</option>`).join(''); }
+  const dt=$('#wbDate'); if(dt && !dt.value) dt.value='2001-09-11';
+  const pr=$('#wbPresets'); if(pr && !pr._built){ pr._built=true;
+    pr._data=[['11-S · 2001','2001-09-11','nyt'],['Caída del Muro · 1989','1989-11-10','nyt'],['Obama gana · 2008','2008-11-05','nyt'],['Pandemia declarada · 2020','2020-03-11','elpais'],['Paz en Colombia · 2016','2016-09-27','eltiempo']];
+    pr.innerHTML=pr._data.map((p,i)=>`<button class="wb-preset" data-i="${i}">${esc(p[0])}</button>`).join('');
+    pr.addEventListener('click',e=>{ const b=e.target.closest('.wb-preset'); if(!b)return; const p=pr._data[+b.dataset.i]; $('#wbDate').value=p[1]; $('#wbSrc').value=p[2]; buildWayback(); });
+  }
+  renderFeaturedDocs();
+}
+function selectArchivoSeg(s){
+  $$('#archivoSeg .segbtn').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
+  $$('#v-archivo .seg-view').forEach(v=>v.classList.toggle('on',v.id==='s-'+s));
+}
+
+/* ============================================================
    NAVEGACIÓN / TABS
    ============================================================ */
 const loaded={};
@@ -1604,6 +1766,7 @@ function switchTab(v){
   if(v==='radio'&&!loaded.radio){ loaded.radio=true; buildRadio(); }
   if(v==='canales'&&!loaded.canales){ loaded.canales=true; buildChannels(); }
   if(v==='prisma'&&!loaded.prisma){ loaded.prisma=true; buildAgenda(); }
+  if(v==='archivo'&&!loaded.archivo){ loaded.archivo=true; initArchivo(); }
 }
 
 /* ============================================================
@@ -1661,6 +1824,14 @@ function bind(){
   $('#vocesQ').addEventListener('keydown',e=>{ if(e.key==='Enter') vocesSpectrum(); });
   $('#agendaTipo').addEventListener('change',buildAgenda);
   $('#agendaOnline').addEventListener('change',buildAgenda);
+  // archivo
+  $('#archivoSeg').addEventListener('click',e=>{ const b=e.target.closest('.segbtn'); if(b) selectArchivoSeg(b.dataset.s); });
+  $('#btnHem').addEventListener('click',buildHemeroteca);
+  $('#hemQ').addEventListener('keydown',e=>{ if(e.key==='Enter') buildHemeroteca(); });
+  $('#btnDoc').addEventListener('click',buildDocs);
+  $('#docQ').addEventListener('keydown',e=>{ if(e.key==='Enter') buildDocs(); });
+  $('#btnDocFeat').addEventListener('click',()=>{ $('#docQ').value=''; renderFeaturedDocs(); });
+  $('#btnWb').addEventListener('click',buildWayback);
   // ajustes
   $('#setLang').addEventListener('change',e=>{ ST.lang=e.target.value; save(); });
   $('#setProxy').addEventListener('change',e=>{ ST.proxy=e.target.value; save(); toast('Puente actualizado'); });
