@@ -413,6 +413,7 @@
     <button class="tab" data-v="canales">🧭 Canales <span class="b" id="chanCount"></span></button>
     <button class="tab" data-v="prisma">🧠 Prisma</button>
     <button class="tab" data-v="archivo">🕰️ Archivo</button>
+    <button class="tab" data-v="comunidad">📍 Comunidad</button>
     <button class="tab" data-v="ajustes">⚙️ Ajustes</button>
   </div>
 
@@ -690,6 +691,65 @@
     </div>
   </section>
 
+  <!-- ===================== COMUNIDAD (local + verificación) ===================== -->
+  <section class="view" id="v-comunidad">
+    <div class="seg" id="comunidadSeg">
+      <button class="segbtn on" data-s="local">🏘️ Mi pueblo</button>
+      <button class="segbtn" data-s="desmentidos">🔍 Desmentidos</button>
+      <button class="segbtn" data-s="reportar">✍️ Reportar</button>
+    </div>
+
+    <!-- Mi pueblo: noticias hiperlocales -->
+    <div class="seg-view on" id="c-local">
+      <div class="note" style="margin-bottom:14px">
+        <b>Noticias de tu pueblo.</b> Escribe tu municipio o vereda y Prisma busca lo que se dice de él en medios regionales y locales — hasta los pueblos más pequeños. Tu lugar se guarda en el dispositivo.
+      </div>
+      <div class="filters" style="margin-bottom:14px">
+        <div class="search"><span class="ic">📍</span><input id="localQ" type="search" placeholder="Tu municipio: Sincelejo, Quibdó, La Ceja, Aguadas…" autocomplete="off"></div>
+        <button class="btn btn-negro btn-sm" id="btnLocal">Ver mi pueblo</button>
+      </div>
+      <div class="ev-chips" id="localChips" style="margin-bottom:14px"></div>
+      <div id="localOut"></div>
+    </div>
+
+    <!-- Desmentidos: fact-checks -->
+    <div class="seg-view" id="c-desmentidos">
+      <div class="note" style="margin-bottom:14px">
+        <b>Aclarar y desmentir bulos.</b> Aquí se reúnen los chequeos de <b>verificadores profesionales</b> (Colombiacheck, Maldita, Chequeado, AFP Factual, Snopes…). ¿Te llegó algo por WhatsApp? Búscalo antes de reenviarlo.
+      </div>
+      <div class="filters" style="margin-bottom:14px">
+        <div class="search"><span class="ic">🔎</span><input id="fcQ" type="search" placeholder="¿Es verdad que…? Pega el bulo o unas palabras clave" autocomplete="off"></div>
+        <button class="btn btn-negro btn-sm" id="btnFc">Buscar chequeos</button>
+        <button class="btn btn-ghost btn-sm" id="btnFcRecent">Últimos desmentidos</button>
+      </div>
+      <div id="fcOut"></div>
+    </div>
+
+    <!-- Reportar: periodismo ciudadano + verificación -->
+    <div class="seg-view" id="c-reportar">
+      <div class="note" style="margin-bottom:14px">
+        <b>Reporta lo que ves.</b> Cualquiera puede escribir una noticia de su barrio o pueblo. Prisma la marca como <b>“sin verificar”</b> y le hace una <b>revisión con IA</b> que la compara con las noticias reales, señala lo que se puede comprobar y las alertas. La IA <b>no confirma hechos</b>: te ayuda a verificar. Todo se guarda en tu dispositivo.
+      </div>
+      <div class="card">
+        <div class="row" style="border:none;padding:0 0 10px;display:block">
+          <input class="txin" id="repTitle" type="text" placeholder="Titular: ¿qué pasó?" style="margin-bottom:8px;font-family:'Inter'">
+          <textarea class="txin" id="repBody" rows="4" placeholder="Cuéntalo con detalle: qué, quién, cuándo, dónde. Sé factual; evita acusar a personas sin pruebas." style="font-family:'Inter';resize:vertical"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <input class="txin" id="repPlace" type="text" placeholder="📍 Lugar (municipio)" style="flex:1;min-width:150px;font-family:'Inter'">
+            <input class="txin" id="repLink" type="url" placeholder="🔗 Enlace o fuente (opcional)" style="flex:2;min-width:180px;font-family:'JetBrains Mono';font-size:12px">
+          </div>
+        </div>
+        <div class="row" style="border:none;padding-top:6px">
+          <div class="desc">La revisión con IA usa tu clave (Ajustes). Sin clave puedes guardar el reporte, pero no se revisa.</div>
+          <button class="btn btn-negro btn-sm" id="btnReport">🔎 Enviar a verificación</button>
+        </div>
+      </div>
+      <div id="repOut"></div>
+      <div class="arch-h" id="repListH" style="display:none">📋 Mis reportes</div>
+      <div id="repList"></div>
+    </div>
+  </section>
+
   <!-- ===================== AJUSTES ===================== -->
   <section class="view" id="v-ajustes">
     <div class="card">
@@ -812,7 +872,7 @@ function timeAgo(d){ if(!d) return ''; const s=(Date.now()-d)/1000; if(s<60)retu
 
 /* ---------- almacenamiento ---------- */
 const SK='noticias_v1', KK='noticias_api_key';
-const defaults={ lang:'es', auto:false, proxy:'auto', worker:'', cat:'todas', reg:'todas', bias:'all', off:[], saved:[], follows:[], lastVisit:0 };
+const defaults={ lang:'es', auto:false, proxy:'auto', worker:'', cat:'todas', reg:'todas', bias:'all', off:[], saved:[], follows:[], lastVisit:0, reports:[], lugares:[] };
 let ST = load();
 function load(){ try{ return Object.assign({}, defaults, JSON.parse(localStorage.getItem(SK)||'{}')); }catch(e){ return {...defaults}; } }
 function save(){ try{ localStorage.setItem(SK, JSON.stringify(ST)); }catch(e){} }
@@ -2008,6 +2068,111 @@ function selectArchivoSeg(s){
 }
 
 /* ============================================================
+   COMUNIDAD · noticias locales + desmentidos + reportar
+   ============================================================ */
+function gnewsUrl(q,loc){ const L=loc==='en'?['en-US','US','US:en']:['es-419','CO','CO:es-419']; return 'https://news.google.com/rss/search?q='+enc(q)+'&hl='+L[0]+'&gl='+L[1]+'&ceid='+L[2]; }
+async function fetchGnews(url){
+  await probeProxy();
+  let xml; try{ xml=await fetchViaAny(url,9000); }catch(e){ try{ xml=await fetchText(url,{timeout:9000}); }catch(e2){ return []; } }
+  let doc; try{ doc=new DOMParser().parseFromString(xml,'text/xml'); }catch(e){ return []; }
+  return [...doc.getElementsByTagName('item')].map(n=>{
+    let t=tagText(n,'title'); const link=tagText(n,'link');
+    const se=n.getElementsByTagName('source')[0]; const src=(se&&se.textContent)||'';
+    t=t.replace(/\s+[-–|]\s+[^-–|]{2,45}$/,'').trim();
+    return { title:t, link, ts:Date.parse(tagText(n,'pubDate'))||0, src };
+  }).filter(a=>a.title);
+}
+function newsRow(a,srcHtml){
+  const row=el('div','hemarticle');
+  row.innerHTML=`<span class="hem-dt">${a.ts?timeAgo(a.ts):''}</span><div style="min-width:0"><a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(a.title)}</a>${srcHtml||(a.src?`<div class="hem-src">${esc(a.src)}</div>`:'')}</div>`;
+  return row;
+}
+/* --- Mi pueblo (hiperlocal) --- */
+function localChips(){ const c=$('#localChips'); if(!c)return; const L=ST.lugares||[];
+  c.innerHTML=L.length? L.map((p,i)=>`<button class="fchip2" data-pick="${esc(p)}">📍 ${esc(p)} <span class="x" data-del="${i}">✕</span></button>`).join('') : ''; }
+async function buildLocal(place){
+  const q=(place||$('#localQ').value||'').trim(); const out=$('#localOut');
+  if(!q){ out.innerHTML='<div class="empty"><div class="ic">🏘️</div><p>Escribe tu municipio (o vereda) para ver sus noticias — hasta los pueblos más pequeños.</p></div>'; return; }
+  ST.lugares=ST.lugares||[]; if(!ST.lugares.includes(q)){ ST.lugares.unshift(q); ST.lugares=ST.lugares.slice(0,6); save(); localChips(); }
+  out.innerHTML='<div class="ai-loading">Buscando noticias de '+esc(q)+'…</div>';
+  const arts=await fetchGnews(gnewsUrl('"'+q+'" Colombia when:21d','es'));
+  if(!arts.length){ out.innerHTML='<div class="empty"><div class="ic">📭</div><p>No encontramos noticias recientes de “'+esc(q)+'”. Prueba con el nombre exacto del municipio o con su departamento.</p></div>'; return; }
+  out.innerHTML='<div class="arch-h">📍 Lo último de '+esc(q)+' <span class="n">· '+arts.length+' notas de medios locales y regionales</span></div>';
+  const box=el('div',''); arts.slice(0,40).forEach(a=>box.appendChild(newsRow(a))); out.appendChild(box);
+}
+/* --- Desmentidos (verificadores profesionales) --- */
+const FACTCHECK=[
+  {n:'Colombiacheck',d:'colombiacheck.com',loc:'es',f:'🇨🇴'},
+  {n:'La Silla · Detector',d:'lasillavacia.com',loc:'es',f:'🇨🇴'},
+  {n:'Maldita.es',d:'maldita.es',loc:'es',f:'🇪🇸'},
+  {n:'Newtral',d:'newtral.es',loc:'es',f:'🇪🇸'},
+  {n:'Chequeado',d:'chequeado.com',loc:'es',f:'🇦🇷'},
+  {n:'AFP Factual',d:'factual.afp.com',loc:'es',f:'🌎'},
+  {n:'EFE Verifica',d:'verifica.efe.com',loc:'es',f:'🌎'},
+  {n:'Snopes',d:'snopes.com',loc:'en',f:'🇺🇸'},
+  {n:'PolitiFact',d:'politifact.com',loc:'en',f:'🇺🇸'},
+  {n:'Full Fact',d:'fullfact.org',loc:'en',f:'🇬🇧'},
+];
+async function buildDesmentidos(query){
+  const out=$('#fcOut'); const q=(query||'').trim();
+  out.innerHTML='<div class="ai-loading">'+(q?('Buscando chequeos sobre “'+esc(q)+'”…'):'Trayendo los últimos desmentidos…')+'</div>';
+  const results=await mapLimit(FACTCHECK,5,async fc=>{
+    const term=(q?('"'+q+'" '):'')+'site:'+fc.d+(q?' when:180d':' when:20d');
+    try{ const arts=await fetchGnews(gnewsUrl(term,fc.loc)); return arts.slice(0,q?4:3).map(a=>Object.assign({},a,{fc})); }catch(e){ return []; }
+  });
+  let all=results.flat().filter(x=>x.title); all.sort((a,b)=>b.ts-a.ts);
+  if(!all.length){ out.innerHTML='<div class="empty"><div class="ic">🔍</div><p>'+(q?('No hay chequeos publicados sobre “'+esc(q)+'”. Que nadie lo haya verificado no lo hace cierto ni falso: tómalo con cuidado y no lo reenvíes sin confirmar.'):'No pudimos traer los desmentidos ahora. Reintenta en un momento.')+'</p></div>'; return; }
+  out.innerHTML='<div class="arch-h">🔍 '+(q?('Chequeos sobre “'+esc(q)+'”'):'Últimos desmentidos')+' <span class="n">· '+all.length+' · de verificadores profesionales</span></div>';
+  const box=el('div',''); all.slice(0,40).forEach(x=>box.appendChild(newsRow(x,`<div class="hem-src">${x.fc.f} ${esc(x.fc.n)}</div>`))); out.appendChild(box);
+}
+/* --- Reportar (periodismo ciudadano + revisión con IA) --- */
+function reportCard(r){
+  const st=r.verif?(r.verif.nivel||'revisado por IA'):'sin verificar';
+  const stCls=!r.verif?'cred baja':(/alta/i.test(st)?'cred alta':/baja|dudos|contradice/i.test(st)?'cred baja':'cred media');
+  let vhtml=''; if(r.verif) vhtml='<div class="ai-card" style="margin-top:10px;border-left-color:#7a4fd6">'+mdToHtml(r.verif.texto)+'</div><div class="ai-foot">🤖 Revisión automática con IA · NO confirma los hechos, solo ayuda a verificar. Contrástalo con las fuentes.</div>';
+  const c=el('div','chan'); c.style.borderTopColor='#0891b2';
+  c.innerHTML=`<div class="chan-h"><div><div class="nm">${esc(r.title)}</div><div class="meta">${r.place?('📍 '+esc(r.place)+' · '):''}${new Date(r.ts).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'})} · reporte ciudadano</div></div><span class="cred ${stCls.split(' ')[1]}" style="text-transform:none">${esc(st)}</span></div>
+    <div class="hist" style="white-space:pre-wrap">${esc(r.body)}</div>
+    ${r.link?`<div class="chan-links"><a href="${esc(r.link)}" target="_blank" rel="noopener">🔗 Fuente aportada</a></div>`:''}
+    ${vhtml}
+    <div class="chan-links"><button class="rep-share" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;border:1.5px solid var(--linea)">↗ Compartir</button>${!r.verif&&getKey()?'<button class="rep-check" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;border:1.5px solid var(--linea);color:var(--izq)">🔎 Revisar con IA</button>':''}<button class="rep-del" style="all:unset;cursor:pointer;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;border:1.5px solid var(--linea);color:var(--rojo)">Eliminar</button></div>`;
+  c.querySelector('.rep-share').addEventListener('click',()=>shareArticle('[Reporte ciudadano · SIN VERIFICAR] '+r.title, r.link||location.href));
+  const chk=c.querySelector('.rep-check'); if(chk) chk.addEventListener('click',()=>verifyReport(r));
+  c.querySelector('.rep-del').addEventListener('click',()=>{ ST.reports=(ST.reports||[]).filter(x=>x.id!==r.id); save(); renderReports(); });
+  return c;
+}
+function renderReports(){ const list=$('#repList'), h=$('#repListH'); const rs=ST.reports||[]; if(h)h.style.display=rs.length?'flex':'none'; if(list){ list.innerHTML=''; rs.forEach(r=>list.appendChild(reportCard(r))); } }
+async function verifyReport(r){
+  if(!getKey()){ toast('Pon tu clave de IA en Ajustes para revisar'); return; }
+  const out=$('#repOut'); if(out) out.innerHTML='<div class="ai-loading">Revisando “'+esc(r.title)+'” y comparándolo con las noticias reales…</div>';
+  const ctx=balancedSample(1,40).map(a=>'- '+a.title).join('\n');
+  const system='Eres un ASISTENTE de verificación periodística, prudente y honesto. NO confirmas ni declaras verdadero/falso un hecho: AYUDAS a verificar. Español claro. No difamas. Si el reporte acusa a una persona concreta sin pruebas, adviértelo con claridad.';
+  const user='REPORTE CIUDADANO (sin verificar):\nTitular: '+r.title+'\nRelato: '+r.body+(r.place?('\nLugar: '+r.place):'')+(r.link?('\nFuente aportada: '+r.link):'\nFuente: ninguna')+'\n\nTITULARES REALES recientes (para contrastar):\n'+ctx+'\n\nHaz una REVISIÓN en secciones con estos títulos exactos en negrita:\n**Qué se puede comprobar** — afirmaciones verificables y cómo.\n**Señales de alerta** — falta de fuente, sensacionalismo, posible difamación, parecido a bulos; si no hay, dilo.\n**¿Coincide con lo que reportan los medios?** — usa SOLO los titulares dados; di si contradice, coincide o no aparece.\n**Plausibilidad** — una palabra (alta / media / baja / sin poder evaluar) y por qué; recuerda que sin fuente no se puede confirmar.\nSé breve y prudente.';
+  try{ const t=await aiComplete(system,user,900);
+    const nm=t.match(/plausibilidad[^\n]*?(alta|media|baja|sin poder evaluar)/i);
+    r.verif={ texto:t, nivel:'IA: plausibilidad '+(nm?nm[1].toLowerCase():'revisada') }; save();
+    if(out) out.innerHTML='<div class="note" style="border-left-color:#7a4fd6"><b>Revisión lista.</b> Es una ayuda automática, no una confirmación. Mírala abajo en “Mis reportes”.</div>';
+    renderReports();
+  }catch(e){ if(out) out.innerHTML='<div class="nokey"><b>No se pudo revisar.</b> '+esc(e.message)+'</div>'; }
+}
+async function submitReport(){
+  const title=($('#repTitle').value||'').trim(), body=($('#repBody').value||'').trim();
+  const place=($('#repPlace').value||'').trim(), link=($('#repLink').value||'').trim();
+  if(!title||body.length<15){ toast('Escribe un titular y cuenta el hecho con algo de detalle'); return; }
+  const r={ id:'r'+Date.now(), title, body, place, link, ts:Date.now(), verif:null };
+  ST.reports=ST.reports||[]; ST.reports.unshift(r); save();
+  $('#repTitle').value=''; $('#repBody').value=''; $('#repPlace').value=''; $('#repLink').value=''; renderReports();
+  if(!getKey()){ $('#repOut').innerHTML='<div class="nokey"><b>Reporte guardado como “sin verificar”.</b> Para la revisión con IA, pon tu clave en Ajustes. Puedes compartirlo igual (irá marcado como sin verificar).</div>'; return; }
+  await verifyReport(r);
+}
+function initComunidad(){ localChips(); renderReports(); const L=ST.lugares||[]; if(L.length) buildLocal(L[0]); else if($('#localOut')) $('#localOut').innerHTML='<div class="empty"><div class="ic">🏘️</div><p>Escribe tu municipio (o vereda) para ver sus noticias — hasta los pueblos más pequeños.</p></div>'; }
+function selectComunidadSeg(s){
+  $$('#comunidadSeg .segbtn').forEach(x=>x.classList.toggle('on',x.dataset.s===s));
+  $$('#v-comunidad .seg-view').forEach(v=>v.classList.toggle('on',v.id==='c-'+s));
+  if(s==='desmentidos' && !$('#fcOut').innerHTML.trim()) buildDesmentidos('');
+}
+
+/* ============================================================
    NAVEGACIÓN / TABS
    ============================================================ */
 const loaded={};
@@ -2022,6 +2187,7 @@ function switchTab(v){
   if(v==='canales'&&!loaded.canales){ loaded.canales=true; buildChannels(); }
   if(v==='prisma'&&!loaded.prisma){ loaded.prisma=true; buildAgenda(); }
   if(v==='archivo'&&!loaded.archivo){ loaded.archivo=true; initArchivo(); }
+  if(v==='comunidad'&&!loaded.comunidad){ loaded.comunidad=true; initComunidad(); }
 }
 
 /* ============================================================
@@ -2092,6 +2258,15 @@ function bind(){
   $('#docQ').addEventListener('keydown',e=>{ if(e.key==='Enter') buildDocs(); });
   $('#btnDocFeat').addEventListener('click',()=>{ $('#docQ').value=''; renderFeaturedDocs(); });
   $('#btnWb').addEventListener('click',buildWayback);
+  // comunidad
+  $('#comunidadSeg').addEventListener('click',e=>{ const b=e.target.closest('.segbtn'); if(b) selectComunidadSeg(b.dataset.s); });
+  $('#btnLocal').addEventListener('click',()=>buildLocal());
+  $('#localQ').addEventListener('keydown',e=>{ if(e.key==='Enter') buildLocal(); });
+  $('#localChips').addEventListener('click',e=>{ const del=e.target.closest('[data-del]'); if(del){ e.stopPropagation(); const i=+del.dataset.del; ST.lugares.splice(i,1); save(); localChips(); return; } const b=e.target.closest('[data-pick]'); if(b){ $('#localQ').value=b.dataset.pick; buildLocal(b.dataset.pick); } });
+  $('#btnFc').addEventListener('click',()=>buildDesmentidos($('#fcQ').value));
+  $('#fcQ').addEventListener('keydown',e=>{ if(e.key==='Enter') buildDesmentidos($('#fcQ').value); });
+  $('#btnFcRecent').addEventListener('click',()=>{ $('#fcQ').value=''; buildDesmentidos(''); });
+  $('#btnReport').addEventListener('click',submitReport);
   // ajustes
   $('#setLang').addEventListener('change',e=>{ ST.lang=e.target.value; save(); });
   $('#setProxy').addEventListener('change',e=>{ ST.proxy=e.target.value; save(); toast('Puente actualizado'); });
