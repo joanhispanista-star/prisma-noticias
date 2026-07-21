@@ -2393,6 +2393,7 @@ function init(){
   bind();
   syncSettingsUI();
   buildFeed().then(maybeAutoTranslate);
+  if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw-prisma.js'); }catch(e){} } // instalable + offline
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
