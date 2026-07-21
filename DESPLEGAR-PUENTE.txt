@@ -1,0 +1,58 @@
+========================================================
+  PRISMA · Cómo montar tu PUENTE PROPIO (5 minutos, GRATIS)
+========================================================
+
+¿Para qué? Prisma lee las noticias a través de un "puente" (los medios
+bloquean la lectura directa). Los puentes públicos gratuitos a veces se
+saturan y la Portada queda vacía. Con TU puente propio, Prisma nunca
+depende de nadie: es tuyo, es gratis (100.000 lecturas al día) y no
+pide tarjeta.
+
+Necesitas un computador con navegador (una vez montado, funciona en el
+iPhone y en todas partes).
+
+--------------------------------------------------------
+PASO 1 · Crear cuenta gratis en Cloudflare
+--------------------------------------------------------
+1. Entra a:  https://dash.cloudflare.com/sign-up
+2. Regístrate con tu correo (joan.hispanista@gmail.com) y una clave.
+   NO pide tarjeta. Confirma el correo.
+
+--------------------------------------------------------
+PASO 2 · Crear el Worker
+--------------------------------------------------------
+3. En el panel, menú izquierdo:  "Workers & Pages".
+4. Botón  "Create application"  ->  pestaña "Workers"  ->  "Create Worker".
+5. Ponle de nombre:  prisma-puente
+6. Pulsa  "Deploy"  (se crea con un código de ejemplo, lo cambiamos ya).
+
+--------------------------------------------------------
+PASO 3 · Pegar el código de Prisma
+--------------------------------------------------------
+7. Pulsa  "Edit code"  (o "Editar código").
+8. Borra TODO lo que haya en el editor.
+9. Abre el archivo  cloudflare-worker.js  (está junto a este),
+   copia TODO su contenido y pégalo en el editor.
+10. Pulsa  "Deploy"  (arriba a la derecha).
+
+--------------------------------------------------------
+PASO 4 · Copiar la URL y pegarla en Prisma
+--------------------------------------------------------
+11. Cloudflare te muestra la dirección de tu worker, algo así:
+       https://prisma-puente.TU-USUARIO.workers.dev
+    Cópiala.
+12. Abre Prisma  ->  ⚙️ Ajustes  ->  "Conexión a las fuentes"
+     ->  "Tu puente propio".
+13. Pega la URL y pulsa  "Guardar puente".
+
+¡Listo! A partir de ahora Prisma usará tu puente primero (y los públicos
+solo como respaldo). La Portada cargará más rápido y más estable.
+
+--------------------------------------------------------
+Notas
+--------------------------------------------------------
+- Es gratis para siempre dentro del plan gratuito (100.000 lecturas/día,
+  de sobra para uso personal y de tu barrio).
+- Si algún día quieres quitarlo, borra la URL en Ajustes y pulsa Guardar.
+- Tu puente solo reenvía lecturas públicas; no guarda tus datos.
+========================================================

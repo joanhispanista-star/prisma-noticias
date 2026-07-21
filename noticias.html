@@ -313,6 +313,34 @@
   .hemarticle .hem-dt{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--gris);white-space:nowrap;padding-top:2px;flex:none}
   .hemarticle a{font-size:13px;font-weight:600;line-height:1.4;color:var(--negro)}
   .hemarticle .hem-src{font-size:11px;color:var(--gris);font-weight:700}
+  /* ---- historias (agrupación + puntos ciegos) ---- */
+  .storycard{background:#fff;border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;margin-bottom:14px;transition:.15s}
+  .storycard:hover{box-shadow:0 20px 44px -26px rgba(23,24,28,.5)}
+  .story-top{display:flex;gap:14px;padding:15px 16px}
+  .story-thumb{flex:none;width:104px;height:78px;border-radius:10px;background:#e9eaec no-repeat center/cover}
+  .story-thumb .ni{width:100%;height:100%;display:grid;place-items:center;font-size:26px;opacity:.3}
+  .story-b{flex:1;min-width:0}
+  .story-t{font-size:15.5px;font-weight:800;line-height:1.3}
+  .story-meta{font-size:12px;color:var(--gris);font-weight:700;margin-top:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .biasbar{display:flex;height:8px;border-radius:999px;overflow:hidden;margin-top:9px;background:#eceef0;max-width:260px}
+  .biasbar i{display:block;height:100%}
+  .biasbar .bi{background:var(--izq)}.biasbar .bc{background:var(--centro)}.biasbar .bd{background:var(--der)}.biasbar .be{background:var(--estatal)}
+  .blindspot{font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;background:#fbe4e2;color:#a8121e;display:inline-flex;align-items:center;gap:5px}
+  .blindspot.soft{background:#eef1f4;color:#4a4d54}
+  .story-more{border-top:1px solid var(--linea)}
+  .story-more summary{cursor:pointer;list-style:none;padding:9px 16px;font-size:12.5px;font-weight:800;color:var(--negro)}
+  .story-more summary::-webkit-details-marker{display:none}
+  .story-more summary::after{content:"▾";float:right;color:var(--gris-claro)}
+  .story-more[open] summary::after{transform:rotate(180deg)}
+  .story-ver{display:flex;gap:9px;padding:8px 16px;border-top:1px solid var(--linea-2);align-items:flex-start;font-size:12.5px}
+  .story-ver .vdot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none}
+  .story-ver a{font-weight:600;color:var(--negro);line-height:1.35}
+  .story-ver .vsrc{font-size:10.5px;color:var(--gris);font-weight:700;display:block;margin-top:2px}
+  .bookmark{border:none;background:none;cursor:pointer;font-size:15px;line-height:1;color:var(--gris-claro);padding:6px 9px;border-radius:8px;border:1.5px solid var(--linea);transition:.12s;font-weight:800}
+  .bookmark.on{color:#fff;background:var(--rojo);border-color:var(--rojo)}
+  .follow-chips{display:flex;gap:6px;flex-wrap:wrap}
+  .fchip2{font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:999px;border:1.5px solid var(--linea);background:#fff;color:var(--negro);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .fchip2:hover{border-color:var(--negro)} .fchip2 .x{color:var(--gris-claro);font-weight:900}
 
   /* ---- ajustes ---- */
   .card{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:18px;margin-bottom:16px}
@@ -440,6 +468,14 @@
       </div>
     </div>
 
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+      <div class="seg" id="viewSeg" style="margin-bottom:0">
+        <button class="segbtn on" data-view="titulares">📰 Titulares</button>
+        <button class="segbtn" data-view="historias">🧩 Historias</button>
+        <button class="segbtn" data-view="guardados">★ Guardados</button>
+      </div>
+      <span style="font-size:12px;color:var(--gris);font-weight:600" id="viewHint">“Historias” agrupa la misma noticia de muchos medios y avisa de los puntos ciegos.</span>
+    </div>
     <div class="feedgrid" id="feed"></div>
     <div class="loadmore" id="loadmore" style="display:none">
       <button class="btn btn-negro" id="btnMore">Ver más noticias</button>
@@ -695,6 +731,14 @@
           <option value="direct">Sin puente (directo)</option>
         </select>
       </div>
+      <div class="row" style="display:block">
+        <div class="lab">🛡️ Tu puente propio (Cloudflare Worker) — máxima fiabilidad</div>
+        <div class="desc" style="margin:4px 0 8px">Con tu propio puente, Prisma NUNCA depende de servicios públicos que se saturan. Es gratis (100.000 lecturas/día). Sigue el archivo <b>DESPLEGAR-PUENTE.txt</b> (5 min) y pega aquí la URL de tu worker.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input class="txin" id="setWorker" type="url" placeholder="https://prisma-puente.tu-usuario.workers.dev/" style="flex:1;min-width:220px">
+          <button class="btn btn-negro btn-sm" id="btnSaveWorker">Guardar puente</button>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -768,7 +812,7 @@ function timeAgo(d){ if(!d) return ''; const s=(Date.now()-d)/1000; if(s<60)retu
 
 /* ---------- almacenamiento ---------- */
 const SK='noticias_v1', KK='noticias_api_key';
-const defaults={ lang:'es', auto:false, proxy:'auto', cat:'todas', reg:'todas', bias:'all', off:[], saved:[] };
+const defaults={ lang:'es', auto:false, proxy:'auto', worker:'', cat:'todas', reg:'todas', bias:'all', off:[], saved:[], follows:[], lastVisit:0 };
 let ST = load();
 function load(){ try{ return Object.assign({}, defaults, JSON.parse(localStorage.getItem(SK)||'{}')); }catch(e){ return {...defaults}; } }
 function save(){ try{ localStorage.setItem(SK, JSON.stringify(ST)); }catch(e){} }
@@ -1009,25 +1053,30 @@ const CIUDADES={
 /* proxies que devuelven el cuerpo crudo + cabecera CORS (verificados jul-2026).
    corsproxy.io se descartó: no sirve en file:// ni GitHub Pages sin pagar. */
 const PROXIES={
+  worker:     u=>(ST.worker||'').replace(/\/+$/,'')+'/?url='+enc(u),
   allorigins: u=>'https://api.allorigins.win/raw?url='+enc(u),
   codetabs:   u=>'https://api.codetabs.com/v1/proxy/?quest='+enc(u),
   corseu:     u=>'https://cors.eu.org/'+u,
   direct:     u=>u
 };
-/* la fiabilidad de cada proxy cambia por día; al arrancar sondeamos y usamos el que responda */
+const hasWorker=()=>!!(ST.worker && ST.worker.trim());
+/* la fiabilidad de cada proxy cambia por día; al arrancar sondeamos y usamos el que responda.
+   Si el usuario configuró su PUENTE PROPIO (Cloudflare Worker), ese manda siempre. */
 let PROXY_WINNER=null, probeDone=null;
 function proxyChain(){
-  const p=ST.proxy, all=['allorigins','corseu','codetabs','direct'];
-  if(p==='direct') return ['direct','corseu','allorigins'];
-  if(p&&p!=='auto'&&PROXIES[p]) return [p,...all.filter(x=>x!==p)];
-  return PROXY_WINNER ? [PROXY_WINNER,...all.filter(x=>x!==PROXY_WINNER)] : all;
+  const p=ST.proxy, base=['allorigins','corseu','codetabs','direct'];
+  const lead=hasWorker()?['worker']:[];
+  if(p==='direct') return [...lead,'direct','corseu','allorigins'];
+  if(p&&p!=='auto'&&PROXIES[p]) return [...lead,p,...base.filter(x=>x!==p)];
+  const rest=PROXY_WINNER ? [PROXY_WINNER,...base.filter(x=>x!==PROXY_WINNER)] : base;
+  return [...lead,...rest];
 }
 async function probeProxy(){
   if(ST.proxy && ST.proxy!=='auto') return;   // proxy fijado por el usuario
   if(probeDone) return probeDone;
   probeDone=(async()=>{
     const test='https://feeds.bbci.co.uk/news/world/rss.xml';
-    const cands=['allorigins','corseu','codetabs'];
+    const cands=hasWorker()?['worker','allorigins','corseu','codetabs']:['allorigins','corseu','codetabs'];
     const res=await Promise.all(cands.map(name=>(async()=>{
       try{ const c=new AbortController(); const to=setTimeout(()=>c.abort(),5500);
         const r=await fetch(PROXIES[name](test),{signal:c.signal}); clearTimeout(to);
@@ -1294,14 +1343,17 @@ function catOf(a,o){
   a._cat = bestScore>=2 ? best : 'mundo';
   return a._cat;
 }
+let viewMode='titulares';
 function applyFeedFilters(){
-  const feed=$('#feed'); feed.innerHTML=''; shown=0;
+  const feed=$('#feed'); feed.className=(viewMode==='historias')?'':'feedgrid'; feed.innerHTML=''; shown=0;
+  if(viewMode==='guardados'){ renderGuardados(); return; }
   const list=FEED.filter(matchesFilters);
   if(!list.length){
     feed.appendChild(el('div','empty','<div class="ic">📭</div><p>No encontramos noticias con esos filtros. Prueba con “Actualizar”, otra región o menos filtros.</p>'));
     $('#loadmore').style.display='none'; return;
   }
   FEED._filtered=list;
+  if(viewMode==='historias'){ renderHistorias(list); $('#loadmore').style.display='none'; return; }
   renderMore();
 }
 function renderMore(){
@@ -1310,6 +1362,83 @@ function renderMore(){
   slice.forEach(a=>feed.appendChild(card(a)));
   shown+=slice.length;
   $('#loadmore').style.display= shown<list.length? 'flex':'none';
+}
+/* ---- guardar noticias ---- */
+function isSaved(link){ return (ST.saved||[]).some(s=>s.link===link); }
+function toggleSave(a,btn){
+  ST.saved=ST.saved||[];
+  const i=ST.saved.findIndex(s=>s.link===a.link);
+  if(i>=0){ ST.saved.splice(i,1); if(btn){btn.classList.remove('on');btn.textContent='☆';} toast('Quitado de guardados'); if(viewMode==='guardados')applyFeedFilters(); }
+  else { ST.saved.unshift({title:a.title,link:a.link,outlet:a.outlet,ts:a.ts,desc:a.desc||'',img:a.img||''}); if(btn){btn.classList.add('on');btn.textContent='★';} toast('Guardado ✓'); }
+  save();
+}
+function renderGuardados(){
+  const feed=$('#feed'); feed.className='feedgrid'; $('#loadmore').style.display='none';
+  const s=ST.saved||[];
+  if(!s.length){ feed.appendChild(el('div','empty','<div class="ic">★</div><p>Aún no guardas noticias. Toca la ☆ en cualquier titular para leerlo luego. Se guardan solo en este dispositivo.</p>')); return; }
+  s.forEach(a=>feed.appendChild(card(a)));
+}
+/* ---- agrupar la misma noticia (historias) + puntos ciegos ---- */
+const CLUSTER_STOP=new Set(('para como pero este esta esto esos esas entre sobre tras desde hasta porque cuando donde segun tambien contra video vivo ultima hora ultimas nuevo nueva noticia noticias tiene hace dice sera millones anos dias mundo pais paises the and for with from that this have will says said after more been they their what when over into about news says video live breaking says report reports could would first '+'').trim().split(/\s+/));
+function clusterTokens(a){
+  const t=(a.title||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const words=t.match(/[a-z0-9]{4,}/g)||[]; const s=new Set();
+  words.forEach(w=>{ if(!CLUSTER_STOP.has(w)) s.add(w); }); return s;
+}
+function clusterStories(list){
+  const arts=list.slice(0,220).map(a=>({a,tk:clusterTokens(a)}));
+  const clusters=[];
+  for(const it of arts){
+    let best=null,bestShared=0;
+    for(const c of clusters){ let sh=0; for(const w of it.tk) if(c.seed.has(w)) sh++; if(sh>bestShared){bestShared=sh;best=c;} }
+    if(best && bestShared>=3){ best.items.push(it.a); }
+    else clusters.push({seed:it.tk,items:[it.a]});
+  }
+  return clusters;
+}
+function storyBucket(o){ const c=biasClass(o); return c==='estatal'?'estatal':(c==='izq'||c==='ci')?'izq':(c==='cd'||c==='der')?'der':'centro'; }
+function storyCard(cluster){
+  const items=cluster.items.slice().filter(a=>byId[a.outlet]);
+  const rep=items.slice().sort((x,y)=>(y.title.length)-(x.title.length))[0];
+  const cnt={izq:0,centro:0,der:0,estatal:0}, per={izq:[],centro:[],der:[],estatal:[]};
+  items.forEach(a=>{ const o=byId[a.outlet]; const b=storyBucket(o); cnt[b]++; per[b].push({a,o}); });
+  const total=cnt.izq+cnt.centro+cnt.der, nSrc=items.length;
+  let blind='',soft=false;
+  if(total>=3){
+    if(cnt.izq===0&&cnt.der>=2) blind='Punto ciego: la izquierda no lo cubre';
+    else if(cnt.der===0&&cnt.izq>=2) blind='Punto ciego: la derecha no lo cubre';
+    else if(cnt.izq/total>=0.8){blind='Sobre todo desde la izquierda';soft=true;}
+    else if(cnt.der/total>=0.8){blind='Sobre todo desde la derecha';soft=true;}
+    else if(cnt.izq>0&&cnt.der>0){blind='Cubierto en todo el espectro';soft=true;}
+  }
+  const img=(items.find(a=>a.img)||{}).img||'';
+  const bt=Math.max(1,cnt.izq+cnt.centro+cnt.der+cnt.estatal);
+  const bar=`<div class="biasbar">${cnt.izq?`<i class="bi" style="width:${(cnt.izq/bt*100).toFixed(1)}%"></i>`:''}${cnt.centro?`<i class="bc" style="width:${(cnt.centro/bt*100).toFixed(1)}%"></i>`:''}${cnt.der?`<i class="bd" style="width:${(cnt.der/bt*100).toFixed(1)}%"></i>`:''}${cnt.estatal?`<i class="be" style="width:${(cnt.estatal/bt*100).toFixed(1)}%"></i>`:''}</div>`;
+  const COL={izq:'var(--izq)',centro:'var(--centro)',der:'var(--der)',estatal:'var(--estatal)'};
+  let vers=''; ['izq','centro','der','estatal'].forEach(b=>per[b].forEach(x=>{ vers+=`<div class="story-ver"><span class="vdot" style="background:${COL[b]}"></span><div><a href="${esc(x.a.link)}" target="_blank" rel="noopener">${esc(x.a.title)}</a><span class="vsrc">${esc(x.o.nombre)} · ${biasWord(x.o)}${x.a.ts?(' · '+timeAgo(x.a.ts)):''}</span></div></div>`; }));
+  const c=el('article','storycard');
+  c.innerHTML=`
+    <div class="story-top">
+      <div class="story-thumb" ${img?`style="background-image:url('${esc(img)}')"`:''}>${img?'':'<div class="ni">🧩</div>'}</div>
+      <div class="story-b">
+        <div class="story-t">${esc(rep.title)}</div>
+        <div class="story-meta"><b style="color:var(--negro)">${nSrc} medios</b> lo cubren ${blind?`· <span class="blindspot ${soft?'soft':''}">${soft?'':'⚠️ '}${esc(blind)}</span>`:''}</div>
+        ${bar}
+      </div>
+    </div>
+    <details class="story-more"><summary>Ver las ${nSrc} versiones (izquierda → derecha)</summary>${vers}</details>`;
+  return c;
+}
+function renderHistorias(list){
+  const feed=$('#feed');
+  const clusters=clusterStories(list);
+  const multi=clusters.filter(c=>c.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
+  const singles=clusters.filter(c=>c.items.length<2).map(c=>c.items[0]);
+  if(multi.length){ const h=el('div','arch-h'); h.innerHTML='🧩 La misma noticia en varios medios <span class="n">· '+multi.length+' historias · abre para ver todas las versiones</span>'; feed.appendChild(h);
+    multi.slice(0,40).forEach(c=>feed.appendChild(storyCard(c))); }
+  else { feed.appendChild(el('div','empty','<div class="ic">🧩</div><p>Aún no hay suficientes fuentes cargadas para agrupar historias. Espera a que cargue la Portada o quita filtros.</p>')); }
+  if(singles.length){ const h=el('div','arch-h'); h.style.marginTop='20px'; h.innerHTML='📰 Otras noticias <span class="n">· por ahora con una sola fuente</span>'; feed.appendChild(h);
+    const g=el('div','feedgrid'); singles.slice(0,24).forEach(a=>g.appendChild(card(a))); feed.appendChild(g); }
 }
 function card(a){
   const o=byId[a.outlet]; if(!o) return extCard(a);
@@ -1330,9 +1459,11 @@ function card(a){
         <button class="lnk tr">🌐 Traducir</button>
         <button class="lnk ver">🧭 Canal</button>
         <button class="lnk sh">↗ Compartir</button>
+        <button class="bookmark ${isSaved(a.link)?'on':''}" title="Guardar para leer luego">${isSaved(a.link)?'★':'☆'}</button>
       </div>
     </div>`;
   c.querySelector('.sh').addEventListener('click',()=>shareArticle(a.title,a.link));
+  c.querySelector('.bookmark').addEventListener('click',e=>toggleSave(a,e.currentTarget));
   // traducir
   c.querySelector('.tr').addEventListener('click',async(e)=>{
     const btn=e.currentTarget; if(btn.classList.contains('done')){ c.querySelector('.art-t').textContent=a.title; c.querySelector('.art-x').textContent=a.desc||''; btn.classList.remove('done'); btn.innerHTML='🌐 Traducir'; return; }
@@ -1711,8 +1842,23 @@ async function buildResumen(){
   box.innerHTML='<div class="ai-loading">Redactando un resumen neutral de '+top.length+' titulares…</div>';
   const system='Eres un editor de noticias imparcial y riguroso. Escribes SOLO a partir de los titulares que te dan, sin añadir hechos externos ni inventar. Separas los hechos de las opiniones. Español claro y neutral, sin adjetivos cargados. Nunca tomas partido político.';
   const user='Titulares reales de múltiples medios (con su medio y sesgo), de ahora mismo:\n\n'+items+'\n\nRedacta un RESUMEN NEUTRAL de lo más importante que ocurre en el mundo, en 6-9 viñetas breves agrupadas por tema (usa **negrita** para el tema al inicio de cada viñeta). Reglas: usa SOLO estos titulares; no inventes cifras ni hechos; si un titular es opinión o los medios discrepan, indícalo; sé conciso.';
-  try{ const t=await aiComplete(system,user,1100); box.innerHTML='<div class="ai-card">'+mdToHtml(t)+'</div>'+aiFootnote(top.length,new Set(top.map(a=>a.outlet)).size); }
+  try{ const t=await aiComplete(system,user,1100);
+    box.innerHTML='<div style="margin-bottom:10px"><button class="btn btn-negro btn-sm" id="btnEscuchar">🔊 Escuchar</button></div><div class="ai-card">'+mdToHtml(t)+'</div>'+aiFootnote(top.length,new Set(top.map(a=>a.outlet)).size);
+    const plain=String(t).replace(/[*#>_`]/g,'').replace(/\n+/g,'. ');
+    $('#btnEscuchar').addEventListener('click',e=>speakText(plain,e.currentTarget));
+  }
   catch(e){ box.innerHTML='<div class="nokey"><b>No se pudo generar.</b> '+esc(e.message==='nokey'?'Falta la clave de IA (Ajustes).':e.message)+'</div>'; }
+}
+/* voz del navegador (gratis, sin clave): leer el resumen en voz alta */
+let _speaking=false;
+function speakText(text,btn){
+  if(!('speechSynthesis' in window)){ toast('Tu navegador no puede leer en voz alta'); return; }
+  if(_speaking){ speechSynthesis.cancel(); _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; return; }
+  const u=new SpeechSynthesisUtterance(text); u.lang=(ST.lang==='es'?'es-ES':ST.lang); u.rate=1.02;
+  const vs=speechSynthesis.getVoices(); const v=vs.find(x=>/es/i.test(x.lang)); if(v)u.voice=v;
+  u.onend=()=>{ _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; };
+  u.onerror=()=>{ _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; };
+  speechSynthesis.cancel(); speechSynthesis.speak(u); _speaking=true; if(btn)btn.innerHTML='⏸ Detener';
 }
 /* --- El mismo hecho, muchas voces (espectro + IA) --- */
 function vocesSpectrum(){
@@ -1883,6 +2029,7 @@ function switchTab(v){
    ============================================================ */
 function syncSettingsUI(){
   $('#setLang').value=ST.lang; $('#setProxy').value=ST.proxy;
+  if($('#setWorker')) $('#setWorker').value=ST.worker||'';
   $('#setAuto').classList.toggle('on',!!ST.auto);
   $('#fCat').value=ST.cat; $('#fReg').value=ST.reg;
   $$('#biasChips .bchip').forEach(b=>b.classList.toggle('on',b.dataset.b===ST.bias));
@@ -1913,6 +2060,10 @@ function bind(){
   $('#biasChips').addEventListener('click',e=>{ const b=e.target.closest('.bchip'); if(!b)return; ST.bias=b.dataset.b; save(); syncSettingsUI(); buildFeed(); });
   $('#btnRefresh').addEventListener('click',()=>{ Object.keys(memCache).forEach(k=>delete memCache[k]); buildFeed().then(maybeAutoTranslate); });
   $('#btnWorld').addEventListener('click',worldSearch);
+  $('#viewSeg').addEventListener('click',e=>{ const b=e.target.closest('.segbtn'); if(!b)return; viewMode=b.dataset.view;
+    $$('#viewSeg .segbtn').forEach(x=>x.classList.toggle('on',x===b));
+    $('#viewHint').textContent = viewMode==='historias'?'Agrupada: la misma noticia en varios medios, con sus puntos ciegos.':(viewMode==='guardados'?'Tus noticias guardadas en este dispositivo.':'“Historias” agrupa la misma noticia y avisa de puntos ciegos.');
+    applyFeedFilters(); });
   $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); applyFeedFilters(); } });
   $('#btnMore').addEventListener('click',renderMore);
   // video
@@ -1944,6 +2095,7 @@ function bind(){
   // ajustes
   $('#setLang').addEventListener('change',e=>{ ST.lang=e.target.value; save(); });
   $('#setProxy').addEventListener('change',e=>{ ST.proxy=e.target.value; save(); toast('Puente actualizado'); });
+  $('#btnSaveWorker').addEventListener('click',()=>{ ST.worker=($('#setWorker').value||'').trim(); save(); PROXY_WINNER=null; probeDone=null; Object.keys(memCache).forEach(k=>delete memCache[k]); toast(ST.worker?'Puente propio activado ✓':'Puente propio quitado'); });
   $('#setAuto').addEventListener('click',()=>{ ST.auto=!ST.auto; save(); syncSettingsUI(); if(ST.auto)maybeAutoTranslate(); });
   $('#btnSaveKey').addEventListener('click',()=>{ setKey($('#setKey').value.trim()); toast($('#setKey').value.trim()?'Clave guardada en este dispositivo':'Clave eliminada'); });
   $('#btnExport').addEventListener('click',exportData);
