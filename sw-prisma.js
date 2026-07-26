@@ -4,8 +4,8 @@
    Diseño seguro: solo toca peticiones del MISMO origen (el cascarón HTML);
    los proxies, fuentes, APIs de traducción, radio, archivo, YouTube (todos de otro
    origen) pasan DIRECTOS a la red sin que el SW los intercepte ni los cachee. */
-const CACHE='prisma-shell-v1';
-const SHELL=['./','./index.html','./noticias.html'];
+const CACHE='prisma-shell-v2';
+const SHELL=['./','./index.html','./noticias.html','./estilos.css','./app.js','./catalogo.json'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(
@@ -31,23 +31,12 @@ self.addEventListener('fetch',e=>{
   // Otro origen (proxies/fuentes/APIs/YouTube/archive…) → red directa, el SW no se mete
   if(url.origin!==location.origin) return;
 
-  // El DOCUMENTO HTML: RED PRIMERO (siempre lo último cuando hay señal),
-  // y si no hay red, servimos la copia cacheada → la app abre offline.
-  if(req.mode==='navigate' || (req.headers.get('accept')||'').includes('text/html')){
-    e.respondWith(
-      fetch(req)
-        .then(res=>{ const cp=res.clone(); caches.open(CACHE).then(c=>c.put('./noticias.html',cp)); return res; })
-        .catch(()=>caches.match('./noticias.html').then(r=>r||caches.match('./')))
-    );
-    return;
-  }
-
-  // Resto de recursos del mismo origen: caché primero + refresco en segundo plano
+  // Mismo origen (cascarón + estilos.css + app.js + catalogo.json): RED PRIMERO —
+  // siempre lo último cuando hay señal; si no hay red, la copia cacheada → la app abre offline.
+  // (network-first en todo evita servir una versión desincronizada durante el diseño).
   e.respondWith(
-    caches.open(CACHE).then(async c=>{
-      const hit=await c.match(req,{ignoreSearch:true});
-      const net=fetch(req).then(r=>{ if(r&&r.ok) c.put(req,r.clone()); return r; }).catch(()=>hit);
-      return hit||net;
-    })
+    fetch(req)
+      .then(res=>{ if(res&&res.ok){ const cp=res.clone(); caches.open(CACHE).then(c=>c.put(req,cp)); } return res; })
+      .catch(()=>caches.match(req,{ignoreSearch:true}).then(r=> r || (req.mode==='navigate' ? caches.match('./noticias.html') : undefined)))
   );
 });
