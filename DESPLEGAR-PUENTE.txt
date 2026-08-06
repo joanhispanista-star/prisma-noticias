@@ -2,11 +2,15 @@
   PRISMA · Cómo montar tu PUENTE PROPIO (5 minutos, GRATIS)
 ========================================================
 
-¿Para qué? Prisma lee las noticias a través de un "puente" (los medios
-bloquean la lectura directa). Los puentes públicos gratuitos a veces se
-saturan y la Portada queda vacía. Con TU puente propio, Prisma nunca
-depende de nadie: es tuyo, es gratis (100.000 lecturas al día) y no
-pide tarjeta.
+¿Para qué? Prisma lee las noticias a través de un "puente" (la mayoría de
+los medios bloquean la lectura directa desde el navegador). Los puentes
+públicos gratuitos que veníamos usando YA NO SIRVEN: medido el 6 de agosto
+de 2026, de los tres, dos están muertos y el tercero solo aguanta una
+lectura. Resultado: la Portada publicada muestra 1 medio de 221.
+
+Sin puente, Prisma solo puede leer las ~25 fuentes que se dejan leer en
+directo. Con TU puente, lee las 221. Es tuyo, es gratis (100.000 lecturas
+al día) y no pide tarjeta.
 
 Necesitas un computador con navegador (una vez montado, funciona en el
 iPhone y en todas partes).
@@ -36,23 +40,33 @@ PASO 3 · Pegar el código de Prisma
 10. Pulsa  "Deploy"  (arriba a la derecha).
 
 --------------------------------------------------------
-PASO 4 · Copiar la URL y pegarla en Prisma
+PASO 4 · Copiar la URL  (esto es lo que cambia todo)
 --------------------------------------------------------
 11. Cloudflare te muestra la dirección de tu worker, algo así:
        https://prisma-puente.TU-USUARIO.workers.dev
-    Cópiala.
-12. Abre Prisma  ->  ⚙️ Ajustes  ->  "Conexión a las fuentes"
-     ->  "Tu puente propio".
-13. Pega la URL y pulsa  "Guardar puente".
+    Cópiala y pásamela por el chat.
 
-¡Listo! A partir de ahora Prisma usará tu puente primero (y los públicos
-solo como respaldo). La Portada cargará más rápido y más estable.
+    La pego en UNA línea de app.js:
+        const PUENTE_OFICIAL='https://prisma-puente.TU-USUARIO.workers.dev';
+    (está arriba del todo, junto a la lista de puentes)
+
+    A partir de ese momento, CUALQUIERA que abra Prisma —tu mamá, un
+    vecino, alguien en Twitter— ve los 221 medios sin configurar nada.
+    Ese es el punto: el puente deja de ser un ajuste que nadie va a tocar
+    y pasa a ser parte de la app.
+
+12. (Opcional, para ti) También puedes pegarla en
+    ⚙️ Ajustes -> "Conexión a las fuentes" -> "Tu puente propio".
+    Eso solo afecta a TU dispositivo y manda por encima del oficial.
 
 --------------------------------------------------------
 Notas
 --------------------------------------------------------
-- Es gratis para siempre dentro del plan gratuito (100.000 lecturas/día,
-  de sobra para uso personal y de tu barrio).
-- Si algún día quieres quitarlo, borra la URL en Ajustes y pulsa Guardar.
-- Tu puente solo reenvía lecturas públicas; no guarda tus datos.
+- Es gratis para siempre dentro del plan gratuito (100.000 lecturas/día).
+  Prisma pide ~100 lecturas por visita, y el puente guarda copia 5 min,
+  así que dan de sobra para arrancar. Cuando se queden cortas, se sube el
+  tiempo de copia en cloudflare-worker.js (cacheTtl) y rinden mucho más.
+- Tu puente solo reenvía lecturas públicas; no guarda datos de nadie.
+- Si algún día quieres quitarlo, se borra esa línea y la app sigue
+  funcionando con las fuentes directas.
 ========================================================

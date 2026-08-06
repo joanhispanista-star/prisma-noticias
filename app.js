@@ -94,14 +94,22 @@ const CIUDADES={
    ============================================================ */
 /* proxies que devuelven el cuerpo crudo + cabecera CORS (verificados jul-2026).
    corsproxy.io se descartó: no sirve en file:// ni GitHub Pages sin pagar. */
+/* EL PUENTE DE PRISMA — la única línea que hay que rellenar para que la Portada
+   traiga los 221 medios a CUALQUIER lector, sin que él configure nada.
+   Se monta gratis en 10 minutos siguiendo DESPLEGAR-PUENTE.txt y se pega aquí:
+     const PUENTE_OFICIAL='https://prisma-puente.TU-USUARIO.workers.dev';
+   Vacío, la app funciona igual pero solo con las fuentes que se dejan leer en
+   directo (unas 25 de 221): los puentes públicos gratuitos están saturados. */
+const PUENTE_OFICIAL='';
+const puente=()=>(((ST.worker&&ST.worker.trim())||PUENTE_OFICIAL)||'').replace(/\/+$/,'');
 const PROXIES={
-  worker:     u=>(ST.worker||'').replace(/\/+$/,'')+'/?url='+enc(u),
+  worker:     u=>puente()+'/?url='+enc(u),
   allorigins: u=>'https://api.allorigins.win/raw?url='+enc(u),
   codetabs:   u=>'https://api.codetabs.com/v1/proxy/?quest='+enc(u),
   corseu:     u=>'https://cors.eu.org/'+u,
   direct:     u=>u
 };
-const hasWorker=()=>!!(ST.worker && ST.worker.trim());
+const hasWorker=()=>!!puente();
 /* la fiabilidad de cada proxy cambia por día; al arrancar sondeamos y usamos el que responda.
    Si el usuario configuró su PUENTE PROPIO (Cloudflare Worker), ese manda siempre. */
 let PROXY_WINNER=null, PROXY_WINNERS=[], probeDone=null;
@@ -138,6 +146,27 @@ async function probeProxy(){
     if(!PROXY_WINNER && winners.length) PROXY_WINNER=winners[0];
   })();
   return probeDone;
+}
+/* ---------- memoria de vía por medio ----------
+   Muchas fuentes (El País, NYT, Fox, DW, RTVE…) entregan su RSS con permiso CORS:
+   se pueden leer EN DIRECTO, sin puente, más rápido y sin gastar el cupo de nadie.
+   Apuntamos por qué vía respondió cada medio para ir por ahí primero la próxima vez. */
+const VK='nvia_v1', VIA_TTL=7*24*3600*1000;
+let VIA=(()=>{ try{ const o=JSON.parse(localStorage.getItem(VK)||'{}'), n={}, now=Date.now();
+    for(const k in o){ if(o[k]&&o[k].n&&now-o[k].t<VIA_TTL) n[k]=o[k]; } return n; }catch(e){ return {}; } })();
+let viaDirty=false, viaTimer=null;
+/* se guarda poco después de aprender algo: la portada tarda en terminar y el
+   lector puede irse antes; lo aprendido no se puede perder por eso. */
+function viaSet(id,name){ const c=VIA[id]; if(!c||c.n!==name){ VIA[id]={n:name,t:Date.now()}; viaDirty=true; clearTimeout(viaTimer); viaTimer=setTimeout(viaSave,1500); } }
+function viaSave(){ if(!viaDirty) return; viaDirty=false; try{ localStorage.setItem(VK,JSON.stringify(VIA)); }catch(e){} }
+/* orden de vías para UN medio: su puente propio manda; luego la vía que ya le funcionó;
+   y si aún no sabemos nada de él, 'directo' entra en la carrera (si la fuente no lo permite
+   falla en milisegundos, así que probarlo no cuesta tiempo). */
+function outletChain(id){
+  const base=proxyChain(id), lead=hasWorker()?['worker']:[];
+  const k=VIA[id]&&VIA[id].n;
+  const usable=k && (k==='direct' || (PROXIES[k] && (k!=='worker'||hasWorker())));
+  return [...new Set([...lead, usable?k:'direct', ...base])];
 }
 async function fetchText(url,{timeout=8000}={}){
   for(const name of proxyChain()){
@@ -217,13 +246,14 @@ async function tryProxy(url,name,outlet,timeout){
   }catch(e){ return null; }
   finally{ clearTimeout(to); }
 }
-/* carrera en paralelo: gana el 1er proxy que devuelva items; si ninguno, null */
+/* carrera en paralelo: gana la 1ª vía que devuelva items; si ninguna, null.
+   Devuelve también CUÁL ganó, para recordarla. */
 async function raceProxies(url,names,outlet,timeout){
   if(!names.length) return null;
   try{
     return await Promise.any(names.map(async name=>{
       const it=await tryProxy(url,name,outlet,timeout);
-      if(it&&it.length) return it;
+      if(it&&it.length) return {items:it,via:name};
       throw 0;
     }));
   }catch(e){ return null; }
@@ -240,15 +270,15 @@ async function fetchOutletItems(outlet){
   const timeLeft=()=>BUDGET-(Date.now()-started);
   for(const url of (outlet.rss||[])){
     if(timeLeft()<1200) break;                       // sin presupuesto: no arranques otra dirección
-    const chain=proxyChain(outlet.id).filter(n=>n!=='direct');
-    // 1) carrera EN PARALELO de los 2 proxies líderes (antes era en fila, 4×7s)
-    let items=await raceProxies(url,chain.slice(0,2),outlet,Math.min(6000,timeLeft()));
-    if(items&&items.length) return items;
-    // 1b) resto de proxies, en serie pero con presupuesto
-    for(const name of chain.slice(2)){
+    const chain=outletChain(outlet.id);
+    // 1) carrera EN PARALELO de las 3 vías líderes (antes era en fila, 4×7s)
+    const won=await raceProxies(url,chain.slice(0,3),outlet,Math.min(6000,timeLeft()));
+    if(won){ viaSet(outlet.id,won.via); return won.items; }
+    // 1b) resto de vías, en serie pero con presupuesto
+    for(const name of chain.slice(3)){
       if(timeLeft()<1200) break;
-      items=await tryProxy(url,name,outlet,Math.min(5000,timeLeft()));
-      if(items&&items.length) return items;
+      const items=await tryProxy(url,name,outlet,Math.min(5000,timeLeft()));
+      if(items&&items.length){ viaSet(outlet.id,name); return items; }
     }
     // 2) AllOrigins /get (ahora CON timeout): el XML viene dentro de JSON.contents
     if(timeLeft()>1200){
@@ -362,6 +392,7 @@ async function buildFeed(){
     for(const a of items){ const k=a.title.toLowerCase().slice(0,70); if(k&&!seen.has(k)){ seen.add(k); FEED.push(a); added=true; } }
     if(added) schedulePaint();
   });
+  viaSave();                        // apunta por qué vía respondió cada medio, para la próxima vez
   if(myToken!==feedToken) return;
   loading=false;
   if(!FEED.length){ feed.innerHTML=''; feed.appendChild(el('div','empty','<div class="ic">📭</div><p>No pudimos cargar noticias ahora. Revisa tu conexión, toca “Actualizar” o cambia el “puente” en Ajustes › Conexión.</p>')); $('#loadmore').style.display='none'; return; }
