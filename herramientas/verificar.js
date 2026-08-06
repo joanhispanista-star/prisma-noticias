@@ -46,6 +46,23 @@ if(ok){ ck('app.js compila y corre top-level',true);
     ck('sin <style> ni catálogo embebidos', !shell.includes('<style>') && !shell.includes('__CATALOGO__'));
     ck('registra el SW', appSrcRaw.includes("navigator.serviceWorker.register('sw-prisma.js')"));
 
+    console.log('[4] En vivo (televisión)');
+    let LIVE=null; try{ LIVE=JSON.parse(rd('envivo.json')); }catch(e){ ck('envivo.json parsea', false, e.message); }
+    if(LIVE){
+      const ids=LIVE.map(c=>c.canal);
+      ck('es una lista de canales', Array.isArray(LIVE)&&LIVE.length>0, 'len='+LIVE.length);
+      ck('todos con canal de YouTube válido', LIVE.every(c=>/^UC[\w-]{22}$/.test(c.canal||'')));
+      ck('todos con nombre', LIVE.every(c=>c.nombre));
+      ck('sin canales repetidos', ids.filter((x,i)=>ids.indexOf(x)!==i).length===0);
+      ck('el medio que citan existe en el catálogo', LIVE.every(c=>!c.medio||CAT.some(o=>o.id===c.medio)),
+         LIVE.filter(c=>c.medio&&!CAT.some(o=>o.id===c.medio)).map(c=>c.medio).join(',')||'');
+      ck('hay canales en español', LIVE.filter(c=>c.lang==='es').length>0, LIVE.filter(c=>c.lang==='es').length+' en español');
+      ck('la pestaña existe en el cascarón', shell.includes('data-v="envivo"') && shell.includes('id="v-envivo"'));
+      ck('la pestaña está cableada en app.js', appSrcRaw.includes("v==='envivo'") && appSrcRaw.includes('function buildEnVivo'));
+      ck('se abre por canal, no por video fijo', appSrcRaw.includes('embed/live_stream?channel='));
+      ck('el SW guarda envivo.json', rd('sw-prisma.js').includes('envivo.json'));
+    }
+
     console.log('\n================ '+pass+' OK · '+fail+' FALLOS ================');
     process.exit(fail?1:0);
   })();

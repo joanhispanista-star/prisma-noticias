@@ -1,0 +1,168 @@
+[
+ {
+  "arroba": "africanews",
+  "canal": "UC25EuGAePOPvPrUA5cmu3dQ",
+  "nombre": "africanews",
+  "envivo": true,
+  "vid": "b6R9-7KZ8YM",
+  "horasAlAire": 50095.4,
+  "titulo": "Africanews français en direct - Info et actualités en continu",
+  "senal": true
+ },
+ {
+  "arroba": "cnnee",
+  "canal": "UC_lEiu6917IJz03TnntWUaQ",
+  "nombre": "CNN en Español",
+  "envivo": true,
+  "vid": "Qr61waJ6AZg",
+  "horasAlAire": 7029.7,
+  "titulo": "CNN Noticias, en vivo: sigue la última hora del mundo",
+  "senal": true
+ },
+ {
+  "arroba": "aljazeera",
+  "canal": "UCfiwzLy-8yKzIbsmZTzxDgw",
+  "nombre": "AlJazeera Arabic  قناة الجزيرة",
+  "envivo": true,
+  "vid": "N8xxOD0nT1Y",
+  "horasAlAire": 2799.6,
+  "titulo": "الجزيرة 2 | متابعات إخبارية وبرامج مختارة",
+  "senal": true
+ },
+ {
+  "arroba": "dwespanol",
+  "canal": "UCT4Jg8h03dD0iN3Pb5L0PMA",
+  "nombre": "DW Español",
+  "envivo": true,
+  "vid": "yZh3xsFqCt8",
+  "horasAlAire": 2398.7,
+  "titulo": "🔴 DW Español | En vivo",
+  "senal": true
+ },
+ {
+  "arroba": "France24_es",
+  "canal": "UCCCPCZNChQdGa9EkATeye4g",
+  "nombre": "FRANCE 24 Español",
+  "envivo": true,
+  "vid": "a47ckXKZjxI",
+  "horasAlAire": 1699.9,
+  "titulo": "FRANCE 24 – EN DIRECT – Info et actualités internationales en continu 24h/24",
+  "senal": true
+ },
+ {
+  "arroba": "NoticiasCaracol",
+  "canal": "UC2Xq2PK-got3Rtz9ZJ32hLQ",
+  "nombre": "Noticias Caracol",
+  "envivo": true,
+  "vid": "XE-HAP0KALo",
+  "horasAlAire": 131.8,
+  "titulo": "🔴 NOTICIAS CARACOL EN VIVO | Detalles de la posesión presidencial de Abelardo de la Espriella",
+  "senal": true
+ },
+ {
+  "arroba": "ntn24",
+  "canal": "UCEJs1fTF3KszRJGxJY14VrA",
+  "nombre": "NTN24",
+  "envivo": true,
+  "vid": "I4AVxPm58S0",
+  "horasAlAire": 50.1,
+  "titulo": "SEÑAL EN VIVO DE NTN24, EL CANAL DE LAS AMÉRICAS",
+  "senal": true
+ },
+ {
+  "arroba": "ABCNews",
+  "canal": "UCBi2mrWuNuyYy4gbM6fU18Q",
+  "nombre": "ABC News",
+  "envivo": true,
+  "vid": "reGeHg_d9is",
+  "horasAlAire": 6.9,
+  "titulo": "LIVE: ABC News Live - Thursday, August 6 | ABC News",
+  "senal": false
+ },
+ {
+  "arroba": "WION",
+  "canal": "UC_gUM8rL-Lrg6O3adPW9K1g",
+  "nombre": "WION",
+  "envivo": true,
+  "vid": "KEuX0_lvY_0",
+  "horasAlAire": 3,
+  "titulo": "LIVE: RSS Chief Mohan Bhagwat Addresses Gen Z And Gen Alpha In Mumbai | WION",
+  "senal": false
+ },
+ {
+  "arroba": "telesurtv",
+  "error": "HTTP 404"
+ },
+ {
+  "arroba": "rtnoticias",
+  "error": "HTTP 404"
+ },
+ {
+  "arroba": "SkyNews",
+  "canal": "UCkFclpi8U9VJjfxLYoms7Aw",
+  "nombre": "Sky News",
+  "envivo": false,
+  "vid": null,
+  "horasAlAire": null,
+  "titulo": "",
+  "senal": false
+ },
+ {
+  "arroba": "CBSNews",
+  "canal": "UC-SJ6nODDmufqBzPBwCvYvQ",
+  "nombre": "CBS News",
+  "envivo": false,
+  "vid": null,
+  "horasAlAire": null,
+  "titulo": "",
+  "senal": false
+ },
+ {
+  "arroba": "CNA",
+  "error": "HTTP 404"
+ },
+ {
+  "arroba": "Semananoticias",
+  "canal": "UChy3akrVISIU6dKsT0wZTFw",
+  "nombre": " Semana",
+  "envivo": false,
+  "vid": null,
+  "horasAlAire": null,
+  "titulo": "",
+  "senal": false
+ },
+ {
+  "arroba": "LaFM",
+  "canal": "UCMh_DpCdZA286k1zdLt4YhQ",
+  "nombre": "Leonardo Carvalho",
+  "envivo": false,
+  "vid": null,
+  "horasAlAire": null,
+  "titulo": "",
+  "senal": false
+ },
+ {
+  "arroba": "wradiocolombia",
+  "error": "HTTP 404"
+ },
+ {
+  "arroba": "elespectador",
+  "canal": "UCFYdMS-M4mRdbxPuErz1CVw",
+  "nombre": "El Espectador",
+  "envivo": true,
+  "vid": "Z9MTHKFddFs",
+  "horasAlAire": -3.1,
+  "titulo": "Consejos para reducir el consumo de energía en casa | Echemos Cuentas",
+  "senal": false
+ },
+ {
+  "arroba": "NBCNews",
+  "canal": "UChDKyKQ59fYz3JO2fl0Z6sg",
+  "nombre": "NBC News",
+  "envivo": true,
+  "vid": "1DzWmSkfeH8",
+  "horasAlAire": -18.1,
+  "titulo": "Watch celebrity interviews, entertaining tips and TODAY Show exclusives | TODAY All Day - Aug 7",
+  "senal": false
+ }
+]

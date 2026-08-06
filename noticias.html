@@ -48,6 +48,7 @@
   <div class="tabs" id="tabs">
     <button class="tab on" data-v="portada">📰 Portada</button>
     <button class="tab" data-v="mundo">🗺️ Mundo</button>
+    <button class="tab" data-v="envivo">🔴 En vivo</button>
     <button class="tab" data-v="video">🎬 Video</button>
     <button class="tab" data-v="shorts">⚡ Shorts</button>
     <button class="tab" data-v="radio">📻 Radio</button>
@@ -136,6 +137,27 @@
         <span class="it"><span class="d" style="background:var(--estatal)"></span>Estatal</span>
         <span class="it" style="margin-left:auto">El tamaño del punto = número de noticias · toca un punto para ver los titulares.</span>
       </div>
+    </div>
+  </section>
+
+  <!-- ===================== EN VIVO ===================== -->
+  <section class="view" id="v-envivo">
+    <div class="filters">
+      <div class="fgroup"><span>Idioma</span>
+        <select class="sel" id="fLiveLang">
+          <option value="">Todos</option>
+          <option value="es">🗣️ Español</option>
+          <option value="en">Inglés</option>
+          <option value="otros">Otros idiomas</option>
+        </select>
+      </div>
+      <span style="font-size:12px;color:var(--gris);font-weight:600">Canales de noticias que emiten sin parar. Toca uno y se abre aquí mismo.</span>
+    </div>
+    <div class="livegrid" id="livelist"></div>
+    <div style="margin-top:16px;font-size:11.5px;color:var(--gris);font-weight:600;line-height:1.5">
+      Cada tarjeta lleva el <b>sesgo del medio que emite</b>, igual que en la Portada: ver televisión también es elegir quién te la cuenta.
+      Los días al aire son los que lleva esa señal encendida sin cortarse — es la prueba de que es un canal continuo y no una transmisión suelta.
+      Si un canal para su emisión, el reproductor lo dirá.
     </div>
   </section>
 

@@ -4,8 +4,8 @@
    Diseño seguro: solo toca peticiones del MISMO origen (el cascarón HTML);
    los proxies, fuentes, APIs de traducción, radio, archivo, YouTube (todos de otro
    origen) pasan DIRECTOS a la red sin que el SW los intercepte ni los cachee. */
-const CACHE='prisma-shell-v2';
-const SHELL=['./','./index.html','./noticias.html','./estilos.css','./app.js','./catalogo.json'];
+const CACHE='prisma-shell-v3';
+const SHELL=['./','./index.html','./noticias.html','./estilos.css','./app.js','./catalogo.json','./envivo.json'];
 
 self.addEventListener('install',e=>{
   e.waitUntil(

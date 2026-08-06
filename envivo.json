@@ -1,0 +1,192 @@
+[
+ {
+  "canal": "UC_lEiu6917IJz03TnntWUaQ",
+  "nombre": "CNN en Español",
+  "medio": "cnn",
+  "pais": "EE.UU.",
+  "region": "EE.UU.",
+  "lang": "es",
+  "visto": "CNN Noticias, en vivo: sigue la última hora del mundo",
+  "horasAlAire": 7030
+ },
+ {
+  "canal": "UC7QZIf0dta-XPXsp9Hv4dTw",
+  "nombre": "RTVE · Canal 24H",
+  "medio": "rtve",
+  "pais": "España",
+  "region": "España",
+  "lang": "es",
+  "visto": "🔴DIRECTO | CANAL 24H | TODA LA ACTUALIDAD NACIONAL E INTERNACIONAL | RTVE Noticias",
+  "horasAlAire": 3430
+ },
+ {
+  "canal": "UCT4Jg8h03dD0iN3Pb5L0PMA",
+  "nombre": "DW Español",
+  "medio": "dw",
+  "pais": "Alemania",
+  "region": "Europa",
+  "lang": "es",
+  "visto": "🔴 DW Español | En vivo",
+  "horasAlAire": 2399
+ },
+ {
+  "canal": "UCFxHplbcoJK9m70c4VyTIxg",
+  "nombre": "Milenio",
+  "medio": "milenio",
+  "pais": "Mexico",
+  "region": "Latinoamérica",
+  "lang": "es",
+  "visto": "Milenio Noticias EN VIVO",
+  "horasAlAire": 652
+ },
+ {
+  "canal": "UCv5Oy_TJFvGKXjeNzzJE_PQ",
+  "nombre": "CityTv · El Tiempo",
+  "medio": "eltiempo",
+  "pais": "Colombia",
+  "region": "Colombia",
+  "lang": "es",
+  "visto": "🔴 CityTv en vivo | Transmisión 24/7",
+  "horasAlAire": 233
+ },
+ {
+  "canal": "UCnr6pbeXJmkNQJ9PSYle7QQ",
+  "nombre": "Noticias RCN",
+  "medio": "rcnnoticiasrcn",
+  "pais": "Colombia",
+  "region": "Colombia",
+  "lang": "es",
+  "visto": "🔴 EN VIVO: Noticias RCN Información de Colombia y el mundo",
+  "horasAlAire": 144
+ },
+ {
+  "canal": "UC2Xq2PK-got3Rtz9ZJ32hLQ",
+  "nombre": "Noticias Caracol",
+  "medio": null,
+  "pais": "",
+  "region": "",
+  "lang": "es",
+  "visto": "🔴 NOTICIAS CARACOL EN VIVO | Detalles de la posesión presidencial de Abelardo de la Espriella",
+  "horasAlAire": 132
+ },
+ {
+  "canal": "UCEJs1fTF3KszRJGxJY14VrA",
+  "nombre": "NTN24",
+  "medio": null,
+  "pais": "",
+  "region": "",
+  "lang": "es",
+  "visto": "SEÑAL EN VIVO DE NTN24, EL CANAL DE LAS AMÉRICAS",
+  "horasAlAire": 50
+ },
+ {
+  "canal": "UCSPEjw8F2nQDtmUKPFNF7_A",
+  "nombre": "NHK World",
+  "medio": "nhk",
+  "pais": "Japón",
+  "region": "Asia",
+  "lang": "en",
+  "visto": "LIVE: NHK WORLD-JAPAN News",
+  "horasAlAire": 38656
+ },
+ {
+  "canal": "UCyoGb3SMlTlB8CLGVH4c8Rw",
+  "nombre": "Euronews",
+  "medio": "euronews",
+  "pais": "Europa",
+  "region": "Europa",
+  "lang": "en",
+  "visto": "euronews en directo",
+  "horasAlAire": 32600
+ },
+ {
+  "canal": "UCNye-wNBqNL5ZzHSJj3l8Bg",
+  "nombre": "Al Jazeera English",
+  "medio": "aljz",
+  "pais": "Catar",
+  "region": "Medio Oriente",
+  "lang": "en",
+  "visto": "🔴 Al Jazeera English | Live",
+  "horasAlAire": 29896
+ },
+ {
+  "canal": "UCUMZ7gohGI9HcU9VNsr2FJQ",
+  "nombre": "Bloomberg",
+  "medio": "bloomberg",
+  "pais": "EE.UU.",
+  "region": "Global",
+  "lang": "en",
+  "visto": "Bloomberg Originals LIVE | News, Documentaries & More",
+  "horasAlAire": 21333
+ },
+ {
+  "canal": "UCknLrEdhRCp1aegoMqRaCZg",
+  "nombre": "Deutsche Welle",
+  "medio": "dw",
+  "pais": "Alemania",
+  "region": "Europa",
+  "lang": "en",
+  "visto": "DW News livestream | Headline news from around the world",
+  "horasAlAire": 11831
+ },
+ {
+  "canal": "UCQfwfsi5VrQ8yKZ-UWmAEFg",
+  "nombre": "France 24",
+  "medio": "france24",
+  "pais": "Francia",
+  "region": "Europa",
+  "lang": "en",
+  "visto": "FRANCE 24 English – LIVE – International Breaking News & Top stories - 24/7 stream",
+  "horasAlAire": 1710
+ },
+ {
+  "canal": "UCupvZG-5ko_eiXAupbDfxWw",
+  "nombre": "CNN",
+  "medio": "cnn",
+  "pais": "EE.UU.",
+  "region": "EE.UU.",
+  "lang": "en",
+  "visto": "CNN Headlines: 24/7 Live News",
+  "horasAlAire": 1245
+ },
+ {
+  "canal": "UC7fWeaHhqgM4Ry-RMpM2YYw",
+  "nombre": "TRT World",
+  "medio": "trt",
+  "pais": "Turquía",
+  "region": "Medio Oriente",
+  "lang": "en",
+  "visto": "LIVE: Watch TRT World",
+  "horasAlAire": 1058
+ },
+ {
+  "canal": "UCBi2mrWuNuyYy4gbM6fU18Q",
+  "nombre": "ABC News",
+  "medio": "abcnews",
+  "pais": "EE.UU.",
+  "region": "EE.UU.",
+  "lang": "en",
+  "visto": "LIVE: ABC News Live - Thursday, August 6 | ABC News",
+  "horasAlAire": 7
+ },
+ {
+  "canal": "UC25EuGAePOPvPrUA5cmu3dQ",
+  "nombre": "africanews",
+  "medio": "africanews",
+  "pais": "Congo (Rep.)",
+  "region": "África",
+  "lang": "fr",
+  "visto": "Africanews français en direct - Info et actualités en continu",
+  "horasAlAire": 50095
+ },
+ {
+  "canal": "UCfiwzLy-8yKzIbsmZTzxDgw",
+  "nombre": "Al Jazeera (árabe)",
+  "medio": "aljazeeraar",
+  "pais": "Catar",
+  "region": "Medio Oriente",
+  "lang": "ar",
+  "visto": "الجزيرة 2 | متابعات إخبارية وبرامج مختارة",
+  "horasAlAire": 2800
+ }
+]

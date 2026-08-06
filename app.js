@@ -731,6 +731,51 @@ async function plotMap(){
 }
 
 /* ============================================================
+   EN VIVO (televisión de noticias, 24 horas)
+   ============================================================
+   La lista vive en envivo.json y NO se escribió a mano: sale de medir, canal
+   por canal, cuánto lleva su emisión encendida (herramientas/comprobar-*.js).
+   Una señal continua lleva días o años sin cortarse; una transmisión suelta
+   —un juicio, una rueda de prensa— unas horas. Solo entran las continuas.
+   Se abre con el canal, no con un video: YouTube resuelve en ese momento qué
+   está emitiendo, así que la lista no caduca aunque cambien de emisión. */
+let ENVIVO=[];
+async function loadEnVivo(){
+  if(ENVIVO.length) return ENVIVO;
+  try{ const r=await fetch('envivo.json',{cache:'no-cache'}); if(r&&r.ok){ const d=await r.json(); if(Array.isArray(d)) ENVIVO=d; } }catch(e){}
+  return ENVIVO;
+}
+function liveCard(c){
+  const o=c.medio?byId[c.medio]:null;
+  const dias=c.horasAlAire!=null?Math.round(c.horasAlAire/24):null;
+  const badge=o?biasBadge(o):'<span class="bbadge centro" title="Este canal no está clasificado por AllSides/MBFC"><span class="dt"></span>Sin clasificar</span>';
+  const d=el('div','live');
+  d.innerHTML=`<div class="lv-top"><span class="lv-dot"></span><span class="lv-nm">${esc(c.nombre)}</span></div>
+    <div class="lv-meta">${badge}${c.pais?('<span>'+esc(c.pais)+'</span>'):''}</div>
+    <div class="lv-pie"><span class="lv-antig">${dias!=null&&dias>=1?(dias+' día'+(dias>1?'s':'')+' al aire'):'señal continua'}</span><span class="lv-ver">▶ Ver</span></div>`;
+  d.addEventListener('click',()=>openLive(c.canal,c.nombre));
+  return d;
+}
+async function buildEnVivo(){
+  const list=$('#livelist'); if(!list) return;
+  list.innerHTML='';
+  for(let i=0;i<6;i++) list.appendChild(el('div','sk','<div class="b"><div class="l"></div><div class="l s"></div></div>'));
+  await loadEnVivo();
+  const f=($('#fLiveLang')&&$('#fLiveLang').value)||'';
+  const arr=ENVIVO.filter(c=> !f || (f==='otros' ? (c.lang!=='es'&&c.lang!=='en') : c.lang===f));
+  list.innerHTML='';
+  if(!ENVIVO.length){ list.appendChild(el('div','empty','<div class="ic">📺</div><p>No se pudo cargar la lista de canales en vivo. Recarga la página.</p>')); return; }
+  if(!arr.length){ list.appendChild(el('div','empty','<div class="ic">📺</div><p>Ningún canal continuo en ese idioma, por ahora.</p>')); return; }
+  arr.forEach(c=>list.appendChild(liveCard(c)));
+}
+function openLive(canal,nombre){
+  const box=$('#modalBox'); box.className='box';
+  $('#modalInner').innerHTML=`<iframe class="vframe" src="https://www.youtube-nocookie.com/embed/live_stream?channel=${esc(canal)}&autoplay=1&rel=0&playsinline=1" allow="autoplay;encrypted-media;picture-in-picture;fullscreen" allowfullscreen playsinline frameborder="0"></iframe>
+    <a href="https://www.youtube.com/channel/${esc(canal)}/live" target="_blank" rel="noopener" style="display:block;text-align:center;background:#111;color:#fff;font-size:12.5px;font-weight:700;padding:9px;text-decoration:none">▶ Abrir ${esc(nombre)} en YouTube (si no se ve aquí)</a>`;
+  $('#modal').classList.add('on');
+}
+
+/* ============================================================
    VIDEO / SHORTS (YouTube RSS por canal)
    ============================================================ */
 const ytCache={};
@@ -1260,6 +1305,7 @@ function switchTab(v){
   $$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
   window.scrollTo({top:0,behavior:'smooth'});
   if(v==='mundo'){ if(!FEED.length) buildFeed().then(plotMap); else plotMap(); }
+  if(v==='envivo'&&!loaded.envivo){ loaded.envivo=true; buildEnVivo(); }
   if(v==='video'&&!loaded.video){ loaded.video=true; buildVideos(); }
   if(v==='shorts'&&!loaded.shorts){ loaded.shorts=true; buildShorts(); }
   if(v==='radio'&&!loaded.radio){ loaded.radio=true; buildRadio(); }
@@ -1311,6 +1357,8 @@ function bind(){
     applyFeedFilters(); });
   $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); applyFeedFilters(); } });
   $('#btnMore').addEventListener('click',renderMore);
+  // en vivo
+  $('#fLiveLang').addEventListener('change',buildEnVivo);
   // video
   $('#fVideo').addEventListener('change',e=>buildVideos(e.target.value||null));
   $('#btnVideoAll').addEventListener('click',()=>{ $('#fVideo').value=''; buildVideos(); });
