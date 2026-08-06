@@ -92,8 +92,14 @@ const CIUDADES={
 /* ============================================================
    PROXY / lectura de feeds
    ============================================================ */
-/* proxies que devuelven el cuerpo crudo + cabecera CORS (verificados jul-2026).
-   corsproxy.io se descartó: no sirve en file:// ni GitHub Pages sin pagar. */
+/* Puentes públicos, verificados uno por uno el 6-ago-2026 DESDE GitHub Pages
+   (que es lo único que cuenta: cada puente decide según el origen que le llama):
+     corsproxy  → responde ~78% de los 221 medios, y rápido. El mejor hoy.
+     allorigins → saturado: casi siempre tarda o corta, pero es el ÚNICO que
+                  sirve Google News (a corsproxy, Google le devuelve 503).
+     codetabs   → muerto.
+     corseu     → muerto.
+   Por eso ninguno va solo: se corre una carrera y gana el que conteste. */
 /* EL PUENTE DE PRISMA — la única línea que hay que rellenar para que la Portada
    traiga los 221 medios a CUALQUIER lector, sin que él configure nada.
    Se monta gratis en 10 minutos siguiendo DESPLEGAR-PUENTE.txt y se pega aquí:
@@ -104,6 +110,7 @@ const PUENTE_OFICIAL='';
 const puente=()=>(((ST.worker&&ST.worker.trim())||PUENTE_OFICIAL)||'').replace(/\/+$/,'');
 const PROXIES={
   worker:     u=>puente()+'/?url='+enc(u),
+  corsproxy:  u=>'https://corsproxy.io/?url='+enc(u),
   allorigins: u=>'https://api.allorigins.win/raw?url='+enc(u),
   codetabs:   u=>'https://api.codetabs.com/v1/proxy/?quest='+enc(u),
   corseu:     u=>'https://cors.eu.org/'+u,
@@ -115,7 +122,7 @@ const hasWorker=()=>!!puente();
 let PROXY_WINNER=null, PROXY_WINNERS=[], probeDone=null;
 function hashId(s){ let h=0; s=String(s); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h; }
 function proxyChain(id){
-  const p=ST.proxy, base=['allorigins','corseu','codetabs','direct'];
+  const p=ST.proxy, base=['corsproxy','allorigins','codetabs','corseu','direct'];
   const lead=hasWorker()?['worker']:[];
   if(p==='direct') return [...new Set([...lead,'direct','corseu','allorigins'])];
   if(p&&p!=='auto'&&PROXIES[p]) return [...new Set([...lead,p,...base.filter(x=>x!==p)])];
@@ -133,7 +140,7 @@ async function probeProxy(){
   if(probeDone) return probeDone;
   probeDone=(async()=>{
     const test='https://feeds.bbci.co.uk/news/world/rss.xml';
-    const cands=hasWorker()?['worker','allorigins','corseu','codetabs']:['allorigins','corseu','codetabs'];
+    const cands=hasWorker()?['worker','corsproxy','allorigins','codetabs']:['corsproxy','allorigins','codetabs'];
     const winners=[];
     await Promise.all(cands.map(name=>(async()=>{
       try{ const c=new AbortController(); const to=setTimeout(()=>c.abort(),5500);
@@ -168,18 +175,23 @@ function outletChain(id){
   const usable=k && (k==='direct' || (PROXIES[k] && (k!=='worker'||hasWorker())));
   return [...new Set([...lead, usable?k:'direct', ...base])];
 }
+/* Carrera EN PARALELO de todas las vías: gana la primera que traiga algo con cuerpo.
+   Antes iba en fila y cada una podía comerse 8 s: con dos puentes muertos delante,
+   un solo canal de YouTube tardaba medio minuto (la pestaña Video, 51 s en total). */
 async function fetchText(url,{timeout=8000}={}){
-  for(const name of proxyChain()){
-    try{
+  const names=proxyChain();
+  try{
+    return await Promise.any(names.map(async name=>{
       const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),timeout);
-      const r=await fetch(PROXIES[name](url),{signal:ctrl.signal,headers:{'Accept':'text/xml,application/xml,application/rss+xml,text/html,*/*'}});
-      clearTimeout(to);
-      if(!r.ok) continue;
-      const t=await r.text();
-      if(t&&t.length>60) return t;
-    }catch(e){/* siguiente proxy */}
-  }
-  throw new Error('sin proxy');
+      try{
+        const r=await fetch(PROXIES[name](url),{signal:ctrl.signal,headers:{'Accept':'text/xml,application/xml,application/rss+xml,text/html,*/*'}});
+        if(!r.ok) throw 0;
+        const t=await r.text();
+        if(!t||t.length<=60) throw 0;
+        return t;
+      } finally{ clearTimeout(to); }
+    }));
+  }catch(e){ throw new Error('sin puente'); }
 }
 /* carrera de proxies en paralelo: gana el primero que responda (para GDELT / búsquedas puntuales) */
 async function fetchViaAny(url,timeout=8000){
@@ -270,12 +282,20 @@ async function fetchOutletItems(outlet){
   const timeLeft=()=>BUDGET-(Date.now()-started);
   for(const url of (outlet.rss||[])){
     if(timeLeft()<1200) break;                       // sin presupuesto: no arranques otra dirección
-    const chain=outletChain(outlet.id);
-    // 1) carrera EN PARALELO de las 3 vías líderes (antes era en fila, 4×7s)
-    const won=await raceProxies(url,chain.slice(0,3),outlet,Math.min(6000,timeLeft()));
+    const chain=outletChain(outlet.id), sabido=VIA[outlet.id]&&VIA[outlet.id].n;
+    // 1) si aún no sabemos por dónde entra este medio, 'directo' va SOLO y primero:
+    //    no gasta cupo de ningún puente (corsproxy corta con 429 al rato) y, si la
+    //    fuente no lo permite, falla en milisegundos. Solo se paga la primera visita.
+    if(!sabido||sabido==='direct'){
+      const it=await tryProxy(url,'direct',outlet,Math.min(2500,timeLeft()));
+      if(it&&it.length){ viaSet(outlet.id,'direct'); return it; }
+    }
+    const puentes=chain.filter(n=>n!=='direct');
+    // 2) carrera EN PARALELO de los 3 puentes líderes (antes era en fila, 4×7s)
+    const won=await raceProxies(url,puentes.slice(0,3),outlet,Math.min(6000,timeLeft()));
     if(won){ viaSet(outlet.id,won.via); return won.items; }
-    // 1b) resto de vías, en serie pero con presupuesto
-    for(const name of chain.slice(3)){
+    // 2b) resto de puentes, en serie pero con presupuesto
+    for(const name of puentes.slice(3)){
       if(timeLeft()<1200) break;
       const items=await tryProxy(url,name,outlet,Math.min(5000,timeLeft()));
       if(items&&items.length){ viaSet(outlet.id,name); return items; }
@@ -627,18 +647,24 @@ async function worldSearch(){
   feed.appendChild(el('div','',`<div style="grid-column:1/-1;padding:14px 16px;background:#fff;border:1px solid var(--linea);border-radius:14px;font-weight:700;font-size:13px">🌐 Buscando <b>“${esc(q)}”</b> en medios de todo el mundo (GDELT)…</div>`));
   for(let i=0;i<6;i++) feed.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
   const url='https://api.gdeltproject.org/api/v2/doc/doc?query='+enc(q)+'&mode=artlist&format=json&maxrecords=48&sort=datedesc';
-  let arts=[];
+  let arts=[], nollego=false;
   await probeProxy();
-  try{ const raw=await fetchViaAny(url,9000); const j=JSON.parse(raw); arts=(j&&j.articles)||[]; }catch(e){}
+  try{ const raw=await fetchViaAny(url,9000); const j=JSON.parse(raw); arts=(j&&j.articles)||[]; }
+  catch(e){ nollego=true; }   // no es "no hay noticias": es que no pudimos preguntar
   if(myToken!==feedToken) return;   // el usuario hizo otra cosa mientras tanto
   feed.innerHTML='';
   const back=el('div',''); back.style.gridColumn='1/-1';
   back.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--linea);border-left:3px solid var(--oro);border-radius:12px;padding:11px 15px;margin-bottom:4px">
-    <div style="font-size:13px;font-weight:700">🌐 ${arts.length} resultados del mundo para “${esc(q)}” <span style="color:var(--gris-claro);font-weight:600">· fuente: GDELT · el sesgo solo se muestra si reconocemos el medio</span></div>
+    <div style="font-size:13px;font-weight:700">🌐 ${nollego?('No se pudo preguntar por “'+esc(q)+'”'):(arts.length+' resultados del mundo para “'+esc(q)+'”')} <span style="color:var(--gris-claro);font-weight:600">· fuente: GDELT · el sesgo solo se muestra si reconocemos el medio</span></div>
     <button class="btn btn-ghost btn-sm" id="btnBackFeed">← Volver a mi portada</button></div>`;
   feed.appendChild(back);
   $('#btnBackFeed').addEventListener('click',()=>{ $('#q').value=''; buildFeed().then(maybeAutoTranslate); });
-  if(!arts.length){ feed.appendChild(el('div','empty','<div class="ic">🌐</div><p>Sin resultados ahora (GDELT limita a ~1 búsqueda cada 5 s). Espera un momento y reintenta, o cambia las palabras.</p>')); return; }
+  if(!arts.length){
+    feed.appendChild(el('div','empty', nollego
+      ? '<div class="ic">🚧</div><p><b>No es que no haya noticias: es que no pudimos preguntar.</b> GDELT solo acepta una búsqueda cada 5 segundos por dirección, y la del puente público la comparte mucha gente, así que casi siempre está ocupada.<br><br>Con un <b>puente propio</b> (gratis, 10 minutos: mira <b>DESPLEGAR-PUENTE.txt</b>) esta búsqueda funciona siempre. Mientras tanto, tu portada y las demás pestañas siguen igual.</p>'
+      : '<div class="ic">🌐</div><p>GDELT no tiene nada indexado sobre “'+esc(q)+'”. Prueba con otras palabras o en otro idioma.</p>'));
+    return;
+  }
   arts.forEach(g=>feed.appendChild(extCard({title:g.title,link:g.url,desc:'',ts:parseGdeltDate(g.seendate),img:g.socialimage&&/^https/.test(g.socialimage)?g.socialimage:'',ext:{domain:(g.domain||'').replace(/^www\./,''),country:g.sourcecountry,lang:g.language}})));
 }
 /* auto-traducción de titulares no-idioma (solo si ST.auto) */
@@ -1096,8 +1122,9 @@ async function buildWayback(){
   const ts=date.replace(/-/g,'');
   out.innerHTML='<div class="ai-loading">Buscando la portada de '+esc(o.nombre)+' del '+esc(date)+'…</div>';
   try{
-    const r=await fetch('https://archive.org/wayback/available?url='+enc(domain)+'&timestamp='+ts);
-    const j=await r.json(); const snap=j&&j.archived_snapshots&&j.archived_snapshots.closest;
+    // este endpoint del archivo NO manda cabecera CORS: hay que pedirlo por puente
+    const raw=await fetchText('https://archive.org/wayback/available?url='+enc(domain)+'&timestamp='+ts,{timeout:9000});
+    const j=JSON.parse(raw); const snap=j&&j.archived_snapshots&&j.archived_snapshots.closest;
     if(snap&&snap.url){ const s=snap.timestamp; const fecha=s.slice(6,8)+'/'+s.slice(4,6)+'/'+s.slice(0,4);
       out.innerHTML=`<div class="wb-card"><div class="em">📜</div><div style="flex:1;min-width:0"><div class="t">${esc(o.nombre)} · ${fecha}</div><div class="s">Instantánea más cercana a la fecha que pediste, guardada por la Wayback Machine.</div></div><a class="btn btn-negro btn-sm" href="${esc(snap.url.replace('http://','https://'))}" target="_blank" rel="noopener">Ver la portada archivada ↗</a></div>`;
     } else out.innerHTML='<div class="empty"><div class="ic">📭</div><p>No hay copia archivada de '+esc(o.nombre)+' cerca del '+esc(date)+'. Prueba otra fecha (los archivos son más completos desde ~2000) u otro periódico.</p></div>';
