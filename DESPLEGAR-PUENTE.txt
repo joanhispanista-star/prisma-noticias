@@ -60,6 +60,34 @@ PASO 4 · Copiar la URL  (esto es lo que cambia todo)
     Eso solo afecta a TU dispositivo y manda por encima del oficial.
 
 --------------------------------------------------------
+PASO 5 · Comprobar que quedó bien (30 segundos)
+--------------------------------------------------------
+14. En la carpeta Noticias, con tu direccion:
+
+      node herramientas/probar-puente.mjs https://prisma-puente.TU-USUARIO.workers.dev
+
+    Son 16 pruebas. Tienen que salir las 16 en verde. Comprueban las dos
+    caras: que deja pasar lo de Prisma (medios, YouTube, GDELT, Google News,
+    el archivo) y -mas importante- que RECHAZA a cualquier otro.
+
+--------------------------------------------------------
+Por que este puente no sirve para nada mas
+--------------------------------------------------------
+Tu direccion de worker queda escrita en app.js, que esta en un repositorio
+publico. Hay gente que rastrea GitHub buscando justo eso: puentes que
+reenvien cualquier cosa a cualquiera. Si el tuyo lo hiciera, te vaciarian
+las 100.000 lecturas del dia y Cloudflare podria cerrarte la cuenta.
+
+Por eso el puente comprueba dos cosas antes de mover un dedo:
+  1. que quien llama sea Prisma, y
+  2. que lo pedido sea un medio de tu catalogo o una de las APIs que la app
+     usa de verdad.
+
+La lista de medios NO esta escrita dentro del worker: la lee de tu propio
+catalogo.json. Asi, cuando anadas medios nuevos, el puente se entera solo y
+no hay que volver a pegar nada en Cloudflare.
+
+--------------------------------------------------------
 Notas
 --------------------------------------------------------
 - Es gratis para siempre dentro del plan gratuito (100.000 lecturas/día).
