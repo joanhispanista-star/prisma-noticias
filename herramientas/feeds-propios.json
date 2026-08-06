@@ -1,0 +1,639 @@
+{
+ "nbcnews": {
+  "nombre": "NBC News",
+  "region": "EE.UU.",
+  "url": "https://feeds.nbcnews.com/nbcnews/public/news",
+  "items": 20,
+  "directo": false
+ },
+ "eluniversal": {
+  "nombre": "El Universal (Mx)",
+  "region": "Latinoamérica",
+  "url": "https://www.eluniversal.com.mx/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "thehill": {
+  "nombre": "The Hill",
+  "region": "EE.UU.",
+  "url": "https://thehill.com/feed/?feed=partnerfeed-news-feed&format=rss",
+  "items": 100,
+  "directo": false
+ },
+ "rt": {
+  "nombre": "RT en Español",
+  "region": "Europa",
+  "url": "https://actualidad.rt.com/feeds/all.rss",
+  "items": 10,
+  "directo": false
+ },
+ "thetelegraph": {
+  "nombre": "The Telegraph",
+  "region": "Reino Unido",
+  "url": "https://www.telegraph.co.uk/rss.xml",
+  "items": 120,
+  "directo": false
+ },
+ "newsweek": {
+  "nombre": "Newsweek",
+  "region": "EE.UU.",
+  "url": "https://www.newsweek.com/rss.xml",
+  "items": 20,
+  "directo": false
+ },
+ "breitbart": {
+  "nombre": "Breitbart",
+  "region": "EE.UU.",
+  "url": "https://feeds.feedburner.com/breitbart",
+  "items": 49,
+  "directo": false
+ },
+ "rtx": {
+  "nombre": "RT (Russia Today)",
+  "region": "Europa",
+  "url": "https://www.rt.com/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "aljazeeraar": {
+  "nombre": "Al Jazeera árabe",
+  "region": "Medio Oriente",
+  "url": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9",
+  "items": 25,
+  "directo": false
+ },
+ "rfi": {
+  "nombre": "RFI",
+  "region": "Europa",
+  "url": "https://www.rfi.fr/fr/rss",
+  "items": 23,
+  "directo": false
+ },
+ "africanews": {
+  "nombre": "Africanews",
+  "region": "África",
+  "url": "https://www.africanews.com/feed/",
+  "items": 50,
+  "directo": false
+ },
+ "straitstimes": {
+  "nombre": "The Straits Times",
+  "region": "Asia",
+  "url": "https://www.straitstimes.com/rss.xml",
+  "items": 10,
+  "directo": true
+ },
+ "lasillavacia": {
+  "nombre": "La Silla Vacia",
+  "region": "Colombia",
+  "url": "https://www.lasillavacia.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "lanacion": {
+  "nombre": "La Nacion",
+  "region": "Latinoamérica",
+  "url": "https://www.lanacion.com.ar/arc/outboundfeeds/rss/",
+  "items": 87,
+  "directo": false
+ },
+ "pagina12": {
+  "nombre": "Pagina/12",
+  "region": "Latinoamérica",
+  "url": "https://www.pagina12.com.ar/arc/outboundfeeds/rss/",
+  "items": 25,
+  "directo": false
+ },
+ "theverge": {
+  "nombre": "The Verge",
+  "region": "EE.UU.",
+  "url": "https://www.theverge.com/rss/index.xml",
+  "items": 10,
+  "directo": false
+ },
+ "wired": {
+  "nombre": "WIRED",
+  "region": "EE.UU.",
+  "url": "https://www.wired.com/feed/",
+  "items": 20,
+  "directo": true
+ },
+ "mittechnologyr": {
+  "nombre": "MIT Technology Review",
+  "region": "EE.UU.",
+  "url": "https://www.technologyreview.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "snopes": {
+  "nombre": "Snopes",
+  "region": "EE.UU.",
+  "url": "https://www.snopes.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "malditaes": {
+  "nombre": "Maldita.es",
+  "region": "España",
+  "url": "https://maldita.es/feed",
+  "items": 50,
+  "directo": true
+ },
+ "vanguardia": {
+  "nombre": "Vanguardia",
+  "region": "Colombia",
+  "url": "https://www.vanguardia.com/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "colombiacheck": {
+  "nombre": "Colombiacheck",
+  "region": "Colombia",
+  "url": "https://colombiacheck.com/rss/msn",
+  "items": 20,
+  "directo": true
+ },
+ "elpaiscali": {
+  "nombre": "El Pais",
+  "region": "Colombia",
+  "url": "https://www.elpais.com.co/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "voragine": {
+  "nombre": "Voragine",
+  "region": "Colombia",
+  "url": "https://voragine.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "motherjones": {
+  "nombre": "Mother Jones",
+  "region": "EE.UU.",
+  "url": "https://www.motherjones.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "cuestionpublic": {
+  "nombre": "Cuestion Publica",
+  "region": "Colombia",
+  "url": "https://cuestionpublica.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "theintercept": {
+  "nombre": "The Intercept",
+  "region": "EE.UU.",
+  "url": "https://theintercept.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "semafor": {
+  "nombre": "Semafor",
+  "region": "EE.UU.",
+  "url": "https://www.semafor.com/rss.xml",
+  "items": 244,
+  "directo": false
+ },
+ "nationalreview": {
+  "nombre": "National Review",
+  "region": "EE.UU.",
+  "url": "https://www.nationalreview.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "las2orillas": {
+  "nombre": "Las2orillas",
+  "region": "Colombia",
+  "url": "https://www.las2orillas.co/feed/",
+  "items": 150,
+  "directo": false
+ },
+ "newyorkpost": {
+  "nombre": "New York Post",
+  "region": "EE.UU.",
+  "url": "https://nypost.com/feed/",
+  "items": 22,
+  "directo": false
+ },
+ "propublica": {
+  "nombre": "ProPublica",
+  "region": "EE.UU.",
+  "url": "https://www.propublica.org/feed",
+  "items": 10,
+  "directo": false
+ },
+ "rappler": {
+  "nombre": "Rappler",
+  "region": "Asia",
+  "url": "https://www.rappler.com/feed/",
+  "items": 10,
+  "directo": true
+ },
+ "thefreepress": {
+  "nombre": "The Free Press",
+  "region": "EE.UU.",
+  "url": "https://www.thefp.com/feed",
+  "items": 20,
+  "directo": false
+ },
+ "thejapantimes": {
+  "nombre": "The Japan Times",
+  "region": "Asia",
+  "url": "https://www.japantimes.co.jp/feed/",
+  "items": 30,
+  "directo": false
+ },
+ "dawn": {
+  "nombre": "Dawn",
+  "region": "Asia",
+  "url": "https://www.dawn.com/feeds/home",
+  "items": 27,
+  "directo": true
+ },
+ "elheraldo": {
+  "nombre": "El Heraldo",
+  "region": "Colombia",
+  "url": "https://www.elheraldo.co/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": true
+ },
+ "middleeasteye": {
+  "nombre": "Middle East Eye",
+  "region": "Reino Unido",
+  "url": "https://www.middleeasteye.net/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "dailymaverick": {
+  "nombre": "Daily Maverick",
+  "region": "África",
+  "url": "https://www.dailymaverick.co.za/dmrss/",
+  "items": 50,
+  "directo": false
+ },
+ "elfinanciero": {
+  "nombre": "El Financiero",
+  "region": "Latinoamérica",
+  "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml",
+  "items": 100,
+  "directo": false
+ },
+ "lanacioncostar": {
+  "nombre": "La Nación",
+  "region": "Latinoamérica",
+  "url": "https://www.nacion.com/arc/outboundfeeds/rss/?outputType=xml",
+  "items": 100,
+  "directo": false
+ },
+ "prensalibre": {
+  "nombre": "Prensa Libre",
+  "region": "Latinoamérica",
+  "url": "https://www.prensalibre.com/feed/",
+  "items": 99,
+  "directo": false
+ },
+ "ciper": {
+  "nombre": "CIPER",
+  "region": "Latinoamérica",
+  "url": "https://www.ciperchile.cl/feed/",
+  "items": 16,
+  "directo": false
+ },
+ "nos": {
+  "nombre": "NOS",
+  "region": "Europa",
+  "url": "https://feeds.nos.nl/nosnieuwsalgemeen",
+  "items": 20,
+  "directo": false
+ },
+ "latercera": {
+  "nombre": "La Tercera",
+  "region": "Latinoamérica",
+  "url": "https://www.latercera.com/arc/outboundfeeds/rss/?outputType=xml",
+  "items": 100,
+  "directo": false
+ },
+ "elcronista": {
+  "nombre": "El Cronista",
+  "region": "Latinoamérica",
+  "url": "https://www.cronista.com/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "nationalpost": {
+  "nombre": "National Post",
+  "region": "Global",
+  "url": "https://nationalpost.com/feed",
+  "items": 10,
+  "directo": false
+ },
+ "elnacional": {
+  "nombre": "El Nacional",
+  "region": "Latinoamérica",
+  "url": "https://www.elnacional.com/feed/",
+  "items": 100,
+  "directo": true
+ },
+ "talcual": {
+  "nombre": "TalCual",
+  "region": "Latinoamérica",
+  "url": "https://talcualdigital.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "theirishtimes": {
+  "nombre": "The Irish Times",
+  "region": "Europa",
+  "url": "https://www.irishtimes.com/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "efectococuyo": {
+  "nombre": "Efecto Cocuyo",
+  "region": "Latinoamérica",
+  "url": "https://efectococuyo.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "rppnoticias": {
+  "nombre": "RPP Noticias",
+  "region": "Latinoamérica",
+  "url": "https://rpp.pe/rss",
+  "items": 60,
+  "directo": true
+ },
+ "larepublica": {
+  "nombre": "La Republica",
+  "region": "Latinoamérica",
+  "url": "https://larepublica.pe/rss/home.xml",
+  "items": 200,
+  "directo": false
+ },
+ "idlreporteros": {
+  "nombre": "IDL-Reporteros",
+  "region": "Latinoamérica",
+  "url": "https://www.idl-reporteros.pe/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "consonante": {
+  "nombre": "Consonante",
+  "region": "Colombia",
+  "url": "https://consonante.org/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "rutasdelconfli": {
+  "nombre": "Rutas del Conflicto",
+  "region": "Colombia",
+  "url": "https://rutasdelconflicto.com/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "laligacontrael": {
+  "nombre": "La Liga Contra el Silencio",
+  "region": "Colombia",
+  "url": "https://ligacontraelsilencio.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "mutante": {
+  "nombre": "Mutante",
+  "region": "Colombia",
+  "url": "https://mutante.org/feed/",
+  "items": 15,
+  "directo": false
+ },
+ "colombiainform": {
+  "nombre": "Colombia Informa",
+  "region": "Colombia",
+  "url": "https://www.colombiainforma.info/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "baudoagenciapu": {
+  "nombre": "Baudó Agencia Pública",
+  "region": "Colombia",
+  "url": "https://baudoap.com/feed/",
+  "items": 257,
+  "directo": false
+ },
+ "diariodelhuila": {
+  "nombre": "Diario del Huila",
+  "region": "Colombia",
+  "url": "https://diariodelhuila.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "elturbion": {
+  "nombre": "El Turbión",
+  "region": "Colombia",
+  "url": "https://elturbion.com/feed",
+  "items": 20,
+  "directo": false
+ },
+ "elnuevosiglo": {
+  "nombre": "El Nuevo Siglo",
+  "region": "Colombia",
+  "url": "https://www.elnuevosiglo.com.co/rss.xml",
+  "items": 50,
+  "directo": false
+ },
+ "elnuevodia": {
+  "nombre": "El Nuevo Día",
+  "region": "Colombia",
+  "url": "https://www.elnuevodia.com.co/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "proclamadelpac": {
+  "nombre": "Proclama del Pacifico",
+  "region": "Colombia",
+  "url": "https://proclamadelpacifico.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "volcanicas": {
+  "nombre": "Volcánicas",
+  "region": "Colombia",
+  "url": "https://volcanicas.com/feed/",
+  "items": 40,
+  "directo": false
+ },
+ "qhubocali": {
+  "nombre": "Q'Hubo Cali",
+  "region": "Colombia",
+  "url": "https://www.qhubocali.com/feed/",
+  "items": 12,
+  "directo": false
+ },
+ "extrallano": {
+  "nombre": "Extra",
+  "region": "Colombia",
+  "url": "https://extra.com.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "diariooccident": {
+  "nombre": "Diario Occidente",
+  "region": "Colombia",
+  "url": "https://occidente.co/feed/",
+  "items": 11,
+  "directo": false
+ },
+ "choco7dias": {
+  "nombre": "Choco 7 Dias",
+  "region": "Colombia",
+  "url": "https://choco7dias.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "miputumayonoti": {
+  "nombre": "MiPutumayo Noticias",
+  "region": "Colombia",
+  "url": "https://miputumayo.com.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "conexionputuma": {
+  "nombre": "Conexion Putumayo",
+  "region": "Colombia",
+  "url": "https://conexionputumayo.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "lapatria": {
+  "nombre": "La Patria",
+  "region": "Colombia",
+  "url": "https://www.lapatria.com/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "diariodelsur": {
+  "nombre": "Diario del Sur",
+  "region": "Colombia",
+  "url": "https://www.diariodelsur.com.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "publimetro": {
+  "nombre": "Publimetro",
+  "region": "Colombia",
+  "url": "https://www.publimetro.co/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "periodicoelori": {
+  "nombre": "Periodico El Oriente",
+  "region": "Colombia",
+  "url": "https://periodicoeloriente.co/feed/",
+  "items": 12,
+  "directo": false
+ },
+ "minuto30": {
+  "nombre": "Minuto30",
+  "region": "Colombia",
+  "url": "https://www.minuto30.com/feed/",
+  "items": 20,
+  "directo": false
+ },
+ "zonacero": {
+  "nombre": "Zona Cero",
+  "region": "Colombia",
+  "url": "https://zonacero.com/rss.xml",
+  "items": 3,
+  "directo": false
+ },
+ "qhubobarranqui": {
+  "nombre": "Q'hubo Barranquilla",
+  "region": "Colombia",
+  "url": "https://qhubo.com/feed/",
+  "items": 6,
+  "directo": false
+ },
+ "prensalibrecas": {
+  "nombre": "Prensa Libre Casanare",
+  "region": "Colombia",
+  "url": "https://prensalibrecasanare.com/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "seguimientoco": {
+  "nombre": "Seguimiento.co",
+  "region": "Colombia",
+  "url": "https://seguimiento.co/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "eluniversalx": {
+  "nombre": "El Universal",
+  "region": "Colombia",
+  "url": "https://www.eluniversal.com.co/arc/outboundfeeds/rss/",
+  "items": 100,
+  "directo": false
+ },
+ "laguajirahoy": {
+  "nombre": "La Guajira Hoy",
+  "region": "Colombia",
+  "url": "https://laguajirahoy.com/feed",
+  "items": 20,
+  "directo": false
+ },
+ "diariodelnorte": {
+  "nombre": "Diario del Norte",
+  "region": "Colombia",
+  "url": "https://diariodelnorte.net/feed/",
+  "items": 100,
+  "directo": false
+ },
+ "eje21": {
+  "nombre": "Eje21",
+  "region": "Colombia",
+  "url": "https://www.eje21.com.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "boyacasie7edia": {
+  "nombre": "Boyaca Sie7e Dias",
+  "region": "Colombia",
+  "url": "https://boyaca7dias.com.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "meridiano70": {
+  "nombre": "Meridiano 70",
+  "region": "Colombia",
+  "url": "https://meridiano70.co/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "laopinion": {
+  "nombre": "La Opinion",
+  "region": "Colombia",
+  "url": "https://laopinion.co/rss.xml",
+  "items": 10,
+  "directo": false
+ },
+ "eldiarioboyaca": {
+  "nombre": "EL DIARIO Boyaca",
+  "region": "Colombia",
+  "url": "https://eldiarioboyaca.com/feed/",
+  "items": 10,
+  "directo": false
+ },
+ "elfrente": {
+  "nombre": "El Frente",
+  "region": "Colombia",
+  "url": "https://elfrente.com.co/rss/",
+  "items": 15,
+  "directo": false
+ },
+ "alairenoticias": {
+  "nombre": "Al Aire Noticias",
+  "region": "Colombia",
+  "url": "https://alairenoticias.com/feed/",
+  "items": 10,
+  "directo": false
+ }
+}
