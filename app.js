@@ -857,8 +857,16 @@ async function buildRadio(){
   else url=RB+'/json/stations/bytag/news?limit=80&hidebroken=true&order=clickcount&reverse=true';
   let arr=[];
   try{ const r=await fetch(url,{headers:{'Accept':'application/json'}}); arr=await r.json(); }catch(e){}
-  // filtrar https + audio compatible iOS
-  arr=(arr||[]).filter(s=>{ const u=s.url_resolved||s.url||''; return u.startsWith('https')&&/(mp3|aac|aacp|ogg|)/i.test(s.codec||''); });
+  // filtrar https + audio compatible iOS.
+  // OJO: aquí había un fallo. La expresión era /(mp3|aac|aacp|ogg|)/ y esa barra
+  // final suelta significa "o nada", así que aceptaba CUALQUIER códec —incluido
+  // wma, que el iPhone no reproduce— y el filtro no filtraba nada.
+  // Ahora: se aceptan los códecs que sí suenan, y también los que la emisora no
+  // declara (muchas dejan el campo vacío y funcionan; ahí se deja probar).
+  arr=(arr||[]).filter(s=>{
+    const u=s.url_resolved||s.url||'', c=(s.codec||'').trim();
+    return u.startsWith('https') && (!c || /^unknown$/i.test(c) || /(mp3|aac|aacp|ogg|opus|vorbis)/i.test(c));
+  });
   // dedupe por nombre
   const seen=new Set(); arr=arr.filter(s=>{const k=(s.name||'').toLowerCase().trim(); if(!k||seen.has(k))return false; seen.add(k); return true;});
   list.innerHTML='';
@@ -1034,11 +1042,33 @@ async function buildResumen(){
 }
 /* voz del navegador (gratis, sin clave): leer el resumen en voz alta */
 let _speaking=false;
+/* Las voces del navegador NO están listas cuando arranca la página: getVoices()
+   devuelve una lista vacía y sólo se llena más tarde, avisando con 'voiceschanged'.
+   Medido aquí: 0 voces al primer intento. Por eso la primera vez que alguien
+   pulsaba "Escuchar" no se elegía voz española y un texto en español se leía con
+   acento inglés. Guardamos la lista en cuanto el navegador la publica. */
+let _voces=[];
+function _cargarVoces(){ try{ _voces=speechSynthesis.getVoices()||[]; }catch(e){ _voces=[]; } }
+if('speechSynthesis' in window){
+  _cargarVoces();
+  // Safari sólo tiene la propiedad onvoiceschanged; Chrome y Firefox además el
+  // addEventListener. Se usa lo que haya, sin dar por hecho ninguno de los dos.
+  if(typeof speechSynthesis.addEventListener==='function') speechSynthesis.addEventListener('voiceschanged',_cargarVoces);
+  else speechSynthesis.onvoiceschanged=_cargarVoces;
+}
+function vozPara(lang){
+  const lista=_voces.length?_voces:((('speechSynthesis' in window)&&speechSynthesis.getVoices())||[]);
+  const pre=String(lang||'es').slice(0,2).toLowerCase();
+  // primero una voz del país (es-CO, es-MX…), si no, cualquiera del idioma
+  return lista.find(v=>v.lang&&v.lang.toLowerCase().startsWith(pre+'-'))
+      || lista.find(v=>v.lang&&v.lang.toLowerCase().startsWith(pre))
+      || null;
+}
 function speakText(text,btn){
   if(!('speechSynthesis' in window)){ toast('Tu navegador no puede leer en voz alta'); return; }
   if(_speaking){ speechSynthesis.cancel(); _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; return; }
   const u=new SpeechSynthesisUtterance(text); u.lang=(ST.lang==='es'?'es-ES':ST.lang); u.rate=1.02;
-  const vs=speechSynthesis.getVoices(); const v=vs.find(x=>/es/i.test(x.lang)); if(v)u.voice=v;
+  const v=vozPara(ST.lang); if(v)u.voice=v;
   u.onend=()=>{ _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; };
   u.onerror=()=>{ _speaking=false; if(btn)btn.innerHTML='🔊 Escuchar'; };
   speechSynthesis.cancel(); speechSynthesis.speak(u); _speaking=true; if(btn)btn.innerHTML='⏸ Detener';

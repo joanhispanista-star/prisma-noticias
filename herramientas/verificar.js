@@ -26,7 +26,7 @@ let MOCK=async()=>({ok:false});
 const ctx={fetch:(...a)=>MOCK(...a),AbortController,setTimeout,clearTimeout,setInterval,clearInterval,Promise,Date,Math,JSON,Set,Map,Array,Object,String,Number,Boolean,RegExp,URL,isNaN,parseInt,parseFloat,encodeURIComponent,decodeURIComponent,console,
   document:doc,navigator:{onLine:true,userAgent:'node',language:'es',serviceWorker:{register(){return Promise.resolve();}}},
   location:{href:'https://x/noticias.html',origin:'https://x',reload(){}},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},
-  DOMParser:function(){this.parseFromString=()=>({getElementsByTagName:()=>[]});},speechSynthesis:{getVoices:()=>[]},matchMedia:()=>({matches:false,addEventListener(){}}),caches:undefined};
+  DOMParser:function(){this.parseFromString=()=>({getElementsByTagName:()=>[]});},speechSynthesis:{getVoices:()=>[],addEventListener(){},removeEventListener(){},cancel(){},speak(){}},matchMedia:()=>({matches:false,addEventListener(){}}),caches:undefined};
 ctx.window=ctx;ctx.self=ctx;ctx.globalThis=ctx;vm.createContext(ctx);
 let ok=true; try{ new vm.Script(appTest,{filename:'app.js'}).runInContext(ctx); }catch(e){ ok=false; ck('app.js compila y corre top-level',false,e.message); }
 if(ok){ ck('app.js compila y corre top-level',true);
