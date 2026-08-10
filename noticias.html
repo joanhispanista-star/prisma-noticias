@@ -48,6 +48,7 @@
   <div class="tabs" id="tabs">
     <button class="tab on" data-v="portada">📰 Portada</button>
     <button class="tab" data-v="mundo">🗺️ Mundo</button>
+    <button class="tab" data-v="canal">📡 Canal</button>
     <button class="tab" data-v="envivo">🔴 En vivo</button>
     <button class="tab" data-v="video">🎬 Video</button>
     <button class="tab" data-v="shorts">⚡ Shorts</button>
@@ -137,6 +138,48 @@
         <span class="it"><span class="d" style="background:var(--estatal)"></span>Estatal</span>
         <span class="it" style="margin-left:auto">El tamaño del punto = número de noticias · toca un punto para ver los titulares.</span>
       </div>
+    </div>
+  </section>
+
+  <!-- ===================== CANAL (reportero automático) ===================== -->
+  <section class="view" id="v-canal">
+    <div class="canal-wrap">
+      <div class="canal-tele">
+        <div class="canal-video" id="canalVideo">
+          <div class="canal-apagado" id="canalApagado">
+            <div class="ic">📡</div>
+            <p>El canal lee en voz alta las noticias que más medios están cubriendo ahora mismo.<br>
+               <b>Nadie elige por ti:</b> abre la historia con más fuentes independientes, y se ve por qué.</p>
+            <button class="btn btn-negro" id="btnCanalOn">▶ Entrar al canal</button>
+            <div class="canal-nota">El navegador exige que toques para permitir el sonido.</div>
+          </div>
+        </div>
+        <div class="canal-aviso" id="canalAviso" hidden></div>
+      </div>
+
+      <div class="canal-guion">
+        <div class="canal-vivo"><span class="lv-dot"></span> EN EL AIRE <span class="canal-reloj" id="canalReloj"></span></div>
+        <div id="canalLineas" class="canal-lineas"></div>
+        <div class="canal-mandos" id="canalMandos" hidden>
+          <button class="btn btn-ghost btn-sm" id="btnCanalPausa">⏸ Pausar</button>
+          <button class="btn btn-ghost btn-sm" id="btnCanalSalta">⏭ Siguiente historia</button>
+          <div class="fgroup" style="margin-left:auto"><span>Voz</span>
+            <select class="sel" id="canalVoz"></select>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btnCanalVoces">¿Voz robótica?</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="canal-porque" id="canalPorque" hidden></div>
+
+    <div class="canal-pie">
+      <b>Cómo se elige lo que suena, sin que intervenga nadie.</b>
+      El canal agrupa los titulares que hablan del mismo hecho y los ordena por
+      <b>cuántos medios independientes lo cubren</b>, de cuántos países y de cuántas posiciones del espectro,
+      dando más peso a lo más reciente. Con los mismos titulares, el resultado siempre es el mismo.
+      <b>El reportero no redacta: cita.</b> Lo que oyes entre comillas es el titular literal del medio, sin reescribir,
+      y detrás va siempre quién lo publicó y cómo está clasificado. Prisma no añade hechos.
     </div>
   </section>
 

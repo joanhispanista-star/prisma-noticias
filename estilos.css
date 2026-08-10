@@ -153,6 +153,36 @@
   .pp-h .c{font-size:11px;color:#6c6f76;font-weight:700}
   .pp-it{display:block;padding:5px 0;border-top:1px solid #eee;font-weight:600;color:#17181c;line-height:1.35}
 
+  /* ---- canal (reportero automático) ---- */
+  .canal-wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;align-items:start}
+  .canal-tele{min-width:0}
+  .canal-video{position:relative;aspect-ratio:16/9;background:#0c0d10;border-radius:var(--r);overflow:hidden;border:1px solid var(--linea)}
+  .canal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .canal-apagado{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:22px;color:#e9eaec}
+  .canal-apagado .ic{font-size:40px}
+  .canal-apagado p{font-size:13px;line-height:1.5;max-width:44ch;color:#c8cace}
+  .canal-nota{font-size:11px;color:#8b8e95}
+  /* la etiqueta es obligatoria: el video es la señal del canal, NO imagen de la noticia que suena */
+  .canal-aviso{margin-top:8px;font-size:11.5px;color:var(--gris);font-weight:600;line-height:1.45;
+    background:var(--hueso);border:1px solid var(--linea);border-left:3px solid var(--ambar);border-radius:10px;padding:8px 11px}
+  .canal-guion{min-width:0;display:flex;flex-direction:column;gap:11px}
+  .canal-vivo{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--rojo)}
+  .canal-reloj{margin-left:auto;color:var(--gris-claro);font-weight:700;letter-spacing:0}
+  .canal-lineas{display:flex;flex-direction:column;gap:9px;min-height:190px}
+  .canal-linea{font-size:13.5px;line-height:1.5;color:var(--gris);padding-left:11px;border-left:2px solid transparent;transition:.2s}
+  .canal-linea.on{color:var(--negro);font-weight:700;border-left-color:var(--rojo)}
+  .canal-linea .qui{display:block;font-size:11px;font-weight:700;color:var(--gris-claro);margin-top:3px}
+  .canal-linea.cabecera{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gris-claro)}
+  .canal-linea.ciego{background:#fff7ed;border-left-color:var(--ambar);border-radius:0 8px 8px 0;padding:7px 11px}
+  .canal-mandos{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--linea)}
+  .canal-porque{margin-top:16px;background:#fff;border:1px solid var(--linea);border-left:3px solid var(--oro);border-radius:var(--r);padding:14px 16px}
+  .canal-porque h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gris-claro);margin-bottom:9px}
+  .canal-porque .cifras{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:10px}
+  .canal-porque .cifra b{display:block;font-size:21px;font-weight:900;line-height:1}
+  .canal-porque .cifra span{font-size:11px;color:var(--gris);font-weight:700}
+  .canal-porque .quienes{font-size:11.5px;color:var(--gris);line-height:1.6}
+  .canal-pie{margin-top:16px;font-size:11.5px;color:var(--gris);font-weight:600;line-height:1.6}
+
   /* ---- en vivo (televisión) ---- */
   .livegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
   .live{background:#fff;border:1px solid var(--linea);border-left:3px solid var(--rojo);border-radius:var(--r);padding:14px 15px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:9px}
@@ -366,7 +396,7 @@
 
   @media(max-width:640px){
     .wrap{padding:16px 13px 60px}
-    .feedgrid,.vgrid,.changrid,.radiolist,.livegrid{grid-template-columns:1fr}
+    .feedgrid,.vgrid,.changrid,.radiolist,.livegrid,.canal-wrap{grid-template-columns:1fr}
     .clock{display:none}
     .tabs{gap:6px}
     .tab{padding:8px 12px;font-size:12.5px}

@@ -731,6 +731,227 @@ async function plotMap(){
 }
 
 /* ============================================================
+   CANAL · el reportero que no redacta
+   ============================================================
+   Dos reglas gobiernan esto, y las dos son deliberadas:
+
+   1. NADIE ELIGE LA NOTICIA. El orden sale de contar: cuántos medios
+      independientes cubren el mismo hecho, de cuántos países y de cuántas
+      posiciones del espectro, con más peso a lo reciente. Con los mismos
+      titulares el resultado es siempre el mismo, así que cualquiera puede
+      reproducirlo y comprobar que no hubo mano.
+
+   2. EL REPORTERO NO ESCRIBE, CITA. Todo lo que se afirma es un titular
+      literal de un medio, seguido de quién lo publicó y cómo está clasificado.
+      Lo único generado son las frases de enlace ("la cubren N medios"), que no
+      añaden ningún hecho. Así no hay nada que inventar: es imposible alucinar
+      un dato si no se redacta ninguno.
+   ============================================================ */
+/* apagado: se guarda el nodo de la pantalla de "Entrar al canal" porque vive
+   DENTRO del recuadro del video, y al meter el iframe se hace innerHTML='' —
+   que lo destruiría. Guardado aparte, se puede devolver al apagar. */
+const CANAL={ on:false, bloques:[], b:0, l:0, pausado:false, utter:null, apagado:null };
+
+/* puntuación de una historia: corroboración × diversidad × frescura */
+function puntuarHistoria(c){
+  const ids=[...new Set(c.items.map(a=>a.outlet))].filter(id=>byId[id]);
+  if(ids.length<2) return null;                       // una sola fuente no es corroboración
+  const paises=new Set(ids.map(id=>byId[id].pais).filter(Boolean));
+  const lados=new Set(ids.map(id=>storyBucket(byId[id])));
+  const reciente=Math.max(...c.items.map(a=>a.ts||0));
+  const horas=(Date.now()-reciente)/3600000;
+  const frescura= horas<=1?1 : horas<=3?.85 : horas<=6?.7 : horas<=12?.5 : horas<=24?.3 : .12;
+  return { items:c.items, ids, paises, lados, reciente, frescura,
+           puntos: ids.length * (1+paises.size*0.35) * (1+lados.size*0.5) * frescura };
+}
+/* Los titulares traen adornos que en pantalla se leen bien pero en voz alta
+   suenan absurdos: el lector de voz pronuncia los emojis ("círculo rojo grande")
+   y las barras de sección. En PANTALLA el titular se deja literal, palabra por
+   palabra; sólo se limpia lo que va al altavoz, porque un emoji no es una
+   palabra que el medio haya escrito. */
+function paraVoz(t){
+  return String(t||'')
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}]/gu,' ')
+    .replace(/\s*\|\s*/g,'. ')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+}
+/* un titular por cada lado del espectro: que se oigan las dos versiones, no la más repetida */
+function titularesDelBloque(b){
+  const porLado={izq:[],centro:[],der:[],estatal:[]};
+  b.items.forEach(a=>{ const o=byId[a.outlet]; if(o) porLado[storyBucket(o)].push({a,o}); });
+  const salida=[], vistos=new Set();
+  for(const lado of ['izq','der','centro','estatal']){
+    const c=porLado[lado].find(x=>!vistos.has(x.o.id));
+    if(c){ vistos.add(c.o.id); salida.push(c); }
+  }
+  return salida.slice(0,4);
+}
+function guionDelBloque(b,pos){
+  const L=[];
+  const paises=b.paises.size, medios=b.ids.length;
+  L.push({ tipo:'cabecera', txt:(pos===0?'Abre el noticiero. ':'Siguiente historia. ')+
+    medios+' medios de '+paises+(paises===1?' país':' países')+' están cubriendo esto.' });
+  for(const {a,o} of titularesDelBloque(b)){
+    L.push({ tipo:'titular', outlet:o.id, link:a.link,
+             // el titular va literal: ni una palabra reescrita
+             txt:'"'+a.title.replace(/\s+/g,' ').trim()+'".',
+             qui:o.nombre+' · '+o.pais+' · '+(o.sesgo==='estatal'?'medio estatal':biasWord(o)),
+             voz:paraVoz(a.title)+'. Titular de '+o.nombre+', '+o.pais+', '+(o.sesgo==='estatal'?'medio estatal':biasWord(o))+'.' });
+  }
+  const tieneIzq=b.lados.has('izq'), tieneDer=b.lados.has('der');
+  if(tieneIzq&&!tieneDer) L.push({ tipo:'ciego', txt:'Punto ciego: ningún medio clasificado a la derecha está cubriendo esta historia.' });
+  else if(tieneDer&&!tieneIzq) L.push({ tipo:'ciego', txt:'Punto ciego: ningún medio clasificado a la izquierda está cubriendo esta historia.' });
+  else if(tieneIzq&&tieneDer) L.push({ tipo:'ciego', txt:'Esta historia se cubre en todo el espectro, de izquierda a derecha.' });
+  return L;
+}
+/* Los titulares del MISMO hecho en idiomas distintos no comparten palabras
+   ("terremoto" / "earthquake"), así que el agrupador de la Portada los deja
+   separados y el noticiero repetiría la misma noticia cinco veces.
+   Lo que sí sobrevive a la traducción: los nombres propios y los números.
+   Con esa huella se fusiona — pero sólo si el token es RARO. "Colombia" aparece
+   en media portada y uniría noticias que no tienen nada que ver; "Jharkhand"
+   aparece en dos sitios y esos dos sitios son la misma historia. */
+function huellaDe(b){
+  const s=new Set();
+  b.items.forEach(a=>{
+    const t=a.title||'';
+    (t.match(/\d+[.,]?\d*/g)||[]).forEach(x=>s.add('#'+x.replace(',','.')));
+    (t.match(/\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{3,}\b/g)||[]).forEach(x=>s.add(x.toLowerCase()));
+  });
+  return s;
+}
+function fusionarBloques(bloques){
+  const H=bloques.map(huellaDe);
+  const df={};                                   // en cuántos bloques aparece cada token
+  H.forEach(h=>h.forEach(t=>{ df[t]=(df[t]||0)+1; }));
+  const padre=bloques.map((_,i)=>i);
+  const raiz=i=>{ while(padre[i]!==i) i=padre[i]=padre[padre[i]]; return i; };
+  for(let i=0;i<H.length;i++) for(let j=i+1;j<H.length;j++){
+    const comunes=[...H[i]].filter(t=>H[j].has(t));
+    const raro=comunes.some(t=>df[t]<=2);         // un token que solo comparten ellos dos
+    if(comunes.length>=2 || raro){ const a=raiz(i), b=raiz(j); if(a!==b) padre[a]=b; }
+  }
+  const grupos={};
+  bloques.forEach((b,i)=>{ const r=raiz(i); (grupos[r]=grupos[r]||[]).push(b); });
+  return Object.values(grupos).map(g=>{
+    if(g.length===1) return g[0];
+    const vistos=new Set(), items=[];
+    g.forEach(b=>b.items.forEach(a=>{ if(!vistos.has(a.link)){ vistos.add(a.link); items.push(a); } }));
+    return puntuarHistoria({items});             // se repuntúa con todas las fuentes juntas
+  }).filter(Boolean);
+}
+function construirCanal(){
+  const crudos=clusterStories(FEED||[]).map(puntuarHistoria).filter(Boolean);
+  const bloques=fusionarBloques(crudos)
+    .sort((x,y)=>y.puntos-x.puntos)
+    .slice(0,12);
+  bloques.forEach((b,i)=>{ b.lineas=guionDelBloque(b,i); });
+  CANAL.bloques=bloques; CANAL.b=0; CANAL.l=0;
+  return bloques.length;
+}
+/* la pantallita: se prefiere la señal de un medio que SÍ cubre esta historia */
+function videoDelBloque(b){
+  if(!ENVIVO.length) return null;
+  const suyo=ENVIVO.find(c=>c.medio&&b.ids.includes(c.medio));
+  if(suyo) return { canal:suyo, propio:true };
+  return { canal:ENVIVO[(CANAL.b)%ENVIVO.length], propio:false };
+}
+function pintarCanal(){
+  const b=CANAL.bloques[CANAL.b]; if(!b) return;
+  const cont=$('#canalLineas'); cont.innerHTML='';
+  b.lineas.forEach((li,i)=>{
+    const d=el('div','canal-linea '+(li.tipo==='cabecera'?'cabecera':li.tipo==='ciego'?'ciego':'')+(i===CANAL.l?' on':''));
+    d.innerHTML=esc(li.txt)+(li.qui?`<span class="qui">${esc(li.qui)}</span>`:'');
+    cont.appendChild(d);
+  });
+  // por qué suena esta y no otra
+  const p=$('#canalPorque'); p.hidden=false;
+  const lados=[...b.lados].map(x=>({izq:'izquierda',der:'derecha',centro:'centro',estatal:'estatal'}[x])).join(', ');
+  p.innerHTML=`<h4>Por qué suena esta historia</h4>
+    <div class="cifras">
+      <div class="cifra"><b>${b.ids.length}</b><span>medios independientes</span></div>
+      <div class="cifra"><b>${b.paises.size}</b><span>países</span></div>
+      <div class="cifra"><b>${b.lados.size}</b><span>posiciones del espectro</span></div>
+      <div class="cifra"><b>${timeAgo(b.reciente)}</b><span>lo más reciente</span></div>
+    </div>
+    <div class="quienes"><b>Quiénes la cubren:</b> ${b.ids.map(id=>esc(byId[id].nombre)+' <i style="color:var(--gris-claro);font-style:normal">('+esc(biasWord(byId[id])||'—')+')</i>').join(' · ')}
+    <br><b>Espectro presente:</b> ${esc(lados)}.
+    <br>Ninguna persona ordenó esta lista: es el resultado de contar fuentes.</div>`;
+  // la pantallita
+  const v=videoDelBloque(b), caja=$('#canalVideo'), aviso=$('#canalAviso');
+  if(v && CANAL.on){
+    if(caja._canal!==v.canal.canal){
+      caja._canal=v.canal.canal;
+      caja.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/live_stream?channel=${esc(v.canal.canal)}&autoplay=1&mute=1&rel=0&playsinline=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen playsinline></iframe>`;
+    }
+    aviso.hidden=false;
+    aviso.innerHTML= v.propio
+      ? `📺 <b>Señal en vivo de ${esc(v.canal.nombre)}</b>, uno de los medios que cubre esta historia. Va sin sonido y <b>no es imagen de esta noticia</b>: es su emisión de ahora mismo.`
+      : `📺 <b>Señal en vivo de ${esc(v.canal.nombre)}</b>. Va sin sonido y <b>no es imagen de esta noticia</b>: ningún medio con señal en directo la está cubriendo, así que esto es su emisión de ahora mismo.`;
+  }
+}
+function hablarLinea(){
+  const b=CANAL.bloques[CANAL.b]; if(!b) return;
+  const li=b.lineas[CANAL.l];
+  if(!li){ siguienteBloque(); return; }
+  pintarCanal();
+  if(!('speechSynthesis' in window)){ setTimeout(()=>{ CANAL.l++; hablarLinea(); },2600); return; }
+  const u=new SpeechSynthesisUtterance(li.voz||li.txt);
+  u.lang='es-ES'; u.rate=1.02; u.pitch=1;
+  const v=vozElegidaCanal(); if(v) u.voice=v;
+  u.onend=()=>{ if(!CANAL.on||CANAL.pausado) return; CANAL.l++; hablarLinea(); };
+  u.onerror=()=>{ if(!CANAL.on||CANAL.pausado) return; CANAL.l++; setTimeout(hablarLinea,300); };
+  CANAL.utter=u; speechSynthesis.speak(u);
+}
+function siguienteBloque(){
+  CANAL.b++; CANAL.l=0;
+  if(CANAL.b>=CANAL.bloques.length){          // se acabó la vuelta: se rehace con lo último
+    if(!construirCanal()){ pararCanal(); return; }
+    CANAL.b=0;
+  }
+  hablarLinea();
+}
+function vozElegidaCanal(){
+  const sel=$('#canalVoz');
+  if(sel&&sel.value){ const v=(_voces||[]).find(x=>x.name===sel.value); if(v) return v; }
+  return vozPara('es');
+}
+function llenarVocesCanal(){
+  const sel=$('#canalVoz'); if(!sel) return;
+  const lista=(_voces||[]).filter(v=>/^es/i.test(v.lang));
+  const previo=sel.value;
+  // las neuronales (Natural/Online/Enhanced/Premium, o las que no son locales) primero
+  const natural=v=>(/natural|online|neural|enhanced|premium|siri/i.test(v.name)||v.localService===false);
+  lista.sort((a,b)=>(natural(b)?1:0)-(natural(a)?1:0)||a.name.localeCompare(b.name));
+  sel.innerHTML=lista.length
+    ? lista.map(v=>`<option value="${esc(v.name)}">${natural(v)?'★ ':''}${esc(v.name.replace(/^Microsoft /,''))}</option>`).join('')
+    : '<option value="">(sin voces en español)</option>';
+  if(previo&&lista.some(v=>v.name===previo)) sel.value=previo;
+}
+function arrancarCanal(){
+  if(!FEED.length){ toast('Cargando titulares…'); return; }
+  if(!construirCanal()){ toast('Aún no hay historias con varias fuentes. Espera a que cargue la Portada.'); return; }
+  CANAL.on=true; CANAL.pausado=false;
+  CANAL.apagado=CANAL.apagado||$('#canalApagado');   // antes de que el iframe lo borre
+  if(CANAL.apagado) CANAL.apagado.style.display='none';
+  $('#canalMandos').hidden=false;
+  llenarVocesCanal();
+  loadEnVivo().then(()=>{ pintarCanal(); hablarLinea(); });
+}
+function pararCanal(){
+  CANAL.on=false; CANAL.pausado=false;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  const caja=$('#canalVideo');
+  CANAL.apagado=CANAL.apagado||$('#canalApagado');
+  caja._canal=null; caja.innerHTML='';                 // esto se lleva por delante el iframe…
+  if(CANAL.apagado){ CANAL.apagado.style.display=''; caja.appendChild(CANAL.apagado); }  // …y aquí vuelve la portada del canal
+  const p=$('#btnCanalPausa'); if(p) p.textContent='⏸ Pausar';
+  $('#canalMandos').hidden=true; $('#canalAviso').hidden=true;
+}
+function relojCanal(){ const e=$('#canalReloj'); if(e) e.textContent=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); }
+
+/* ============================================================
    EN VIVO (televisión de noticias, 24 horas)
    ============================================================
    La lista vive en envivo.json y NO se escribió a mano: sale de medir, canal
@@ -1335,6 +1556,8 @@ function switchTab(v){
   $$('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
   window.scrollTo({top:0,behavior:'smooth'});
   if(v==='mundo'){ if(!FEED.length) buildFeed().then(plotMap); else plotMap(); }
+  if(v!=='canal' && CANAL.on) pararCanal();   // salir del canal calla al reportero
+  if(v==='canal'&&!loaded.canal){ loaded.canal=true; relojCanal(); setInterval(relojCanal,30000); }
   if(v==='envivo'&&!loaded.envivo){ loaded.envivo=true; buildEnVivo(); }
   if(v==='video'&&!loaded.video){ loaded.video=true; buildVideos(); }
   if(v==='shorts'&&!loaded.shorts){ loaded.shorts=true; buildShorts(); }
@@ -1387,6 +1610,51 @@ function bind(){
     applyFeedFilters(); });
   $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ clearTimeout(qT); applyFeedFilters(); } });
   $('#btnMore').addEventListener('click',renderMore);
+  // canal
+  $('#btnCanalOn').addEventListener('click',arrancarCanal);
+  $('#btnCanalPausa').addEventListener('click',e=>{
+    CANAL.pausado=!CANAL.pausado;
+    e.currentTarget.textContent=CANAL.pausado?'▶ Reanudar':'⏸ Pausar';
+    if(CANAL.pausado){ if('speechSynthesis' in window) speechSynthesis.cancel(); }
+    else hablarLinea();
+  });
+  $('#btnCanalSalta').addEventListener('click',()=>{
+    if(!CANAL.on) return;
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    CANAL.pausado=false; $('#btnCanalPausa').textContent='⏸ Pausar';
+    siguienteBloque();
+  });
+  $('#btnCanalVoces').addEventListener('click',()=>{
+    // Voces naturales gratis: no hace falta pagar IA ni claves, hace falta que el
+    // SISTEMA tenga instaladas voces neuronales. Cada plataforma las regala.
+    const box=$('#modalBox'); box.className='box';
+    $('#modalInner').innerHTML=`<div style="background:#fff;padding:22px 24px;max-height:80vh;overflow:auto">
+      <h3 style="font-size:17px;font-weight:900;margin-bottom:6px">Cómo poner una voz natural, gratis</h3>
+      <p style="font-size:12.5px;color:var(--gris);line-height:1.6;margin-bottom:14px">
+        La voz no la pone Prisma: la pone tu aparato, y por eso no cuesta nada. Las que traen
+        Windows, Android y iPhone de fábrica suenan a robot, pero <b>los tres regalan voces
+        neuronales</b> mucho mejores. Se instalan una vez y sirven para todo el sistema.</p>
+      <div style="font-size:12.5px;line-height:1.65;display:flex;flex-direction:column;gap:11px">
+        <div><b>🪟 Windows 11</b><br>Configuración → Accesibilidad → Voz → <i>Agregar voces</i>.
+          Busca las que dicen <b>(Natural)</b>, por ejemplo <i>Ximena</i> o <i>Dalia</i>. Descarga y reinicia el navegador.</div>
+        <div><b>🌐 Microsoft Edge</b><br>Abre Prisma en Edge: trae voces neuronales en línea sin instalar nada.
+          Aparecerán aquí marcadas con ★.</div>
+        <div><b>📱 iPhone / iPad</b><br>Ajustes → Accesibilidad → Contenido hablado → Voces → Español →
+          elige una y toca la nube para bajar la versión <b>Premium</b>.</div>
+        <div><b>🤖 Android</b><br>Ajustes → Accesibilidad → Texto a voz → motor de Google →
+          Instalar datos de voz → Español.</div>
+      </div>
+      <p style="font-size:11.5px;color:var(--gris-claro);line-height:1.6;margin-top:14px">
+        Prisma detecta sola las voces buenas y las pone arriba de la lista con una ★.
+        Nada de esto usa internet de pago ni claves: todo corre en tu aparato.</p>
+    </div>`;
+    $('#modal').classList.add('on');
+  });
+  $('#canalVoz').addEventListener('change',()=>{
+    if(!CANAL.on||CANAL.pausado) return;
+    if('speechSynthesis' in window) speechSynthesis.cancel();   // se relee la línea con la voz nueva
+    hablarLinea();
+  });
   // en vivo
   $('#fLiveLang').addEventListener('change',buildEnVivo);
   // video
