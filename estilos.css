@@ -399,5 +399,20 @@
     .feedgrid,.vgrid,.changrid,.radiolist,.livegrid,.canal-wrap{grid-template-columns:1fr}
     .clock{display:none}
     .tabs{gap:6px}
-    .tab{padding:8px 12px;font-size:12.5px}
+    /* Un dedo no es un ratón. Antes esto ENCOGÍA las pestañas en el móvil
+       (34 px de alto), justo al revés de lo que hace falta: Apple y Google piden
+       44 px mínimo para que algo se pueda tocar sin fallar. Medido en 375 px. */
+    .tab{padding:12px 14px;font-size:13px;min-height:44px;display:inline-flex;align-items:center}
+    .segbtn,.bchip,.btn-sm,.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center}
+    /* los tres enlaces del pie de cada tarjeta (traducir, compartir, abrir) y la
+       estrella de guardar: se tocan a diario, tienen que dar dónde apretar */
+    .art-foot .lnk{padding:8px 4px;min-height:40px;display:inline-flex;align-items:center}
+    .bookmark{min-width:40px;min-height:40px;display:inline-flex;align-items:center;justify-content:center}
+    /* el texto más pequeño de la interfaz se queda corto en una pantalla de mano */
+    .art-src,.vcard .vs,.rstat .rmeta,.live .lv-meta{font-size:12px}
+  }
+  /* En un móvil de verdad (no un navegador estrecho) el dedo manda siempre */
+  @media(pointer:coarse){
+    .tab{min-height:44px}
+    button,.segbtn{touch-action:manipulation}
   }

@@ -1,0 +1,45 @@
+{
+  "name": "Prisma · Noticias del mundo",
+  "short_name": "Prisma",
+  "description": "Las noticias del mundo de 221 medios, con el sesgo y el dueño de cada uno a la vista.",
+  "start_url": "./noticias.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#17181c",
+  "theme_color": "#17181c",
+  "lang": "es-CO",
+  "dir": "ltr",
+  "categories": [
+    "news",
+    "magazines"
+  ],
+  "icons": [
+    {
+      "src": "icono-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icono-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Canal",
+      "short_name": "Canal",
+      "description": "El noticiero que se elige solo",
+      "url": "./noticias.html#canal"
+    },
+    {
+      "name": "En vivo",
+      "short_name": "En vivo",
+      "description": "Televisión de noticias 24 horas",
+      "url": "./noticias.html#envivo"
+    }
+  ]
+}
