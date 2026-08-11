@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacidad · Prisma · Noticias del mundo</title>
+<meta name="description" content="Qué guarda Prisma, dónde lo guarda y a quién le pide las noticias. En cristiano.">
+<meta name="theme-color" content="#17181c">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .doc{max-width:760px;margin:0 auto;padding:28px 18px 70px}
+  .doc h1{font-size:28px;font-weight:900;line-height:1.15;margin-bottom:6px}
+  .doc .fecha{font-size:12px;color:var(--gris-claro);font-weight:700;margin-bottom:22px}
+  .doc h2{font-size:17px;font-weight:900;margin:26px 0 9px}
+  .doc p,.doc li{font-size:14px;line-height:1.65;color:var(--negro)}
+  .doc p{margin-bottom:11px}
+  .doc ul{margin:0 0 12px 20px}
+  .doc li{margin-bottom:6px}
+  .doc .clave{background:#fff;border:1px solid var(--linea);border-left:3px solid var(--oro);border-radius:12px;padding:14px 16px;margin:16px 0}
+  .doc a{color:var(--negro);font-weight:700}
+  .doc table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  .doc th,.doc td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linea);vertical-align:top}
+  .doc th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gris-claro)}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<h1>Privacidad en Prisma</h1>
+<div class="fecha">Última actualización: 7 de agosto de 2026</div>
+
+<div class="clave">
+  <b>Lo esencial, en una frase:</b> Prisma no tiene servidor propio, no te pide cuenta
+  ni correo, no lleva publicidad ni medidores de audiencia, y todo lo que eliges
+  se queda guardado <b>en tu aparato</b>. Nunca viaja a ninguna parte.
+</div>
+
+<h2>Quién responde</h2>
+<p>Prisma es una aplicación personal desarrollada por Joan (Colombia). Para cualquier
+duda o petición sobre tus datos: <a href="mailto:joan.hispanista@gmail.com">joan.hispanista@gmail.com</a>.</p>
+
+<h2>Qué guarda Prisma, y dónde</h2>
+<p>Todo lo que ves abajo se guarda con el almacenamiento local del navegador, en tu
+propio teléfono o computador. <b>No existe ninguna base de datos donde se copie
+esto</b>, porque Prisma no tiene servidor.</p>
+<table>
+  <tr><th>Qué</th><th>Para qué</th></tr>
+  <tr><td>Tus preferencias (idioma, filtros, medios apagados)</td><td>Que la app se abra como la dejaste</td></tr>
+  <tr><td>Las noticias que guardas con la estrella</td><td>Poder leerlas después</td></tr>
+  <tr><td>Los municipios que escribes en Comunidad</td><td>Ofrecerte tus lugares de siempre</td></tr>
+  <tr><td>Los reportes ciudadanos que redactas</td><td>Quedan solo en tu aparato; no se envían a nadie</td></tr>
+  <tr><td>Copia temporal de los titulares leídos</td><td>Que la app abra sin internet y no repita descargas</td></tr>
+  <tr><td>Tu clave de IA, si decides poner una</td><td>Usar el resumen automático. Ver más abajo</td></tr>
+</table>
+<p><b>Cómo borrarlo todo:</b> en <b>Ajustes → Borrar mis datos</b>, o desinstalando la app.
+Se va todo, de inmediato y sin dejar copia, porque no hay copia en otro lado.</p>
+
+<h2>A quién le pide Prisma las noticias</h2>
+<p>Prisma no aloja noticias: las lee de sus fuentes en el momento. Para eso tu
+navegador contacta con terceros, y <b>esos terceros ven tu dirección IP</b>, como
+ocurre al abrir cualquier página. Prisma no les manda tu nombre, ni tu correo, ni
+tus preferencias, porque no los tiene.</p>
+<ul>
+  <li><b>Los medios del catálogo</b> (221 sitios de prensa): sus canales de noticias.</li>
+  <li><b>Puentes públicos</b> (corsproxy.io, allorigins) y, si lo configuras, tu propio
+      puente: hacen de intermediarios porque el navegador no puede leer directamente
+      la mayoría de los canales.</li>
+  <li><b>Google News</b> y <b>GDELT</b>: búsquedas de noticias por tema o municipio.</li>
+  <li><b>YouTube</b> (en modo <i>youtube-nocookie</i>): video, shorts y los canales en
+      vivo. Si le das a reproducir, YouTube recibe datos suyos según su propia
+      política.</li>
+  <li><b>Internet Archive</b>: documentales, televisión histórica y portadas de otros días.</li>
+  <li><b>radio-browser</b>: el directorio de emisoras.</li>
+  <li><b>Google Fonts</b>, <b>unpkg</b> y <b>CARTO</b>: tipografías y el mapa.</li>
+  <li><b>Google Traductor</b> o <b>MyMemory</b>: solo si tocas «Traducir». Se les envía el
+      titular, nada más.</li>
+</ul>
+
+<h2>La clave de IA, si pones una</h2>
+<p>Las funciones de resumen automático usan <b>tu propia clave</b> de Anthropic, que tú
+decides poner. Se guarda solo en tu aparato y solo se envía a
+<code>api.anthropic.com</code> cuando usas esas funciones, junto con los titulares que
+se van a resumir. Prisma no la ve, no la copia y no la comparte. Si no pones
+clave, esas funciones simplemente no se activan y el resto de la app funciona igual.</p>
+
+<h2>Lo que Prisma NO hace</h2>
+<ul>
+  <li>No pide registro, cuenta, correo ni teléfono.</li>
+  <li>No lleva publicidad ni redes de anuncios.</li>
+  <li>No lleva medidores de audiencia ni analítica de ningún tipo.</li>
+  <li>No sabe quién eres ni construye ningún perfil tuyo.</li>
+  <li>No accede a tus contactos, tu cámara, tu micrófono ni tus archivos.</li>
+  <li>No usa tu ubicación: cuando escribes tu municipio, lo escribes tú.</li>
+  <li>No vende ni cede datos, porque no los recoge.</li>
+</ul>
+
+<h2>Menores</h2>
+<p>Prisma muestra noticias de actualidad de medios profesionales, que pueden tratar
+hechos duros (conflictos, sucesos). No está dirigida a menores de 13 años y no
+recoge datos de nadie, sea cual sea su edad.</p>
+
+<h2>Tus derechos</h2>
+<p>Conforme a la Ley 1581 de 2012 de Colombia (habeas data) tienes derecho a conocer,
+actualizar, rectificar y suprimir tus datos personales. En Prisma esos derechos se
+ejercen directamente y sin pedir permiso: los datos están en tu aparato y los
+borras tú desde <b>Ajustes → Borrar mis datos</b>. Si quieres preguntar cualquier
+cosa, escribe a <a href="mailto:joan.hispanista@gmail.com">joan.hispanista@gmail.com</a>.</p>
+
+<h2>Cambios</h2>
+<p>Si algún día Prisma empieza a recoger algo, esta página se actualiza <b>antes</b> de
+que ocurra, con su fecha. El código es público y se puede revisar en
+<a href="https://github.com/joanhispanista-star/prisma-noticias" target="_blank" rel="noopener">GitHub</a>.</p>
+
+<p style="margin-top:26px"><a href="noticias.html">← Volver a Prisma</a></p>
+
+</div>
+</body>
+</html>

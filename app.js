@@ -1757,7 +1757,22 @@ function bind(){
   $('#btnSaveKey').addEventListener('click',()=>{ setKey($('#setKey').value.trim()); toast($('#setKey').value.trim()?'Clave guardada en este dispositivo':'Clave eliminada'); });
   $('#btnExport').addEventListener('click',exportData);
   $('#btnImport').addEventListener('click',importData);
-  $('#btnClear').addEventListener('click',()=>{ if(confirm('¿Borrar tus preferencias y guardados de este navegador?')){ localStorage.removeItem(SK); ST={...defaults}; save(); syncSettingsUI(); toast('Datos borrados'); } });
+  /* "Borrar mis datos" tiene que borrarlo TODO. Antes solo quitaba las
+     preferencias (SK) y dejaba atrás la clave de IA, la copia de titulares y la
+     memoria de por dónde entra cada medio. Alguien que pulsa este botón para
+     dejar limpio un teléfono prestado se iba con su clave puesta. */
+  $('#btnClear').addEventListener('click',()=>{
+    if(!confirm('¿Borrar TODO lo que Prisma guardó en este aparato?\n\nPreferencias, noticias guardadas, tus municipios, tus reportes, la copia de titulares y —si pusiste una— tu clave de IA.')) return;
+    try{
+      Object.keys(localStorage)
+        .filter(k=>k===SK||k===KK||k===VK||k.startsWith('nfeed_'))
+        .forEach(k=>localStorage.removeItem(k));
+    }catch(e){}
+    ST={...defaults}; VIA={};
+    if($('#setKey')) $('#setKey').value='';
+    syncSettingsUI(); buildFeed().then(maybeAutoTranslate);
+    toast('Borrado todo: no queda nada de Prisma en este aparato');
+  });
   // modal
   $('#modalX').addEventListener('click',closeModal); $('#modal').addEventListener('click',e=>{ if(e.target.id==='modal')closeModal(); });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
