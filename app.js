@@ -776,10 +776,40 @@ function paraVoz(t){
     .replace(/\s{2,}/g,' ')
     .trim();
 }
-/* un titular por cada lado del espectro: que se oigan las dos versiones, no la más repetida */
+/* Cuánto cuesta ESCUCHAR un titular. Muchos están escritos para el buscador, no
+   para un oyente: "Terremoto EN VIVO en Colombia ÚLTIMAS noticias, daños en
+   directo, videos y réplicas SGC". Leído en alto suena a spam.
+   La regla mide sólo la TIPOGRAFÍA —mayúsculas sueltas, separadores, emojis,
+   comas amontonadas, largo—, nunca lo que el titular dice. No hay lista de
+   palabras prohibidas: eso sería una persona decidiendo qué se puede contar, que
+   es justo lo que este canal no hace. Es mecánica y reproducible: mismo titular,
+   misma nota. */
+function penalizacionLectura(t){
+  const s=String(t||'');
+  const palabras=s.split(/\s+/).filter(Boolean);
+  if(!palabras.length) return 999;
+  // Mayúsculas: hay que distinguir el grito de la sigla. "DANE" o "SGC" son
+  // nombres propios y no molestan al oído; "EN VIVO … ÚLTIMAS" sí. La pista es
+  // que los gritos vienen en grupo y las siglas vienen solas: una sola palabra
+  // corta en mayúsculas se perdona, dos o más ya son un titular a voces.
+  const mayus=palabras.filter(p=>p.length>=4 && p===p.toUpperCase() && /[A-ZÁÉÍÓÚÑ]/.test(p));
+  const gritos=(mayus.length===1 && mayus[0].length<=5) ? 0 : mayus.length;
+  const separadores=(s.match(/[|·»«—–]/g)||[]).length;
+  const comas=(s.match(/,/g)||[]).length;
+  const emojis=(s.match(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu)||[]).length;
+  const largo=Math.abs(palabras.length-14)/14;      // ~14 palabras se dicen de un tirón
+  return gritos*3 + separadores*2 + emojis*2 + Math.max(0,comas-1) + largo*2;
+}
+/* un titular por cada lado del espectro: que se oigan las dos versiones, no la
+   más repetida. Dentro de cada lado gana el que mejor se escucha; los empates
+   los rompe el orden alfabético del medio, para que no quede nada al azar. */
 function titularesDelBloque(b){
   const porLado={izq:[],centro:[],der:[],estatal:[]};
   b.items.forEach(a=>{ const o=byId[a.outlet]; if(o) porLado[storyBucket(o)].push({a,o}); });
+  for(const lado in porLado){
+    porLado[lado].sort((x,y)=>
+      penalizacionLectura(x.a.title)-penalizacionLectura(y.a.title) || x.o.id.localeCompare(y.o.id));
+  }
   const salida=[], vistos=new Set();
   for(const lado of ['izq','der','centro','estatal']){
     const c=porLado[lado].find(x=>!vistos.has(x.o.id));
@@ -886,9 +916,11 @@ function pintarCanal(){
       caja.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/live_stream?channel=${esc(v.canal.canal)}&autoplay=1&mute=1&rel=0&playsinline=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen playsinline></iframe>`;
     }
     aviso.hidden=false;
-    aviso.innerHTML= v.propio
+    const sobreVideo = v.propio
       ? `📺 <b>Señal en vivo de ${esc(v.canal.nombre)}</b>, uno de los medios que cubre esta historia. Va sin sonido y <b>no es imagen de esta noticia</b>: es su emisión de ahora mismo.`
       : `📺 <b>Señal en vivo de ${esc(v.canal.nombre)}</b>. Va sin sonido y <b>no es imagen de esta noticia</b>: ningún medio con señal en directo la está cubriendo, así que esto es su emisión de ahora mismo.`;
+    // si además no se oye la voz, eso va primero: es lo que el lector necesita saber
+    aviso.innerHTML = (CANAL.mudas>=4 ? textoSinVoz()+'<div style="height:7px"></div>' : '') + sobreVideo;
   }
 }
 function hablarLinea(){
@@ -900,9 +932,34 @@ function hablarLinea(){
   const u=new SpeechSynthesisUtterance(li.voz||li.txt);
   u.lang='es-ES'; u.rate=1.02; u.pitch=1;
   const v=vozElegidaCanal(); if(v) u.voice=v;
-  u.onend=()=>{ if(!CANAL.on||CANAL.pausado) return; CANAL.l++; hablarLinea(); };
-  u.onerror=()=>{ if(!CANAL.on||CANAL.pausado) return; CANAL.l++; setTimeout(hablarLinea,300); };
+  /* Si el aparato no está reproduciendo de verdad —teléfono en silencio, permiso
+     de sonido denegado, navegador que descarta la locución— 'end' salta al
+     instante. Encadenando ahí sin más, el noticiero se dispara: medido, 27.993
+     líneas en 40 segundos. Así que se cronometra: lo que acaba en menos de
+     200 ms no sonó, y entonces el canal avanza con reloj en vez de a la carrera. */
+  const t0=Date.now();
+  const seguir=()=>{
+    if(!CANAL.on||CANAL.pausado) return;
+    const duro=Date.now()-t0;
+    if(duro<200){
+      CANAL.mudas=(CANAL.mudas||0)+1;
+      if(CANAL.mudas===4) avisarSinVoz();     // ya no es casualidad: hay que decirlo
+      CANAL.l++; setTimeout(hablarLinea,CANAL.mudas>=4?4000:600);
+      return;
+    }
+    CANAL.mudas=0; CANAL.l++; hablarLinea();
+  };
+  u.onend=seguir;
+  u.onerror=seguir;
   CANAL.utter=u; speechSynthesis.speak(u);
+}
+/* el canal no puede fingir que está hablando si no se le oye.
+   El texto lo pinta pintarCanal, que es quien manda en esta caja: si lo
+   escribiera aquí, el siguiente repintado se lo llevaría por delante. */
+function avisarSinVoz(){ pintarCanal(); }
+function textoSinVoz(){
+  return '🔇 <b>Tu aparato no está reproduciendo la voz</b> — silencio activado, permiso de sonido denegado o sin voces instaladas. '+
+         'El canal sigue pasando las historias con el texto en pantalla. Sube el volumen y vuelve a entrar para oírlo.';
 }
 function siguienteBloque(){
   CANAL.b++; CANAL.l=0;
@@ -932,7 +989,7 @@ function llenarVocesCanal(){
 function arrancarCanal(){
   if(!FEED.length){ toast('Cargando titulares…'); return; }
   if(!construirCanal()){ toast('Aún no hay historias con varias fuentes. Espera a que cargue la Portada.'); return; }
-  CANAL.on=true; CANAL.pausado=false;
+  CANAL.on=true; CANAL.pausado=false; CANAL.mudas=0;
   CANAL.apagado=CANAL.apagado||$('#canalApagado');   // antes de que el iframe lo borre
   if(CANAL.apagado) CANAL.apagado.style.display='none';
   $('#canalMandos').hidden=false;
