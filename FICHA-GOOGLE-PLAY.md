@@ -139,9 +139,16 @@ Prisma:
 
 | Pieza | Medidas | Estado |
 |---|---|---|
-| Icono | 512×512 PNG | ✅ `icono-512.png` |
-| Gráfico destacado | **1024×500 PNG** | ⬜ hay que hacerlo |
+| Icono | 512×512 PNG | ✅ `icono-512.png` — 4 KB |
+| Gráfico destacado | 1024×500 PNG | ✅ `grafico-play-1024x500.png` — 69 KB |
 | Capturas de teléfono | mín. 2, máx. 8 · 9:16 | ⬜ **TÚ**, desde tu móvil |
+
+Las medidas están comprobadas leyendo la cabecera real de cada PNG, no el nombre
+del archivo:
+
+```
+node herramientas/comprobar-graficos.js
+```
 
 **Las capturas mejores son las tuyas**, tomadas en tu propio teléfono: se ven
 reales y Google las prefiere. Las cuatro que más venden:

@@ -14,7 +14,32 @@ const TIPOS = {
   '.webmanifest': 'application/manifest+json',
 };
 
+/* Guardar en disco lo que el navegador dibuje (los gráficos de la tienda se
+   generan en un lienzo con las tipografías reales de la app).
+   Solo de pruebas: escucha en local, acepta un único nombre por petición y no
+   deja salir de la carpeta del proyecto. */
+function guardar(req, res) {
+  let cuerpo = '';
+  req.on('data', d => { cuerpo += d; if (cuerpo.length > 12e6) req.destroy(); });
+  req.on('end', () => {
+    try {
+      const { nombre, datos } = JSON.parse(cuerpo);
+      if (!/^[\w.-]+\.(png|jpg|jpeg)$/i.test(nombre || '')) throw new Error('nombre no permitido');
+      const b64 = String(datos).replace(/^data:image\/\w+;base64,/, '');
+      const buf = Buffer.from(b64, 'base64');
+      fs.writeFileSync(path.join(DIR, nombre), buf);
+      res.writeHead(200, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+      res.end(JSON.stringify({ ok: true, nombre, bytes: buf.length }));
+      console.log('  guardado ' + nombre + '  ' + Math.round(buf.length/1024) + ' KB');
+    } catch (e) {
+      res.writeHead(400, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+  });
+}
+
 http.createServer((req, res) => {
+  if (req.method === 'POST' && req.url === '/guardar') return guardar(req, res);
   let rel = decodeURIComponent(req.url.split('?')[0]);
   if (rel === '/') rel = '/noticias.html';
   const file = path.join(DIR, rel);
