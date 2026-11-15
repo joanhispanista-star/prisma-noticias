@@ -1,0 +1,57 @@
+# El robot de titulares de Prisma.
+#
+# Cada 20 minutos les pregunta a los medios del catálogo por su RSS y publica UN
+# archivo, titulares.json, en la rama `datos`. La app lo lee desde
+# raw.githubusercontent.com (que sí da permiso CORS) y deja de depender de
+# puentes públicos ajenos, que se murieron tres veces.
+#
+# Por qué una rama aparte y no `main`:
+#   - `main` es el código y su historia; 72 commits diarios de datos la enterrarían.
+#   - Cada vuelta REEMPLAZA la rama `datos` por un único commit (por eso el
+#     push --force): ahí no hay historia que cuidar, es un archivo generado, y
+#     así el repositorio no engorda con miles de copias viejas.
+#   - Escribir en `datos` no reconstruye la web ni dispara este mismo flujo.
+name: Robot de titulares
+
+on:
+  schedule:
+    # fuera de las horas en punto, que es cuando la cola de GitHub va más cargada.
+    # Ojo: GitHub corre los cron "cuando puede"; un retraso de 5 a 30 minutos es normal.
+    - cron: '7,27,47 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'herramientas/robot-titulares.js'
+      - '.github/workflows/titulares.yml'
+      - 'catalogo.json'
+
+permissions:
+  contents: write        # solo para empujar la rama `datos`
+
+concurrency:
+  group: robot-titulares
+  cancel-in-progress: true
+
+jobs:
+  leer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      # Sin instalar nada: el robot es Node pelado, y el Node de la máquina de
+      # GitHub ya trae fetch. Si casi ningún medio contesta, el script sale con
+      # error y NO se publica: la app sigue con el archivo de la vuelta anterior.
+      - name: Leer los feeds
+        run: node herramientas/robot-titulares.js salida
+
+      - name: Publicar en la rama datos
+        run: |
+          cd salida
+          git init -q -b datos
+          git config user.name "robot-prisma"
+          git config user.email "robot-prisma@users.noreply.github.com"
+          git add titulares.json
+          git commit -q -m "Titulares del $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" datos

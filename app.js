@@ -403,10 +403,56 @@ async function translate(text,target){
    ESTADO DE LA PORTADA
    ============================================================ */
 let FEED=[], shown=0, PAGE=18, loading=false, feedToken=0;
-function activeOutlets(){
-  const list=CATALOGO.filter(o=>!ST.off.includes(o.id))
+/* ============================================================
+   EL ROBOT DE TITULARES
+   ============================================================
+   El navegador no puede leer casi ningún RSS, y los puentes públicos que lo
+   hacían por él se murieron tres veces (la última, el 14-nov-2026, los cuatro a
+   la vez: la portada quedó en 15 medios). Un servidor sí puede. Así que un robot
+   en GitHub (herramientas/robot-titulares.js) les pregunta a los 221 medios cada
+   20 minutos y deja UN archivo con sus titulares, tal cual los publican.
+   La app lee ese archivo primero. Lo que el robot no haya traído —o todo, si el
+   robot lleva horas parado— se sigue pidiendo por el camino de siempre.
+   El robot no elige ni reescribe: qué sale y en qué orden lo decide esta app. */
+const ROBOT_URL='https://raw.githubusercontent.com/joanhispanista-star/prisma-noticias/datos/titulares.json';
+const RK='ntit_v1', ROBOT_FRESCO_MS=3*3600*1000;   // con más de 3 h, el robot está parado y no se le cree a solas
+let ROBOT=null, robotPedido=0;
+function robotArmar(doc){
+  if(!doc||!Array.isArray(doc.items)||!doc.generado) return null;
+  const t=Date.parse(doc.generado); if(!t) return null;
+  const porMedio={};
+  for(const a of doc.items){ if(a&&a.title&&a.outlet&&byId[a.outlet]) (porMedio[a.outlet]=porMedio[a.outlet]||[]).push(a); }
+  const medios=new Set(Object.keys(porMedio));
+  return medios.size ? {t,porMedio,medios} : null;
+}
+const robotFresco=()=>!!(ROBOT && Date.now()-ROBOT.t<ROBOT_FRESCO_MS);
+function robotGuardar(doc){
+  const s=JSON.stringify(doc);
+  try{ localStorage.setItem(RK,s); }
+  catch(e){   // sin sitio: las copias medio por medio ya sobran casi todas; se sueltan y se reintenta
+    try{ Object.keys(localStorage).filter(k=>k.startsWith('nfeed_')).forEach(k=>localStorage.removeItem(k)); localStorage.setItem(RK,s); }catch(e2){}
+  }
+}
+async function cargarRobot(){
+  // como mucho una petición cada 2 minutos: GitHub entrega la misma copia durante 5
+  if(ROBOT && Date.now()-robotPedido<120000) return ROBOT;
+  robotPedido=Date.now();
+  try{
+    const doc=await fetchJsonT(ROBOT_URL,7000);
+    const r=robotArmar(doc);
+    if(r){ ROBOT=r; robotGuardar(doc); return ROBOT; }
+  }catch(e){}
+  // sin red o sin archivo: la última copia que se guardó en este aparato
+  if(!ROBOT){ try{ ROBOT=robotArmar(JSON.parse(localStorage.getItem(RK)||'null')); }catch(e){} }
+  return ROBOT;
+}
+function outletsFiltrados(){
+  return CATALOGO.filter(o=>!ST.off.includes(o.id))
     .filter(o=> ST.reg==='todas' || o.region===ST.reg || (ST.reg==='Latinoamérica'&&o.region==='Colombia'))
     .filter(o=> ST.bias==='all' || biasClass(o)===ST.bias);
+}
+function activeOutlets(){
+  const list=outletsFiltrados();
   // vista amplia (todas + todos los sesgos): muestrea con diversidad por región para no saturar (todos siguen accesibles al filtrar)
   if(ST.reg==='todas' && ST.bias==='all' && list.length>100){
     const rank={alta:0,media:1,mixta:2,baja:3}, byReg={};
@@ -423,7 +469,13 @@ async function buildFeed(){
   const feed=$('#feed'); feed.innerHTML='';
   for(let i=0;i<8;i++){ feed.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>')); }
   updateNet();
-  const outs=activeOutlets();
+  /* Primero el robot. Si su archivo está fresco, la portada sale de ahí en un
+     segundo, y se enseñan TODOS los medios que pasan el filtro: el muestreo a
+     100 existía para no saturar puentes, y aquí no hay puente que saturar. */
+  const robot=await cargarRobot();
+  if(myToken!==feedToken) return;
+  const fresco=robotFresco();
+  const outs= fresco ? outletsFiltrados() : activeOutlets();
   if(!outs.length){ feed.innerHTML=''; feed.appendChild(el('div','empty','<div class="ic">🗂️</div><p>No hay fuentes activas con esos filtros. Cambia el sesgo o la región, o enciende medios en Ajustes.</p>')); loading=false; return; }
   FEED=[]; shown=0;
   const seen=new Set();
@@ -435,10 +487,26 @@ async function buildFeed(){
     if(now-lastPaint>700){ lastPaint=now; repaint(); }
     else if(!pending){ pending=true; setTimeout(()=>{ pending=false; lastPaint=Date.now(); repaint(); },700); }
   };
-  probeProxy();   // ya NO bloqueamos hasta 5,5s: arranque breve y PROXY_WINNER se aplica en caliente
-  if(probeDone) await Promise.race([probeDone, new Promise(r=>setTimeout(r,1500))]);
+  if(robot){
+    /* un archivo viejo se usa igual —mejor titulares de hace horas que una
+       portada vacía— pero entonces no se le cree a solas: abajo se vuelve a
+       preguntar a todos por el camino de siempre, y el chip dice de cuándo son */
+    const permitidos=new Set(outs.map(o=>o.id));
+    for(const id of robot.medios){
+      if(!permitidos.has(id)) continue;
+      for(const a of robot.porMedio[id]){ const k=a.title.toLowerCase().slice(0,70); if(k&&!seen.has(k)){ seen.add(k); FEED.push(a); } }
+    }
+    if(FEED.length) schedulePaint();
+    updateNet();
+  }
+  // lo que el robot no trajo —o todo, si el robot está parado— va por el camino de siempre
+  const porRed= fresco ? outs.filter(o=>!robot.medios.has(o.id)) : outs;
+  if(porRed.length){
+    probeProxy();   // ya NO bloqueamos hasta 5,5s: arranque breve y PROXY_WINNER se aplica en caliente
+    if(probeDone) await Promise.race([probeDone, new Promise(r=>setTimeout(r,1500))]);
+  }
   if(myToken!==feedToken) return;   // el usuario cambió de filtro/pestaña: abandona
-  await mapLimit(outs,8,async(o)=>{
+  await mapLimit(porRed,8,async(o)=>{
     const items=await loadOutlet(o);
     if(myToken!==feedToken) return;
     let added=false;
@@ -1678,7 +1746,11 @@ function syncSettingsUI(){
 }
 function updateNet(){
   const on=navigator.onLine; const c=$('#netchip');
-  c.className='chip-net '+(on?'on':'off'); $('#nettxt').textContent= on?'En línea':'Sin conexión';
+  c.className='chip-net '+(on?'on':'off');
+  // de cuándo son los titulares: el robot pasa cada 20 minutos, y eso se dice en vez de esconderlo
+  let edad='';
+  if(ROBOT){ const e=timeAgo(ROBOT.t); edad=' · titulares '+(e==='ahora'?'de ahora':'de hace '+e); }
+  $('#nettxt').textContent=(on?'En línea':'Sin conexión')+edad;
 }
 
 /* ============================================================
@@ -1798,7 +1870,7 @@ function bind(){
     if(!confirm('¿Borrar TODO lo que Prisma guardó en este aparato?\n\nPreferencias, noticias guardadas, tus municipios, tus reportes, la copia de titulares y —si pusiste una— tu clave de IA.')) return;
     try{
       Object.keys(localStorage)
-        .filter(k=>k===SK||k===KK||k===VK||k.startsWith('nfeed_'))
+        .filter(k=>k===SK||k===KK||k===VK||k===RK||k.startsWith('nfeed_'))
         .forEach(k=>localStorage.removeItem(k));
     }catch(e){}
     ST={...defaults}; VIA={};

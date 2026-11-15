@@ -85,6 +85,39 @@ if(ok){ ck('app.js compila y corre top-level',true);
       }
     }
 
+    console.log('[6] Robot de titulares');
+    {
+      let R=null; try{ R=require(path.join(DIR,'herramientas','robot-titulares.js')); }catch(e){ ck('el robot carga', false, e.message); }
+      if(R){
+        const rss='<rss><channel><item><title><![CDATA[Sube el d&oacute;lar &amp;quot;m&aacute;s de lo previsto&amp;quot;]]></title>'
+          +'<link>https://medio.test/economia/dolar</link><description>&lt;p&gt;El &lt;b&gt;peso&lt;/b&gt; cae.&lt;/p&gt;&lt;img src="https://medio.test/f.jpg"&gt;</description>'
+          +'<pubDate>Sat, 14 Nov 2026 10:00:00 GMT</pubDate><category>Economía</category></item>'
+          +'<item><title>Sin enlace</title><description>x</description></item>'
+          +'<item><title>Lluvias en Bogotá - El Diario</title><link>https://news.google.com/rss/articles/abc</link></item></channel></rss>';
+        const a=R.leerFeed(rss,'m1');
+        ck('RSS: lee los titulares que tienen enlace', a.length===2, 'len='+a.length);
+        ck('RSS: CDATA y entidades dobles quedan limpias', a[0]&&a[0].title==='Sube el dólar "más de lo previsto"', a[0]&&a[0].title);
+        ck('RSS: el resumen sale sin etiquetas', a[0]&&a[0].desc==='El peso cae.', a[0]&&a[0].desc);
+        ck('RSS: saca la foto del resumen', a[0]&&a[0].img==='https://medio.test/f.jpg');
+        ck('RSS: fecha, medio y sección', a[0]&&a[0].ts===Date.parse('Sat, 14 Nov 2026 10:00:00 GMT')&&a[0].outlet==='m1'&&a[0].cats.includes('economía')&&a[0].cats.includes('economia'));
+        ck('Google News: quita la coletilla " - Medio"', a[1]&&a[1].title==='Lluvias en Bogotá', a[1]&&a[1].title);
+        const atom='<feed><entry><title type="html">Acuerdo &amp;amp; paz</title><link rel="self" href="https://x.test/self"/>'
+          +'<link rel="alternate" href="https://x.test/mundo/nota"/><summary>Resumen</summary><updated>2026-11-14T09:00:00Z</updated>'
+          +'<media:thumbnail url="https://x.test/t.png"/><category term="Mundo"/></entry></feed>';
+        const b=R.leerFeed(atom,'m2');
+        ck('Atom: enlace alternate, no el self', b.length===1&&b[0].link==='https://x.test/mundo/nota', b[0]&&b[0].link);
+        ck('Atom: título, miniatura y fecha', b[0]&&b[0].title==='Acuerdo & paz'&&b[0].img==='https://x.test/t.png'&&b[0].ts===Date.parse('2026-11-14T09:00:00Z'));
+        ck('basura no lo tumba', R.leerFeed('<html>no soy un feed</html>','m3').length===0 && R.leerFeed('','m3').length===0);
+      }
+      ck('la app lee el archivo del robot', appSrcRaw.includes('raw.githubusercontent.com/joanhispanista-star/prisma-noticias/datos/titulares.json'));
+      ck('si el robot está parado, la app no le cree a solas', appSrcRaw.includes('robotFresco()') && appSrcRaw.includes('ROBOT_FRESCO_MS'));
+      ck('"Borrar mis datos" también se lleva la copia del robot', appSrcRaw.includes('k===RK'));
+      let wf=''; try{ wf=rd('.github/workflows/titulares.yml'); }catch(e){}
+      ck('el flujo de GitHub existe y corre con reloj', /cron:/.test(wf) && wf.includes('robot-titulares.js'));
+      ck('el flujo publica en la rama datos, no en main', /push[^\n]*--force[^\n]* datos/.test(wf) && !/push[^\n]* main/.test(wf));
+      ck('la privacidad cuenta lo del robot', rd('privacidad.html').includes('robot de Prisma'));
+    }
+
     console.log('\n================ '+pass+' OK · '+fail+' FALLOS ================');
     process.exit(fail?1:0);
   })();
