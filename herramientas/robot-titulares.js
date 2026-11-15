@@ -141,11 +141,17 @@ async function canal(o) {
    nombre y la bandera; aquí solo hace falta el dominio y el idioma). El
    verificador comprueba que no se desparejen. */
 const VERIFICADORES = [
-  ['colombiacheck.com', 'es'], ['lasillavacia.com', 'es'], ['maldita.es', 'es'], ['newtral.es', 'es'],
+  ['colombiacheck.com', 'es'], ['lasillavacia.com/detector-de-mentiras', 'es'], ['maldita.es', 'es'], ['newtral.es', 'es'],
   ['chequeado.com', 'es'], ['factual.afp.com', 'es'], ['verifica.efe.com', 'es'],
   ['snopes.com', 'en'], ['politifact.com', 'en'], ['fullfact.org', 'en'],
 ];
 const POR_VERIFICADOR = 3;
+/* Google mezcla con los chequeos las páginas de ÍNDICE del propio verificador
+   ("Chequeos: Inchequeable (página 3)", "calabazas Archives", "Article List –
+   Page 3"). No son desmentidos y bajo ese rótulo engañan. La regla mira solo la
+   forma del título —numeración de página, "Archives", "Article List"—, nunca de
+   qué trata: sigue siendo el verificador quien decide qué chequea. */
+const ES_INDICE = /\(p[aá]gina\s*\d+\)|[–-]\s*Page\s*\d+\s*$|\bArchives?\s*$|^Article List\b/i;
 function leerGoogle(xml) {                    // un resultado de Google News → {title, link, ts, src}
   const salida = [];
   for (const b of (xml.match(/<item[\s>][\s\S]*?<\/item>/gi) || [])) {
@@ -160,7 +166,8 @@ async function verificador([dominio, idioma]) {
   const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:' + dominio + ' when:20d') + '&hl=' + L[0] + '&gl=' + L[1] + '&ceid=' + L[2];
   const r = await pedir(url);
   if (r.error) return [];
-  return leerGoogle(r.xml).sort((a, b) => b.ts - a.ts).slice(0, POR_VERIFICADOR).map(a => Object.assign(a, { d: dominio }));
+  return leerGoogle(r.xml).filter(a => !ES_INDICE.test(a.title)).sort((a, b) => b.ts - a.ts)
+    .slice(0, POR_VERIFICADOR).map(a => Object.assign(a, { d: dominio }));
 }
 
 async function pedir(url) {
@@ -242,4 +249,4 @@ async function main() {
   if (con.length < 60) { console.error('✖ Solo ' + con.length + ' medios: no se publica esta vuelta.'); process.exit(1); }
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { leerFeed, leerVideos, leerGoogle, VERIFICADORES, texto, foto };
+module.exports = { leerFeed, leerVideos, leerGoogle, VERIFICADORES, ES_INDICE, texto, foto };

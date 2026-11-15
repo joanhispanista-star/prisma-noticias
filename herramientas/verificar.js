@@ -123,6 +123,8 @@ if(ok){ ck('app.js compila y corre top-level',true);
         const enApp=[...appSrcRaw.matchAll(/\{n:'[^']+',d:'([^']+)',loc:'(es|en)'/g)].map(m=>m[1]+'|'+m[2]).sort().join(',');
         const enRobot=R.VERIFICADORES.map(v=>v[0]+'|'+v[1]).sort().join(',');
         ck('la lista de verificadores es la misma en la app y en el robot', enApp===enRobot && R.VERIFICADORES.length===10, enApp===enRobot?'':'app: '+enApp+' / robot: '+enRobot);
+        ck('La Silla apunta a su Detector, no a todo el medio', R.VERIFICADORES.some(v=>v[0]==='lasillavacia.com/detector-de-mentiras'));
+        ck('las páginas de índice no pasan por desmentidos', ['Chequeos: Inchequeable (página 3)','calabazas Archives','Article List – Page 3'].every(t=>R.ES_INDICE.test(t)) && !R.ES_INDICE.test('Es falso que el agua con limón cure el dengue') && !R.ES_INDICE.test('Did Texas have more registered voters than adult citizens?'));
         ck('basura no lo tumba', R.leerFeed('<html>no soy un feed</html>','m3').length===0 && R.leerFeed('','m3').length===0);
       }
       ck('la app lee el archivo del robot', appSrcRaw.includes('raw.githubusercontent.com/joanhispanista-star/prisma-noticias/datos/titulares.json'));

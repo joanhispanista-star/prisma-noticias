@@ -1677,7 +1677,9 @@ async function buildLocal(place){
 /* --- Desmentidos (verificadores profesionales) --- */
 const FACTCHECK=[
   {n:'Colombiacheck',d:'colombiacheck.com',loc:'es',f:'🇨🇴'},
-  {n:'La Silla · Detector',d:'lasillavacia.com',loc:'es',f:'🇨🇴'},
+  /* la ruta importa: con solo "lasillavacia.com" salían las noticias normales del
+     medio bajo el rótulo de "Detector", que es su sección de chequeos y nada más */
+  {n:'La Silla · Detector',d:'lasillavacia.com/detector-de-mentiras',loc:'es',f:'🇨🇴'},
   {n:'Maldita.es',d:'maldita.es',loc:'es',f:'🇪🇸'},
   {n:'Newtral',d:'newtral.es',loc:'es',f:'🇪🇸'},
   {n:'Chequeado',d:'chequeado.com',loc:'es',f:'🇦🇷'},
