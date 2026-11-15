@@ -423,9 +423,17 @@ function robotArmar(doc){
   const porMedio={};
   for(const a of doc.items){ if(a&&a.title&&a.outlet&&byId[a.outlet]) (porMedio[a.outlet]=porMedio[a.outlet]||[]).push(a); }
   const medios=new Set(Object.keys(porMedio));
-  return medios.size ? {t,porMedio,medios} : null;
+  // los videos de cada canal; la miniatura se deduce del identificador, por eso no viaja
+  const videos={};
+  for(const v of (doc.videos||[])){
+    if(!v||!v.vid||!v.outlet||!byId[v.outlet]) continue;
+    (videos[v.outlet]=videos[v.outlet]||[]).push({vid:v.vid,title:v.title||'',pub:v.pub||0,outlet:v.outlet,
+      img:v.img||('https://i.ytimg.com/vi/'+v.vid+'/hqdefault.jpg')});
+  }
+  return medios.size ? {t,porMedio,medios,videos} : null;
 }
 const robotFresco=()=>!!(ROBOT && Date.now()-ROBOT.t<ROBOT_FRESCO_MS);
+const robotTraeVideos=()=>robotFresco() && !!ROBOT.videos && Object.keys(ROBOT.videos).length>0;
 function robotGuardar(doc){
   const s=JSON.stringify(doc);
   try{ localStorage.setItem(RK,s); }
@@ -1161,6 +1169,11 @@ const ytCache={};
 async function loadYT(outlet){
   if(!outlet.yt) return [];
   if(ytCache[outlet.yt]&&Date.now()-ytCache[outlet.yt].t<15*60*1000) return ytCache[outlet.yt].v;
+  // primero el robot: ya trae lo último de cada canal, sin pasar por ningún puente.
+  // Solo si a este canal no lo trajo (o el robot está parado) se pide como antes.
+  if(robotFresco() && ROBOT.videos && ROBOT.videos[outlet.id] && ROBOT.videos[outlet.id].length){
+    const v=ROBOT.videos[outlet.id]; ytCache[outlet.yt]={t:Date.now(),v}; return v;
+  }
   const url='https://www.youtube.com/feeds/videos.xml?channel_id='+outlet.yt;
   let vids=[];
   try{
@@ -1179,7 +1192,8 @@ async function loadYT(outlet){
 async function buildVideos(single){
   const grid=$('#videos'); grid.innerHTML='';
   for(let i=0;i<6;i++) grid.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
-  await probeProxy();
+  await cargarRobot();
+  if(!robotTraeVideos()) await probeProxy();   // el sondeo de puentes solo hace falta si no hay robot
   const outs=(single?[byId[single]]:CATALOGO.filter(o=>o.yt&&!ST.off.includes(o.id))).filter(Boolean);
   const lists=await mapLimit(outs,5,loadYT);
   let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });
@@ -1198,7 +1212,8 @@ function vcard(v){
 async function buildShorts(){
   const rail=$('#shorts'), grid=$('#shortsGrid'); rail.innerHTML=''; grid.innerHTML='';
   for(let i=0;i<5;i++){ const s=el('div','short'); s.style.background='#e9eaec'; rail.appendChild(s); }
-  await probeProxy();
+  await cargarRobot();
+  if(!robotTraeVideos()) await probeProxy();
   const outs=CATALOGO.filter(o=>o.yt&&!ST.off.includes(o.id));
   const lists=await mapLimit(outs,5,loadYT);
   let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });

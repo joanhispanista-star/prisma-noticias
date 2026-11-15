@@ -107,9 +107,18 @@ if(ok){ ck('app.js compila y corre top-level',true);
         const b=R.leerFeed(atom,'m2');
         ck('Atom: enlace alternate, no el self', b.length===1&&b[0].link==='https://x.test/mundo/nota', b[0]&&b[0].link);
         ck('Atom: título, miniatura y fecha', b[0]&&b[0].title==='Acuerdo & paz'&&b[0].img==='https://x.test/t.png'&&b[0].ts===Date.parse('2026-11-14T09:00:00Z'));
+        const yt='<feed><entry><yt:videoId>dQw4w9WgXcQ</yt:videoId><title>Resumen &amp;amp; an&aacute;lisis</title>'
+          +'<published>2026-11-14T12:00:00+00:00</published><media:group><media:title>otro titulo</media:title></media:group></entry>'
+          +'<entry><yt:videoId>corto</yt:videoId><title>id roto</title></entry></feed>';
+        const v=R.leerVideos(yt,'m4');
+        ck('YouTube: lee el video y descarta el id roto', v.length===1&&v[0].vid==='dQw4w9WgXcQ', 'len='+v.length);
+        ck('YouTube: el título es el del video, no el de media:group', v[0]&&v[0].title==='Resumen & análisis', v[0]&&v[0].title);
+        ck('YouTube: fecha y medio', v[0]&&v[0].pub===Date.parse('2026-11-14T12:00:00+00:00')&&v[0].outlet==='m4');
         ck('basura no lo tumba', R.leerFeed('<html>no soy un feed</html>','m3').length===0 && R.leerFeed('','m3').length===0);
       }
       ck('la app lee el archivo del robot', appSrcRaw.includes('raw.githubusercontent.com/joanhispanista-star/prisma-noticias/datos/titulares.json'));
+      ck('Video y Shorts salen del robot antes que de un puente', appSrcRaw.includes('ROBOT.videos[outlet.id]') && appSrcRaw.includes('robotTraeVideos()'));
+      ck('el robot también trae los videos', rd('herramientas/robot-titulares.js').includes('feeds/videos.xml?channel_id='));
       ck('si el robot está parado, la app no le cree a solas', appSrcRaw.includes('robotFresco()') && appSrcRaw.includes('ROBOT_FRESCO_MS'));
       ck('"Borrar mis datos" también se lleva la copia del robot', appSrcRaw.includes('k===RK'));
       let wf=''; try{ wf=rd('.github/workflows/titulares.yml'); }catch(e){}

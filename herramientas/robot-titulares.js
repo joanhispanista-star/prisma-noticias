@@ -101,6 +101,39 @@ function leerFeed(xml, medioId) {
   return salida;
 }
 
+/* ---------- los videos: el feed público de cada canal de YouTube ----------
+   Video y Shorts pedían estos mismos feeds por puente, canal por canal, desde el
+   teléfono de cada lector. Son 49 direcciones fijas: las lee el robot de una vez.
+   No se guarda la miniatura: sale del identificador del video
+   (i.ytimg.com/vi/<id>/hqdefault.jpg) y así el archivo pesa la mitad. */
+const VIDEOS_POR_CANAL = 6;
+function leerVideos(xml, medioId) {
+  const bloques = xml.match(/<entry[\s>][\s\S]*?<\/entry>/gi) || [];
+  const salida = [];
+  for (const b of bloques) {
+    const vid = texto(etiqueta(b, 'yt:videoId'));
+    if (!/^[\w-]{11}$/.test(vid)) continue;          // un identificador de YouTube mide 11, siempre
+    const title = texto(etiqueta(b, 'title')); if (!title) continue;
+    salida.push({ vid, title, pub: Date.parse(texto(etiqueta(b, 'published'))) || 0, outlet: medioId });
+  }
+  return salida;
+}
+/* El 14-nov-2026 YouTube contestaba 404 a TODOS los feeds de canal (por id, por
+   usuario y por lista, con cualquier identificación), mientras la página normal
+   del canal respondía bien. Cuando eso pasa no tiene sentido preguntar 49 veces
+   cada 20 minutos: tras 8 errores seguidos se deja de preguntar en esta vuelta.
+   En la siguiente se vuelve a probar, así que si el feed regresa, entra solo. */
+let erroresSeguidosYT = 0;
+const YT_CORTE = 8;
+async function canal(o) {
+  if (erroresSeguidosYT >= YT_CORTE) return { id: o.id, videos: [], error: 'no se preguntó: YouTube no está entregando feeds' };
+  const r = await pedir('https://www.youtube.com/feeds/videos.xml?channel_id=' + o.yt);
+  if (r.error) { erroresSeguidosYT++; return { id: o.id, videos: [], error: r.error }; }
+  erroresSeguidosYT = 0;
+  const videos = leerVideos(r.xml, o.id).sort((a, b) => b.pub - a.pub).slice(0, VIDEOS_POR_CANAL);
+  return { id: o.id, videos, error: videos.length ? null : 'canal sin videos' };
+}
+
 async function pedir(url) {
   const c = new AbortController(); const to = setTimeout(() => c.abort(), ESPERA);
   try {
@@ -138,12 +171,19 @@ async function main() {
 
   const con = res.filter(r => r.items.length), sin = res.filter(r => !r.items.length);
   const items = con.flatMap(r => r.items);
+
+  // los videos van después y con menos prisa: a YouTube no le gustan las ráfagas
+  const conCanal = CAT.filter(o => o.yt), canales = []; let j = 0;
+  await Promise.all(Array.from({ length: 5 }, async () => { while (j < conCanal.length) canales.push(await canal(conCanal[j++])); }));
+  canales.sort((a, b) => orden[a.id] - orden[b.id]);
+  const videos = canales.flatMap(c => c.videos);
   const doc = {
     v: 1,
     generado: new Date().toISOString(),
     medios: con.map(r => r.id),                                  // quiénes respondieron en esta vuelta
     faltan: Object.fromEntries(sin.map(r => [r.id, r.error])),   // y quiénes no, con su motivo
     items,
+    videos,                                                      // {vid,title,pub,outlet}: lo último de cada canal
   };
   if (!fs.existsSync(SALIDA)) fs.mkdirSync(SALIDA, { recursive: true });
   const cuerpo = JSON.stringify(doc);
@@ -154,7 +194,12 @@ async function main() {
   console.log('  medios con noticias : ' + con.length + ' de ' + CAT.length + '   (' + (con.length - porGoogle) + ' por su RSS, ' + porGoogle + ' por Google News)');
   console.log('  titulares           : ' + items.length);
   console.log('  con foto            : ' + Math.round(items.filter(a => a.img).length / (items.length || 1) * 100) + ' %');
+  console.log('  videos              : ' + videos.length + ' de ' + canales.filter(c => c.videos.length).length + ' canales (de ' + conCanal.length + ')');
   console.log('  peso                : ' + Math.round(cuerpo.length / 1024) + ' KB');
+  // Si YouTube no le contesta al robot NO se cancela la vuelta: los titulares valen
+  // por sí solos, y la app pide por su cuenta los videos que falten.
+  const sinVideo = canales.filter(c => !c.videos.length);
+  if (sinVideo.length) console.log('  canales sin videos (' + sinVideo.length + '): ' + sinVideo.slice(0, 8).map(c => c.id + ' → ' + c.error).join(' · '));
   if (sin.length) {
     const motivos = {}; sin.forEach(r => { motivos[r.error] = (motivos[r.error] || 0) + 1; });
     console.log('  sin noticias (' + sin.length + '): ' + Object.entries(motivos).sort((a, b) => b[1] - a[1]).map(([m, n]) => n + ' ' + m).join(' · '));
@@ -164,4 +209,4 @@ async function main() {
   if (con.length < 60) { console.error('✖ Solo ' + con.length + ' medios: no se publica esta vuelta.'); process.exit(1); }
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { leerFeed, texto, foto };
+module.exports = { leerFeed, leerVideos, texto, foto };
