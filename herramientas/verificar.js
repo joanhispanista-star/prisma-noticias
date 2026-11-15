@@ -114,9 +114,20 @@ if(ok){ ck('app.js compila y corre top-level',true);
         ck('YouTube: lee el video y descarta el id roto', v.length===1&&v[0].vid==='dQw4w9WgXcQ', 'len='+v.length);
         ck('YouTube: el título es el del video, no el de media:group', v[0]&&v[0].title==='Resumen & análisis', v[0]&&v[0].title);
         ck('YouTube: fecha y medio', v[0]&&v[0].pub===Date.parse('2026-11-14T12:00:00+00:00')&&v[0].outlet==='m4');
+        const gn='<rss><channel><item><title>Es falso que el agua con lim&amp;oacute;n cure el dengue - Colombiacheck</title>'
+          +'<link>https://news.google.com/rss/articles/xyz</link><pubDate>Fri, 13 Nov 2026 15:00:00 GMT</pubDate>'
+          +'<source url="https://colombiacheck.com">Colombiacheck</source></item><item><title>sin enlace</title></item></channel></rss>';
+        const g=R.leerGoogle(gn);
+        ck('Desmentidos: lee el chequeo y quita la coletilla del medio', g.length===1&&g[0].title==='Es falso que el agua con limón cure el dengue', g[0]&&g[0].title);
+        ck('Desmentidos: fuente y fecha', g[0]&&g[0].src==='Colombiacheck'&&g[0].ts===Date.parse('Fri, 13 Nov 2026 15:00:00 GMT'));
+        const enApp=[...appSrcRaw.matchAll(/\{n:'[^']+',d:'([^']+)',loc:'(es|en)'/g)].map(m=>m[1]+'|'+m[2]).sort().join(',');
+        const enRobot=R.VERIFICADORES.map(v=>v[0]+'|'+v[1]).sort().join(',');
+        ck('la lista de verificadores es la misma en la app y en el robot', enApp===enRobot && R.VERIFICADORES.length===10, enApp===enRobot?'':'app: '+enApp+' / robot: '+enRobot);
         ck('basura no lo tumba', R.leerFeed('<html>no soy un feed</html>','m3').length===0 && R.leerFeed('','m3').length===0);
       }
       ck('la app lee el archivo del robot', appSrcRaw.includes('raw.githubusercontent.com/joanhispanista-star/prisma-noticias/datos/titulares.json'));
+      ck('los últimos desmentidos salen del robot', appSrcRaw.includes('ROBOT.desmentidos'));
+      ck('si no se pudo preguntar, no se afirma que "no hay chequeos"', appSrcRaw.includes('arts.sinPuente') && appSrcRaw.includes('NO significa que no haya chequeos'));
       ck('Video y Shorts salen del robot antes que de un puente', appSrcRaw.includes('ROBOT.videos[outlet.id]') && appSrcRaw.includes('robotTraeVideos()'));
       ck('el robot también trae los videos', rd('herramientas/robot-titulares.js').includes('feeds/videos.xml?channel_id='));
       ck('si el robot está parado, la app no le cree a solas', appSrcRaw.includes('robotFresco()') && appSrcRaw.includes('ROBOT_FRESCO_MS'));

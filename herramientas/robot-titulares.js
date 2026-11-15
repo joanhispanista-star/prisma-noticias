@@ -134,6 +134,35 @@ async function canal(o) {
   return { id: o.id, videos, error: videos.length ? null : 'canal sin videos' };
 }
 
+/* ---------- los desmentidos: lo último de los verificadores profesionales ----------
+   En la app esto eran 10 búsquedas en Google News por puente, desde el teléfono
+   de cada lector. La lista es fija, así que las hace el robot.
+   OJO: esta lista tiene que ser la misma que FACTCHECK en app.js (la app pone el
+   nombre y la bandera; aquí solo hace falta el dominio y el idioma). El
+   verificador comprueba que no se desparejen. */
+const VERIFICADORES = [
+  ['colombiacheck.com', 'es'], ['lasillavacia.com', 'es'], ['maldita.es', 'es'], ['newtral.es', 'es'],
+  ['chequeado.com', 'es'], ['factual.afp.com', 'es'], ['verifica.efe.com', 'es'],
+  ['snopes.com', 'en'], ['politifact.com', 'en'], ['fullfact.org', 'en'],
+];
+const POR_VERIFICADOR = 3;
+function leerGoogle(xml) {                    // un resultado de Google News → {title, link, ts, src}
+  const salida = [];
+  for (const b of (xml.match(/<item[\s>][\s\S]*?<\/item>/gi) || [])) {
+    const link = texto(etiqueta(b, 'link')); if (!/^https?:\/\//i.test(link)) continue;
+    const title = texto(etiqueta(b, 'title')).replace(/\s+[-–|]\s+[^-–|]{2,45}$/, '').trim(); if (!title) continue;
+    salida.push({ title, link, ts: Date.parse(texto(etiqueta(b, 'pubDate'))) || 0, src: texto(etiqueta(b, 'source')) });
+  }
+  return salida;
+}
+async function verificador([dominio, idioma]) {
+  const L = idioma === 'en' ? ['en-US', 'US', 'US:en'] : ['es-419', 'CO', 'CO:es-419'];
+  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent('site:' + dominio + ' when:20d') + '&hl=' + L[0] + '&gl=' + L[1] + '&ceid=' + L[2];
+  const r = await pedir(url);
+  if (r.error) return [];
+  return leerGoogle(r.xml).sort((a, b) => b.ts - a.ts).slice(0, POR_VERIFICADOR).map(a => Object.assign(a, { d: dominio }));
+}
+
 async function pedir(url) {
   const c = new AbortController(); const to = setTimeout(() => c.abort(), ESPERA);
   try {
@@ -177,6 +206,8 @@ async function main() {
   await Promise.all(Array.from({ length: 5 }, async () => { while (j < conCanal.length) canales.push(await canal(conCanal[j++])); }));
   canales.sort((a, b) => orden[a.id] - orden[b.id]);
   const videos = canales.flatMap(c => c.videos);
+
+  const desmentidos = (await Promise.all(VERIFICADORES.map(verificador))).flat();
   const doc = {
     v: 1,
     generado: new Date().toISOString(),
@@ -184,6 +215,7 @@ async function main() {
     faltan: Object.fromEntries(sin.map(r => [r.id, r.error])),   // y quiénes no, con su motivo
     items,
     videos,                                                      // {vid,title,pub,outlet}: lo último de cada canal
+    desmentidos,                                                 // {title,link,ts,src,d}: lo último de cada verificador
   };
   if (!fs.existsSync(SALIDA)) fs.mkdirSync(SALIDA, { recursive: true });
   const cuerpo = JSON.stringify(doc);
@@ -195,6 +227,7 @@ async function main() {
   console.log('  titulares           : ' + items.length);
   console.log('  con foto            : ' + Math.round(items.filter(a => a.img).length / (items.length || 1) * 100) + ' %');
   console.log('  videos              : ' + videos.length + ' de ' + canales.filter(c => c.videos.length).length + ' canales (de ' + conCanal.length + ')');
+  console.log('  desmentidos         : ' + desmentidos.length + ' de ' + new Set(desmentidos.map(x => x.d)).size + ' verificadores (de ' + VERIFICADORES.length + ')');
   console.log('  peso                : ' + Math.round(cuerpo.length / 1024) + ' KB');
   // Si YouTube no le contesta al robot NO se cancela la vuelta: los titulares valen
   // por sí solos, y la app pide por su cuenta los videos que falten.
@@ -209,4 +242,4 @@ async function main() {
   if (con.length < 60) { console.error('✖ Solo ' + con.length + ' medios: no se publica esta vuelta.'); process.exit(1); }
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { leerFeed, leerVideos, texto, foto };
+module.exports = { leerFeed, leerVideos, leerGoogle, VERIFICADORES, texto, foto };

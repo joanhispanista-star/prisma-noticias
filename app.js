@@ -430,7 +430,8 @@ function robotArmar(doc){
     (videos[v.outlet]=videos[v.outlet]||[]).push({vid:v.vid,title:v.title||'',pub:v.pub||0,outlet:v.outlet,
       img:v.img||('https://i.ytimg.com/vi/'+v.vid+'/hqdefault.jpg')});
   }
-  return medios.size ? {t,porMedio,medios,videos} : null;
+  const desmentidos=(doc.desmentidos||[]).filter(x=>x&&x.title&&x.link&&x.d);
+  return medios.size ? {t,porMedio,medios,videos,desmentidos} : null;
 }
 const robotFresco=()=>!!(ROBOT && Date.now()-ROBOT.t<ROBOT_FRESCO_MS);
 const robotTraeVideos=()=>robotFresco() && !!ROBOT.videos && Object.keys(ROBOT.videos).length>0;
@@ -1636,7 +1637,12 @@ function selectArchivoSeg(s){
 function gnewsUrl(q,loc){ const L=loc==='en'?['en-US','US','US:en']:['es-419','CO','CO:es-419']; return 'https://news.google.com/rss/search?q='+enc(q)+'&hl='+L[0]+'&gl='+L[1]+'&ceid='+L[2]; }
 async function fetchGnews(url){
   await probeProxy();
-  let xml; try{ xml=await fetchViaAny(url,9000); }catch(e){ try{ xml=await fetchText(url,{timeout:9000}); }catch(e2){ return []; } }
+  /* Cuando ningún puente contesta se devuelve una lista vacía MARCADA. Sin esa
+     marca, quien llama no distingue "busqué y no hay nada" de "no pude buscar", y
+     la pantalla de desmentidos acababa afirmando que nadie había verificado un
+     rumor cuando en realidad Prisma ni siquiera había podido preguntar. */
+  const sinPuente=()=>{ const v=[]; v.sinPuente=true; return v; };
+  let xml; try{ xml=await fetchViaAny(url,9000); }catch(e){ try{ xml=await fetchText(url,{timeout:9000}); }catch(e2){ return sinPuente(); } }
   let doc; try{ doc=new DOMParser().parseFromString(xml,'text/xml'); }catch(e){ return []; }
   return [...doc.getElementsByTagName('item')].map(n=>{
     let t=tagText(n,'title'); const link=tagText(n,'link');
@@ -1659,7 +1665,12 @@ async function buildLocal(place){
   ST.lugares=ST.lugares||[]; if(!ST.lugares.includes(q)){ ST.lugares.unshift(q); ST.lugares=ST.lugares.slice(0,6); save(); localChips(); }
   out.innerHTML='<div class="ai-loading">Buscando noticias de '+esc(q)+'…</div>';
   const arts=await fetchGnews(gnewsUrl('"'+q+'" Colombia when:21d','es'));
-  if(!arts.length){ out.innerHTML='<div class="empty"><div class="ic">📭</div><p>No encontramos noticias recientes de “'+esc(q)+'”. Prueba con el nombre exacto del municipio o con su departamento.</p></div>'; return; }
+  if(!arts.length){
+    out.innerHTML= arts.sinPuente
+      ? '<div class="empty"><div class="ic">🚧</div><p><b>No pudimos buscar las noticias de “'+esc(q)+'”.</b> No es que no las haya: esta búsqueda necesita un intermediario para llegar a Google Noticias, y hoy ninguno está respondiendo. La portada, el canal y la televisión en directo no dependen de eso y siguen funcionando.</p></div>'
+      : '<div class="empty"><div class="ic">📭</div><p>No encontramos noticias recientes de “'+esc(q)+'”. Prueba con el nombre exacto del municipio o con su departamento.</p></div>';
+    return;
+  }
   out.innerHTML='<div class="arch-h">📍 Lo último de '+esc(q)+' <span class="n">· '+arts.length+' notas de medios locales y regionales</span></div>';
   const box=el('div',''); arts.slice(0,40).forEach(a=>box.appendChild(newsRow(a))); out.appendChild(box);
 }
@@ -1679,11 +1690,30 @@ const FACTCHECK=[
 async function buildDesmentidos(query){
   const out=$('#fcOut'); const q=(query||'').trim();
   out.innerHTML='<div class="ai-loading">'+(q?('Buscando chequeos sobre “'+esc(q)+'”…'):'Trayendo los últimos desmentidos…')+'</div>';
-  const results=await mapLimit(FACTCHECK,5,async fc=>{
-    const term=(q?('"'+q+'" '):'')+'site:'+fc.d+(q?' when:180d':' when:20d');
-    try{ const arts=await fetchGnews(gnewsUrl(term,fc.loc)); return arts.slice(0,q?4:3).map(a=>Object.assign({},a,{fc})); }catch(e){ return []; }
-  });
-  let all=results.flat().filter(x=>x.title); all.sort((a,b)=>b.ts-a.ts);
+  let all=[], sinPuente=false;
+  // sin búsqueda son "los últimos desmentidos": una lista fija que ya trae el robot
+  if(!q){
+    await cargarRobot();
+    if(robotFresco() && ROBOT.desmentidos && ROBOT.desmentidos.length){
+      const porDominio=Object.fromEntries(FACTCHECK.map(fc=>[fc.d,fc]));
+      all=ROBOT.desmentidos.filter(x=>porDominio[x.d]).map(x=>Object.assign({},x,{fc:porDominio[x.d]}));
+    }
+  }
+  if(!all.length){
+    const results=await mapLimit(FACTCHECK,5,async fc=>{
+      const term=(q?('"'+q+'" '):'')+'site:'+fc.d+(q?' when:180d':' when:20d');
+      try{ const arts=await fetchGnews(gnewsUrl(term,fc.loc)); if(arts.sinPuente) sinPuente=true; return arts.slice(0,q?4:3).map(a=>Object.assign({},a,{fc})); }catch(e){ sinPuente=true; return []; }
+    });
+    all=results.flat().filter(x=>x.title);
+  }
+  all.sort((a,b)=>b.ts-a.ts);
+  /* Aquí una frase falsa hace daño de verdad: decirle a alguien que "no hay
+     chequeos sobre esto" cuando Prisma no pudo preguntar es empujarlo a creer un
+     rumor. Si no se pudo preguntar, se dice eso y nada más. */
+  if(!all.length && sinPuente){
+    out.innerHTML='<div class="empty"><div class="ic">🚧</div><p><b>No pudimos preguntarles a los verificadores'+(q?(' por “'+esc(q)+'”'):'')+'.</b> Eso NO significa que no haya chequeos: la búsqueda necesita un intermediario para llegar a ellos y hoy ninguno está respondiendo. Mientras tanto, no des el rumor por cierto ni por falso, y búscalo directamente en <a href="https://colombiacheck.com" target="_blank" rel="noopener">Colombiacheck</a>, <a href="https://maldita.es" target="_blank" rel="noopener">Maldita.es</a> o <a href="https://chequeado.com" target="_blank" rel="noopener">Chequeado</a>.</p></div>';
+    return;
+  }
   if(!all.length){ out.innerHTML='<div class="empty"><div class="ic">🔍</div><p>'+(q?('No hay chequeos publicados sobre “'+esc(q)+'”. Que nadie lo haya verificado no lo hace cierto ni falso: tómalo con cuidado y no lo reenvíes sin confirmar.'):'No pudimos traer los desmentidos ahora. Reintenta en un momento.')+'</p></div>'; return; }
   out.innerHTML='<div class="arch-h">🔍 '+(q?('Chequeos sobre “'+esc(q)+'”'):'Últimos desmentidos')+' <span class="n">· '+all.length+' · de verificadores profesionales</span></div>';
   const box=el('div',''); all.slice(0,40).forEach(x=>box.appendChild(newsRow(x,`<div class="hem-src">${x.fc.f} ${esc(x.fc.n)}</div>`))); out.appendChild(box);
