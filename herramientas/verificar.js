@@ -63,6 +63,28 @@ if(ok){ ck('app.js compila y corre top-level',true);
       ck('el SW guarda envivo.json', rd('sw-prisma.js').includes('envivo.json'));
     }
 
+    console.log('[5] Cortacircuito de puentes');
+    {
+      const v=ctx.puenteVivo, f=ctx.puenteFallo, ok=ctx.puenteOk, t=ctx.puenteTumbar;
+      ck('existe', [v,f,ok,t].every(x=>typeof x==='function'));
+      if(typeof v==='function'){
+        ck('un puente nuevo se da por vivo', v('pruebaA')===true);
+        f('pruebaA'); f('pruebaA');
+        ck('dos fallos seguidos todavía no lo tumban', v('pruebaA')===true);
+        f('pruebaA');
+        ck('al tercero se le deja de preguntar', v('pruebaA')===false);
+        f('pruebaB'); f('pruebaB'); ok('pruebaB'); f('pruebaB'); f('pruebaB');
+        ck('un acierto en medio borra la cuenta', v('pruebaB')===true);
+        for(let i=0;i<9;i++) f('direct');
+        ck("'directo' nunca se da por caído (ahí falla el medio, no un puente)", v('direct')===true);
+        t('pruebaC');
+        ck('el sondeo de arranque tumba de una vez', v('pruebaC')===false);
+        ok('pruebaC');
+        ck('si revive, vuelve a entrar', v('pruebaC')===true);
+        ck('rss2json también pasa por el cortacircuito', appSrcRaw.includes("puenteVivo('rss2json')"));
+      }
+    }
+
     console.log('\n================ '+pass+' OK · '+fail+' FALLOS ================');
     process.exit(fail?1:0);
   })();

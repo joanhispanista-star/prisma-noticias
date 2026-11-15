@@ -145,15 +145,51 @@ async function probeProxy(){
     await Promise.all(cands.map(name=>(async()=>{
       try{ const c=new AbortController(); const to=setTimeout(()=>c.abort(),5500);
         const r=await fetch(PROXIES[name](test),{signal:c.signal}); clearTimeout(to);
-        if(!r.ok) return; const t=await r.text();
-        if(/<rss|<feed|<channel/i.test(t.slice(0,400))){ winners.push(name); if(!PROXY_WINNER) PROXY_WINNER=name; } // el 1º que valide se aplica en caliente
-      }catch(e){}
+        if(!r.ok){ puenteTumbar(name); return; } const t=await r.text();
+        if(/<rss|<feed|<channel/i.test(t.slice(0,400))){ puenteOk(name); winners.push(name); if(!PROXY_WINNER) PROXY_WINNER=name; } // el 1º que valide se aplica en caliente
+        else puenteTumbar(name);
+      }catch(e){ puenteTumbar(name); }   // ni la BBC: a ese no se le pregunta en 10 minutos
     })()));
     PROXY_WINNERS=winners;
     if(!PROXY_WINNER && winners.length) PROXY_WINNER=winners[0];
   })();
   return probeDone;
 }
+/* ---------- salud de los puentes ----------
+   Los puentes públicos se mueren sin avisar: el 14-nov-2026 estaban caídos los
+   cuatro (corsproxy pasó a pedir clave y contesta 401). Y uno muerto no siempre
+   falla rápido: codetabs se queda colgado hasta agotar el reloj, y como la
+   carrera espera a todos, CADA medio perdía 6 s antes de llegar al recurso que
+   sí funcionaba. Medido en la web publicada: 71 s de carga y seguía.
+   Aquí se cuenta cuántas veces seguidas falla cada puente. A la tercera se le
+   deja de preguntar 10 minutos; pasado ese rato se le da otra oportunidad, así
+   que si un puente revive vuelve a entrar solo, sin tocar código.
+   Solo cuenta como fallo DEL PUENTE lo que es culpa suya: que no conteste, que
+   se cuelgue o que nos rechace (401/402/403/429). Si contesta pero el medio no
+   trae noticias, el puente está sano y el problema es del medio. */
+const SALUD={}, CAIDO_MS=10*60*1000, FALLOS_PARA_CAER=3;
+function puenteVivo(n){ const s=SALUD[n]; return !(s&&s.hasta&&Date.now()<s.hasta); }
+function puenteFallo(n){
+  if(n==='direct') return;               // 'directo' no es un puente: ahí quien falla es el medio
+  const s=SALUD[n]=SALUD[n]||{f:0,hasta:0};
+  if(++s.f>=FALLOS_PARA_CAER){ s.hasta=Date.now()+CAIDO_MS; s.f=0; }
+}
+function puenteTumbar(n){ if(n!=='direct') SALUD[n]={f:0,hasta:Date.now()+CAIDO_MS}; }
+function puenteOk(n){ const s=SALUD[n]; if(s){ s.f=0; s.hasta=0; } }
+const RECHAZO=new Set([401,402,403,429]);
+/* una petición por una vía, con reloj, que además lleva la cuenta de su salud.
+   Devuelve el texto, o null si no sirvió. */
+async function pedirPorVia(name,url,timeout,opciones){
+  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),timeout);
+  try{
+    const r=await fetch(PROXIES[name](url),Object.assign({signal:ctrl.signal},opciones||{}));
+    if(!r.ok){ if(RECHAZO.has(r.status)) puenteFallo(name); return null; }
+    puenteOk(name);
+    return await r.text();
+  }catch(e){ puenteFallo(name); return null; }
+  finally{ clearTimeout(to); }
+}
+
 /* ---------- memoria de vía por medio ----------
    Muchas fuentes (El País, NYT, Fox, DW, RTVE…) entregan su RSS con permiso CORS:
    se pueden leer EN DIRECTO, sin puente, más rápido y sin gastar el cupo de nadie.
@@ -179,28 +215,23 @@ function outletChain(id){
    Antes iba en fila y cada una podía comerse 8 s: con dos puentes muertos delante,
    un solo canal de YouTube tardaba medio minuto (la pestaña Video, 51 s en total). */
 async function fetchText(url,{timeout=8000}={}){
-  const names=proxyChain();
+  const names=proxyChain().filter(puenteVivo);
+  if(!names.length) throw new Error('sin puente');
   try{
     return await Promise.any(names.map(async name=>{
-      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),timeout);
-      try{
-        const r=await fetch(PROXIES[name](url),{signal:ctrl.signal,headers:{'Accept':'text/xml,application/xml,application/rss+xml,text/html,*/*'}});
-        if(!r.ok) throw 0;
-        const t=await r.text();
-        if(!t||t.length<=60) throw 0;
-        return t;
-      } finally{ clearTimeout(to); }
+      const t=await pedirPorVia(name,url,timeout,{headers:{'Accept':'text/xml,application/xml,application/rss+xml,text/html,*/*'}});
+      if(!t||t.length<=60) throw 0;
+      return t;
     }));
   }catch(e){ throw new Error('sin puente'); }
 }
 /* carrera de proxies en paralelo: gana el primero que responda (para GDELT / búsquedas puntuales) */
 async function fetchViaAny(url,timeout=8000){
-  const names=proxyChain().filter(n=>n!=='direct');
+  const names=proxyChain().filter(n=>n!=='direct'&&puenteVivo(n));
+  if(!names.length) throw new Error('sin puente');
   return await Promise.any(names.map(async name=>{
-    const c=new AbortController(); const to=setTimeout(()=>c.abort(),timeout);
-    try{ const r=await fetch(PROXIES[name](url),{signal:c.signal}); const t=await r.text(); clearTimeout(to);
-      if(r.ok&&t&&t.length>40) return t; throw new Error('bad'); }
-    catch(e){ clearTimeout(to); throw e; }
+    const t=await pedirPorVia(name,url,timeout);
+    if(t&&t.length>40) return t; throw new Error('bad');
   }));
 }
 
@@ -249,14 +280,9 @@ function parseFeed(xml, outlet){
 /* ---------- caché por medio ---------- */
 /* un proxy con timeout → items parseados (o null) */
 async function tryProxy(url,name,outlet,timeout){
-  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),timeout);
-  try{
-    const r=await fetch(PROXIES[name](url),{signal:ctrl.signal});
-    if(!r.ok) return null;
-    const t=await r.text(); if(!t||t.length<60) return null;
-    const items=parseFeed(t,outlet); return items.length?items:null;
-  }catch(e){ return null; }
-  finally{ clearTimeout(to); }
+  const t=await pedirPorVia(name,url,timeout);
+  if(!t||t.length<60) return null;
+  try{ const items=parseFeed(t,outlet); return items.length?items:null; }catch(e){ return null; }
 }
 /* carrera en paralelo: gana la 1ª vía que devuelva items; si ninguna, null.
    Devuelve también CUÁL ganó, para recordarla. */
@@ -290,7 +316,7 @@ async function fetchOutletItems(outlet){
       const it=await tryProxy(url,'direct',outlet,Math.min(2500,timeLeft()));
       if(it&&it.length){ viaSet(outlet.id,'direct'); return it; }
     }
-    const puentes=chain.filter(n=>n!=='direct');
+    const puentes=chain.filter(n=>n!=='direct'&&puenteVivo(n));   // a un puente caído no se le espera
     // 2) carrera EN PARALELO de los 3 puentes líderes (antes era en fila, 4×7s)
     const won=await raceProxies(url,puentes.slice(0,3),outlet,Math.min(6000,timeLeft()));
     if(won){ viaSet(outlet.id,won.via); return won.items; }
@@ -301,18 +327,25 @@ async function fetchOutletItems(outlet){
       if(items&&items.length){ viaSet(outlet.id,name); return items; }
     }
     // 2) AllOrigins /get (ahora CON timeout): el XML viene dentro de JSON.contents
-    if(timeLeft()>1200){
+    if(timeLeft()>1200 && puenteVivo('allorigins')){   // mismo servidor que allorigins: si cayó uno, cayó el otro
       try{ const j=await fetchJsonT('https://api.allorigins.win/get?url='+enc(url),Math.min(5000,timeLeft()));
-        if(j&&j.contents){ const it=parseFeed(j.contents,outlet); if(it.length) return it; } }catch(e){}
+        if(j&&j.contents){ puenteOk('allorigins'); const it=parseFeed(j.contents,outlet); if(it.length) return it; } }
+      catch(e){ puenteFallo('allorigins'); }
     }
     // 3) rss2json (ahora CON timeout): JSON ya limpio, último recurso
-    if(timeLeft()>1200){
+    /* rss2json NO aguanta una portada: medido el 14-nov-2026, contesta 429
+       ("estás convirtiendo feeds nuevos demasiado rápido") incluso con 1,2 s
+       entre peticiones; solo acierta con los feeds que ya tiene en su caché.
+       Va bajo el mismo cortacircuito: al tercer rechazo seguido se le deja en
+       paz 10 minutos, en vez de mandarle los otros 80 medios a estrellarse. */
+    if(timeLeft()>1200 && puenteVivo('rss2json')){
       try{ const j=await fetchJsonT('https://api.rss2json.com/v1/api.json?rss_url='+enc(url),Math.min(5000,timeLeft()));
+        if(j&&j.status==='ok') puenteOk('rss2json'); else puenteFallo('rss2json');
         if(j&&j.status==='ok'&&Array.isArray(j.items)){
           const it=j.items.map(x=>({title:stripHtml(x.title),link:x.link,
             desc:stripHtml(x.description||x.content||'').slice(0,320),
             ts:Date.parse(x.pubDate)||0, img:x.thumbnail||(x.enclosure&&x.enclosure.link)||'', outlet:outlet.id})).filter(a=>a.title);
-          if(it.length) return it; } }catch(e){}
+          if(it.length) return it; } }catch(e){ puenteFallo('rss2json'); }
     }
   }
   return [];
