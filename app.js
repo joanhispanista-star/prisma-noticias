@@ -1189,6 +1189,21 @@ async function loadYT(outlet){
   ytCache[outlet.yt]={t:Date.now(),v:vids};
   return vids;
 }
+/* Por qué no hay videos, dicho con la verdad.
+   Antes esto decía "revisa tu conexión o cambia el puente en Ajustes", y eso le
+   echaba la culpa al lector de algo que no era suyo: el 14-nov-2026 YouTube
+   contestaba 404 a todos los feeds de canal, medido desde dos redes distintas
+   (esta máquina y el robot en GitHub). Si el robot acaba de pasar y volvió sin
+   videos, el problema es la fuente y se dice. Si no hay robot ni red, entonces sí
+   puede ser la conexión. */
+function sinVideosHtml(ic){
+  const esLaFuente = robotFresco() && !robotTraeVideos();
+  if(!esLaFuente) return '<div class="ic">'+ic+'</div><p>No pudimos cargar los videos ahora. Revisa tu conexión y vuelve a intentarlo.</p>';
+  return '<div class="ic">'+ic+'</div><p><b>YouTube no está entregando la lista de videos de sus canales.</b> '
+    +'No es tu conexión: el servicio del que salían dejó de responder. Prisma vuelve a preguntar cada 20 minutos y, '
+    +'cuando regrese, los videos aparecerán aquí solos.<br><br>Los canales en directo sí funcionan.</p>'
+    +'<div style="margin-top:10px"><button class="btn btn-negro btn-sm" onclick="switchTab(\'envivo\')">📺 Ver canales en directo</button></div>';
+}
 async function buildVideos(single){
   const grid=$('#videos'); grid.innerHTML='';
   for(let i=0;i<6;i++) grid.appendChild(el('div','sk','<div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div>'));
@@ -1199,7 +1214,7 @@ async function buildVideos(single){
   let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });
   all.sort((a,b)=>b.pub-a.pub);
   grid.innerHTML='';
-  if(!all.length){ grid.appendChild(el('div','empty','<div class="ic">🎬</div><p>No pudimos cargar los videos ahora. Revisa tu conexión o cambia el puente en Ajustes.</p>')); return; }
+  if(!all.length){ grid.appendChild(el('div','empty',sinVideosHtml('🎬'))); return; }
   all.slice(0,40).forEach(v=>grid.appendChild(vcard(v)));
 }
 function vcard(v){
@@ -1219,7 +1234,7 @@ async function buildShorts(){
   let all=[]; lists.forEach(l=>{ if(l) all=all.concat(l); });
   all.sort((a,b)=>b.pub-a.pub);
   rail.innerHTML='';
-  if(!all.length){ rail.innerHTML=''; grid.appendChild(el('div','empty','<div class="ic">⚡</div><p>No hay shorts disponibles ahora mismo.</p>')); return; }
+  if(!all.length){ rail.innerHTML=''; grid.appendChild(el('div','empty',sinVideosHtml('⚡'))); return; }
   all.slice(0,18).forEach(v=>{
     const o=byId[v.outlet]; const s=el('div','short');
     s.style.backgroundImage=`url('${esc(v.img)}')`;
